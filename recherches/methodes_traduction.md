@@ -10,9 +10,13 @@ _Principe_: Rajouter au fur et à mesure un nouveau mot à traduire pour former 
 _Exemple_ : Pyramus et Thisbe sunt duo amantes qui tenent domos contiguas.
 
 Pyramus et Thisbe = Pyrame et Thisbé 
+
 Pyramus et Thisbe sunt = Pyrame et Thisbé sont
+
 Pyramus et Thisbe sunt duo amantes = Pyrame et Thisbé sont deux amants 
+
 Pyramus et Thisbe sunt duo amantes qui tenent = Pyrame et Thisbé sont deux amants qui habitent 
+
 Pyramus et Thisbe sunt duo amantes qui tenent domos contiguas = Pyrame et Thisbé sont deux amants qui habitent des maisons voisines. 
 
 
@@ -24,6 +28,7 @@ _Options_:
 - L'élève complète un juxtalinéaire.
 
 _Exemple_ : Pyramus et Thisbe sunt duo amantes qui tenent domos contiguas.
+
 Pyrame et Thisbé _____ _____ _____ qui ______ des maisons voisines. 
 
 _Propositions de gameplay_:
@@ -35,7 +40,9 @@ _Propositions de gameplay_:
 _Principe_: Deux traductions sont proposées à l'élève et il doit choisir la plus satisfaisante.
 
 _Exemple_ : Pyramus et Thisbe sunt duo amantes qui tenent domos contiguas.
+
 1ère traduction : Pyrame et Thisbé sont deux amants qui habitaient une maison voisine.
+
 2ème traduction : Pyrame et Thisbé sont deux amants qui habitent des maisons voisines.
 
 
@@ -44,7 +51,9 @@ _Exemple_ : Pyramus et Thisbe sunt duo amantes qui tenent domos contiguas.
 _Principe_: Le texte et sa traduction sont donnés à l'élève qui doit associer les mots latins aux mots français.
 
 _Exemple_ : Pyramus et Thisbe sunt duo amantes qui tenent domos contiguas.
+
 _Mots donnés à l’élève_ : Thisbé qui des deux habitent sont maisons Pyrame voisines amants et.
+
 (Ils peuvent peut-être les relier ? Je ne sais pas comment on pourrait mettre ça en forme !)
 
 
@@ -54,7 +63,9 @@ _Principe_: La phrase latine est sous-titrée avec les détails des déclinaison
 
 _Exemple_ : Pyramus est pulcherrimus juvenis in hac terra = Pyrame est le plus beau jeune homme dans ce pays/ sur cette terre. 
 
-Pyrame est pulcherrimus (= superlatif au nominatif de pulcher = beau) juvenis in (= préposition « dans » qui se construit avec l’accusatif) hac (= déterminant démonstratif acc singulier) terra.
+Pyrame est pulcherrimus (= superlatif au nominatif de pulcher = beau) juvenis in (= préposition « dans » qui se construit avec l’accusatif)
+
+hac (= déterminant démonstratif acc singulier) terra.
 
 
 ### 6. Repérer une règle de grammaire.
@@ -64,6 +75,7 @@ _Principe_: Il est demandé à l'élève de savoir repérer le point de grammair
 _Exemple_ : Pyramus est __pulcherrimus__ juvenis in hac terra.
 
 Sauriez-vous nommer ce point de grammaire vu en classe ?
+
 (Peut-être que si l’élève ne réussit pas du premier coup, on peut lui afficher la traduction qui peut l’aider.)
 
 
@@ -98,11 +110,16 @@ _Principe_: L'enseignant remanie la phrase afin de la rendre plus simple.
 _Exemple_ : 
 
 Pyramus et Thisbe, iuvenum pulcherrimus alter, 
+
 Altera quas Oriens habuit, praelata puellis, 
+
 Contiguas tenuere domos
-= Pyrame et Thisbé, l’un était le plus beau des jeunes hommes et l’autre était supérieure aux jeunes filles que l’Orient possédait. Ils ont habité des maisons voisines. 
+
+= Pyrame et Thisbé, l’un était le plus beau des jeunes hommes et l’autre était supérieure aux jeunes filles que l’Orient possédait. 
+Ils ont habité des maisons voisines. 
 
 Pyramus est pulcherrimus juvenum et Thisbé optima puellarum. Tenent domos contiguas.
+
 = Pyrame est le plus beau des jeunes hommes et Thisbé la meilleure des jeunes filles. Ils habitent des maisons voisines.
 
 
