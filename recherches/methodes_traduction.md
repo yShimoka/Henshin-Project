@@ -19,6 +19,10 @@ Pyramus et Thisbe sunt duo amantes qui tenent = Pyrame et Thisbé sont deux aman
 
 Pyramus et Thisbe sunt duo amantes qui tenent domos contiguas = Pyrame et Thisbé sont deux amants qui habitent des maisons voisines. 
 
+Idées de gameplay : Peut-être faire évoluer la scène avec les modifications des élèves.
+
+Pour cet ex : D'abord les 2 persos, puis un coeur, puis deux maisons et enfin les maisons se collent.
+
 
 ### 2. Texte à trous
 
@@ -34,6 +38,7 @@ Pyrame et Thisbé _____ _____ _____ qui ______ des maisons voisines.
 _Propositions de gameplay_:
 - Faire remplir les trous sous forme de point n' click.
   - Le joueur doit trouver dans le décor l'objet qui correspond au trou dans la phrase. 
+  - Certains mots devront tout de même être écrits! (Après la phase drag n drop)
 
 ### 3. Comparaison de traduction
 
@@ -41,9 +46,11 @@ _Principe_: Deux traductions sont proposées à l'élève et il doit choisir la 
 
 _Exemple_ : Pyramus et Thisbe sunt duo amantes qui tenent domos contiguas.
 
-1ère traduction : Pyrame et Thisbé sont deux amants qui habitaient une maison voisine.
+1ère traduction : Pyrame et Thisbé sont deux amants qui habitent une maison voisine.
 
 2ème traduction : Pyrame et Thisbé sont deux amants qui habitent des maisons voisines.
+
+Idées de gameplay : Jouer avec le scénario : mauvaise trad = mauvaise histoire
 
 
 ### 4. Association mot original <=> Mot traduit
@@ -54,7 +61,7 @@ _Exemple_ : Pyramus et Thisbe sunt duo amantes qui tenent domos contiguas.
 
 _Mots donnés à l’élève_ : Thisbé qui des deux habitent sont maisons Pyrame voisines amants et.
 
-(Ils peuvent peut-être les relier ? Je ne sais pas comment on pourrait mettre ça en forme !)
+Idées de gameplay : Drag n drop.
 
 
 ### 5. Phrase latine avec explicitation de certaines tournures et de certains cas.
@@ -67,6 +74,10 @@ Pyrame est pulcherrimus (= superlatif au nominatif de pulcher = beau) juvenis in
 
 hac (= déterminant démonstratif acc singulier) terra.
 
+Idées du gameplay : Professeure entre en jeu et explique les détails grammaticaux, arrêt du "jeu" = demander de traduire.
+Cette phase DOIT être réalisée à la fin du niveau, car les élèves devront produire une réponse écrite ! 
+Peut-être une trace écrite avec l'ensemble des réponses et cela pourrait être noté.
+
 
 ### 6. Repérer une règle de grammaire.
 
@@ -77,6 +88,8 @@ _Exemple_ : Pyramus est __pulcherrimus__ juvenis in hac terra.
 Sauriez-vous nommer ce point de grammaire vu en classe ?
 
 (Peut-être que si l’élève ne réussit pas du premier coup, on peut lui afficher la traduction qui peut l’aider.)
+
+Idée de gameplay : Intervention du prof et après l'élève écrit le nom du point de grammaire.
 
 
 ### 7. QCM
