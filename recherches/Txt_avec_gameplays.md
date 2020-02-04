@@ -62,8 +62,14 @@ _14. Ecce illa redit, requirit amantem et vidit corpus juvenis._
 
 Voici que celle-ci revient, cherche son amant et voit le corps du jeune homme. 
 
-_15. Elle s'ôte la vie à son tour._ 
+_15."Heu ! Tua manus et tuus amor perdidit te, infelix."_
 
-_16. Symbolique des mûres avec le sang, réunion des deux amants dans la mort._
+"Hélas ! Ta main et ton amour t'ont perdus, malheureux."
+
+_16. "Nunc jungit in mortem et arbor est signa amoris"._
+
+"Désormais, je te retrouve dans la mort et cet arbre est le signe de notre amour."
+
+__Thisbé rejoint son bien-aimé dans la mort et le sang des deux amants colore les fruits auparavant blancs de l'arbre. Les mûres deviennent noirs et demeureront l'empreinte de leur amour.__
 
 __THE END.__
