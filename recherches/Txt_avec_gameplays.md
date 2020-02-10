@@ -91,7 +91,7 @@ Au fil du temps, leur amour grandit mais le père interdit cet amour.
 
 Au fil du temps, leur amour grandit mais leurs pères interdirent cet amour.
 
-__Ici, on teste leur connaissance de la conjugaison de _patres_ qui est un pluriel.__
+__Ici, on teste leur connaissance de la déclinaison de _patres_ qui est un pluriel.__
 
 __Cependant, l'interdiction paternelle n'a pas réussi à empêcher leur amour. En effet, une fissure dans le mur permet aux deux amants de se retrouver chaque soir. Ils ne peuvent plus endurer/supporter cette situation et élaborent donc un plan de fuite.__
 
