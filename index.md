@@ -7,3 +7,7 @@ This is the index page for _Henshin Project's_ documentation website.
 [Méthodologies de Recherche](recherches/methodes_traduction.md)
 
 [Texte avec gameplays](recherches/Txt_avec_gameplays.md)
+
+[Texte seul](recherches/texte_seul.md)
+
+[Moodboard](moodboard/)
