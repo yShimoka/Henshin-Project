@@ -11,3 +11,5 @@ This is the index page for _Henshin Project's_ documentation website.
 [Texte seul](recherches/texte_seul.md)
 
 [Moodboard](moodboard/)
+
+[Prototype d'interface](interface_prototype/index.html)
