@@ -4,25 +4,10 @@
 
 using System;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 /* Wrap the class within the local namespace. */
 namespace Henshin.Core.App {
-
-/// <summary>
-/// Exception thrown if no <see cref="State"/> object is found within its resource folder.
-/// </summary>
-internal class MissingStateException: Exception {
-    // ---  Methods ---
-        // -- Public Methods --
-            /// <summary>
-            /// Creates a new <see cref="MissingStateException"/> instance.
-            /// Calls the base constructor.
-            /// <seealso cref="Exception"/>
-            /// </summary>
-            /// <param name="message">The message that will be rendered to the user.</param>
-            public MissingStateException(string message): base(message: message) {}
-    // --- /Methods ---
-}
 
 /// <summary>
 /// Application state used by the <see cref="Manager"/> class.
@@ -32,6 +17,7 @@ internal class MissingStateException: Exception {
 public class State: ScriptableObject {
     // ---  Attributes ---
         // -- Serialized Attributes --
+            // - Utility Attributes -
             /// <summary>
             /// Unique identifier for this state.
             /// Used in debug and editor to ensure which instance is being modified.
@@ -43,10 +29,27 @@ public class State: ScriptableObject {
             /// Flag set if this is the state used for the application.
             /// There should only be one <see cref="State"/> object with this flag set.
             /// </summary>
-            [SerializeField, Tooltip(tooltip: "TEMPORARY, DO NOT MODIFY HERE !!!")]
+            [SerializeField, HideInInspector]
             public bool isAppState;
+            
+            // - Theatre Info -
+            /// <summary>
+            /// Identifier of the scene that will hold the entire application.
+            /// Loaded by the <see cref="Manager"/> at startup.
+            /// </summary>
+            //[HideInInspector]
+            public string theatreScene;
+            
+            /// <summary>
+            /// Prefab instance used for the spectator element.
+            /// This MUST be a prefab with a <see cref="Camera"/> object that will render the whole application.
+            /// </summary>
+            public GameObject spectator;
+            
+            // - Play Info -
         
         // -- Public Attributes --
+            // - Utility Attributes -
             /// <summary>
             /// Reference to the <see cref="State"/> with its <see cref="isAppState"/> flag set.
             /// Initialized in the <see cref="_Initialize"/> method.
@@ -57,6 +60,20 @@ public class State: ScriptableObject {
             /// Default location of the <see cref="State"/> instances.
             /// </summary>
             public const string DEFAULT_PATH = "Serialized/Application";
+            
+            // - Theatre Info -
+            /// <summary>
+            /// Reference to the main camera of the scene.
+            /// This is the instance found within the instanced <see cref="spectator"/> prefab.
+            /// </summary>
+            public static Camera MainCamera { get; private set; }
+            
+            /// <summary>
+            /// Reference to the root transform of the theatre. 
+            /// </summary>
+            public static Transform Root;
+            
+            // - Play Info -
         
         // -- Protected Attributes --
         // -- Private Attributes --
@@ -65,6 +82,38 @@ public class State: ScriptableObject {
     // ---  Methods ---
         // -- Unity Events --
         // -- Public Methods --
+            /// <summary>
+            /// Initializes the spectator prefab.
+            /// Attaches it to the specified <see cref="parent"/>.
+            /// </summary>
+            /// <param name="parent">The transform to attach the <see cref="spectator"/> to.</param>
+            /// <exception cref="MissingPrefabException{State}">If the <see cref="spectator"/> prefab is null.</exception>
+            /// <exception cref="MissingComponentException">If the <see cref="spectator"/> prefab has no <see cref="Camera"/> child component.</exception>
+            public static void InitializeSpectator(Transform parent) {
+                // Check if the spectator prefab was specified.
+                if (State.Current.spectator != null) {
+                    // Instantiate the spectator prefab, ensuring a null position and rotation.
+                    GameObject spectatorInstance = Object.Instantiate(
+                        original: State.Current.spectator, 
+                        parent: parent, 
+                        position: Vector3.zero, 
+                        rotation: Quaternion.identity
+                    );
+                    spectatorInstance.name = "Spectator";
+                    
+                    // Try to load the camera from the instance.
+                    State.MainCamera = spectatorInstance.GetComponentInChildren<Camera>(includeInactive: true);
+                    
+                    // Check if the camera object was found.
+                    if (State.MainCamera == null) {
+                        throw new MissingComponentException(message: "There is no Camera component in the specified spectator prefab.");
+                    }
+                } else {
+                    // Throw an exception.
+                    throw new MissingPrefabException<State>(attributeName: nameof(State.spectator), containerIdentifier: State.Current.identifier);
+                }
+            }
+            
         // -- Protected Methods --
         // -- Private Methods --
             /// <summary>
@@ -72,6 +121,7 @@ public class State: ScriptableObject {
             /// Checks if a <see cref="State"/> is defined as the application's state.
             /// Calls <see cref="Manager.Initialize"/>.
             /// </summary>
+            /// <exception cref="MissingStateException">If there is no valid <see cref="State"/> in a Resources folder.</exception>
             [RuntimeInitializeOnLoadMethod]
             private static void _Initialize() {
                 // Load all the application state objects.
