@@ -2,8 +2,6 @@
  * Copyright © 2020 - Zimproov.
  */
 
-using System;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
