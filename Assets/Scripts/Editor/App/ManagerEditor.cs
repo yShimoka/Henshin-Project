@@ -3,6 +3,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Henshin.Core.App;
 using UnityEditor;
@@ -58,16 +59,22 @@ public class ManagerEditor: EditorWindow {
                 // Draw the header.
                 this._DrawHeader();
                 
-                // Check if there are some states found.
-                if (this._mStates.Length > 0) {
-                    // Draw the state selector.
-                    this._DrawStateSelector();
-                    
-                    // Draw the contents of the state.
-                    this._DrawStateContents();
+                // Check if the indexed object is still valid.
+                if (this.CurrentState != null) {
+                    // Check if there are some states found.
+                    if (this._mStates.Length > 0) {
+                        // Draw the state selector.
+                        this._DrawStateSelector();
+                        
+                        // Draw the contents of the state.
+                        this._DrawStateContents();
+                    } else {
+                        // Draw the warning message.
+                        this._DrawNoStateWarning();
+                    }
                 } else {
-                    // Draw the warning message.
-                    this._DrawNoStateWarning();
+                    // Reload the assets.
+                    this._ReloadStates();
                 }
                 
                 // Add the create state button.
@@ -116,6 +123,11 @@ public class ManagerEditor: EditorWindow {
                         // Stop the loop.
                         break;
                     }
+                }
+                
+                // Ensure that the index is still in the bounds of the array.
+                if (this._mCurrentStateIndex >= this._mStates.Length) {
+                    this._mCurrentStateIndex = this._mStates.Length - 1;
                 }
             }
             
@@ -173,12 +185,29 @@ public class ManagerEditor: EditorWindow {
                 }
                 
                 EditorGUILayout.EndHorizontal();
+                
+                // Create the style for the line.
+                GUIStyle lineStyle = new GUIStyle {
+                    normal = {
+                        background = EditorGUIUtility.whiteTexture
+                    },
+                    stretchWidth = true,
+                    fixedHeight = 2,
+                    margin = new RectOffset { top = 1, bottom = 8, left = 4, right = 4}
+                };
+                
+                GUI.color = Color.grey;
+                GUILayout.Box(text: "", style: lineStyle);
+                GUI.color = Color.white;
             }
             
             /// <summary>
             /// Draws the dropdown selector used to choose which state is being altered.
             /// </summary>
             private void _DrawStateSelector() {
+                // Start an horizontal space.
+                EditorGUILayout.BeginHorizontal();
+                
                 // Draw the dropdown.
                 int newState = EditorGUILayout.Popup(
                     selectedIndex: this._mCurrentStateIndex,
@@ -189,6 +218,15 @@ public class ManagerEditor: EditorWindow {
                 this.CurrentState.isAppState = false;
                 this._mCurrentStateIndex = newState;
                 this.CurrentState.isAppState = true;
+                
+                // Draw the locate button.
+                if (GUILayout.Button(image: Resources.Load<Texture2D>(path: "Editor/Icons/Pointer"), style: EditorStyles.miniButton)) {
+                    // Select the asset.
+                    EditorGUIUtility.PingObject(obj: this.CurrentState);
+                }
+                
+                EditorGUILayout.EndHorizontal();
+                EditorGUILayout.Space();
             }
             
             /// <summary>
@@ -279,6 +317,28 @@ public class ManagerEditor: EditorWindow {
             }
             
             // - Helper Methods -
+            private IEnumerable<Object> LoadAssetsWithFilter(string filter, string baseFolder = null) {
+                // Prepend the "Assets" folder to the base folder.
+                baseFolder = "Assets" + (string.IsNullOrEmpty(value: baseFolder) ? null : $"/{baseFolder}");
+                
+                // Load the asset's GUIDs from the database.
+                string[] assetGuid = AssetDatabase.FindAssets(
+                    filter: filter, 
+                    searchInFolders: new [] { 
+                        baseFolder
+                    }
+                );
+                
+                // Check if a resource was found.
+                if (assetGuid.Length > 0) {
+                    // Load the assets.
+                    return assetGuid.Select(selector: guid => AssetDatabase.LoadAssetAtPath<Object>(assetPath: AssetDatabase.GUIDToAssetPath(guid: guid)));
+                } else {
+                    // Throw an exception.
+                    throw new AssetNotFoundException(message: $"Filter {filter} returned no assets within the {baseFolder} folder.");
+                }
+            }
+            
             private string _CamelToPretty(string camel) {
                 // If the string is null or less than 1 letter, just return it.
                 if (camel == null) { return null; }
@@ -310,21 +370,23 @@ public class ManagerEditor: EditorWindow {
                 
                 // Check if the asset name is set.
                 if (!string.IsNullOrEmpty(value: assetName)) {
-                    // Load the asset from the database.
-                    string[] assetGuid = AssetDatabase.FindAssets(filter: $"{assetName} t:{assetType.Name}", searchInFolders: new [] { "Assets/" + baseFolder});
-                    
-                    // Check if a resource was found.
-                    if (assetGuid.Length == 1) {
-                        // Load the asset.
-                        asset = AssetDatabase.LoadAssetAtPath(assetPath: AssetDatabase.GUIDToAssetPath(guid: assetGuid[0]), type: assetType);
-                    } else if (assetGuid.Length > 1) {
-                        // Throw an exception.
-                        error = new MultipleAssetException(message:  "Tried to render an asset field with multiple corresponding assets.\n" +
-                                                                  $"(Name:{assetName}, Type:{assetType.FullName})");
-                    } else {
+                    try {
+                        // Load the assets.
+                        Object[] assets = this.LoadAssetsWithFilter(filter: $"{assetName} t:{assetType.Name}", baseFolder: baseFolder).ToArray();
+                        
+                        // Check if there is only one asset.
+                        if (assets.Length == 1) {
+                            // Load the asset.
+                            asset = assets[0];
+                        } else {
+                            // Throw an exception.
+                            error = new MultipleAssetException(message:  "Tried to render an asset field with multiple corresponding assets.\n" +
+                                                                        $"(Name:{assetName}, Type:{assetType.FullName})");
+                        }
+                    } catch (AssetNotFoundException) {
                         // Throw an exception.
                         error = new AssetNotFoundException(message:  "Failed to find an asset when rendering an asset field.\n" +
-                                                                  $"(Name:{assetName}, Type:{assetType.FullName})");
+                                                                    $"(Name:{assetName}, Type:{assetType.FullName})");
                     }
                 }
                 
