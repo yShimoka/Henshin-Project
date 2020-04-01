@@ -3,6 +3,7 @@
  */
 
 using System;
+using Henshin.Core.Scene.Directions;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -74,6 +75,8 @@ public class State: ScriptableObject {
             public static Transform Root;
             
             // - Play Info -
+            // DEBUG
+            public Act debugAct;
         
         // -- Protected Attributes --
         // -- Private Attributes --

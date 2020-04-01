@@ -5,10 +5,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Henshin.Core.App;
+
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
 
@@ -265,18 +266,10 @@ public class ManagerEditor: EditorWindow {
                 }
                 
                 // Draw the prefab asset used by the state.
-                try {
-                    this._AssetField(
-                        property: state.FindProperty(propertyPath: nameof(State.spectator)),
-                        assetName: this.CurrentState.spectator ? this.CurrentState.spectator.name : null,
-                        assetType: typeof(GameObject),
-                        baseFolder: "Prefab"
-                    );
-                } catch (AssetNotFoundException) {
-                    Debug.LogWarning(message: $"Could not find a Spectator Prefab named {this.CurrentState.theatreScene}.");
-                } catch (MultipleAssetException) {
-                    Debug.LogWarning(message: $"There are multiple Spectator Prefabs named {this.CurrentState.theatreScene}.");
-                }
+                EditorGUILayout.PropertyField(property: state.FindProperty(propertyPath: nameof(State.spectator)));
+                
+                // DEBUG: Draw the act.
+                EditorGUILayout.PropertyField(property: state.FindProperty(propertyPath: nameof(State.debugAct)));
                 
                 // Save the changes to the state object.
                 state.ApplyModifiedProperties();

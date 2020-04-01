@@ -17,3 +17,4 @@ MonoBehaviour:
   theatreScene: Production
   spectator: {fileID: 9158576721105715496, guid: eb9f5a237a9cb4db09b88c01ccfe6946,
     type: 3}
+  director: {fileID: 11400000, guid: 092e31d1d5271465196ca8fbb1a4e7e3, type: 2}

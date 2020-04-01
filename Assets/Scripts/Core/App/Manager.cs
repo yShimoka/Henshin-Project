@@ -69,10 +69,20 @@ public static class Manager {
                 
                 // Create the Audience game object.
                 GameObject audience = new GameObject { name = "Audience" };
-                audience.transform.SetParent(p: State.Root);
+                audience.transform.SetParent(parent: State.Root, worldPositionStays: false);
                 
                 // Initialize the spectator.
                 State.InitializeSpectator(parent: audience.transform);
+                
+                // Create the act game object.
+                GameObject stage = new GameObject { name = "Stage" };
+                stage.transform.SetParent(parent: State.Root, worldPositionStays: false);
+                
+                // DEBUG: Prepare the test act.
+                State.Current.debugAct.Prepare(theatreRoot: stage.transform);
+                
+                // DEUBG: Play the test act.
+                State.Current.debugAct.Play();
             }
     // --- /Methods ---
 }
