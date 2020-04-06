@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using Henshin.Core.Scene.Directions;
 using Henshin.Core.Scene.Scenery;
+using Henshin.Core.Scene.Scenery.Transformation;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -27,7 +28,7 @@ public class ActorComponent: MonoBehaviour {
         // -- Public Attributes --
             /// <summary>
             /// Unity event fired on each <see cref="Update"/> event call.
-            /// This is used by the <see cref="Transformation"/> class to update the actor.
+            /// This is used by the <see cref="Base"/> class to update the actor.
             /// </summary>
             [NonSerialized]
             public TickEvent OnTick;

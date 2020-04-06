@@ -69,12 +69,6 @@ public struct Scene {
                     // Initialize the actor.
                     actor.Initialize(actorRoot: actorRoot.transform);
                 }
-                
-                // Loop through the lines.
-                for (int i = 0; i < this.lines.Count; i++) {
-                    // Prepare the line.
-                    this.lines[index: i].Prepare(isFirst: i == 0);
-                }
             }
             
             /// <summary>
@@ -126,9 +120,9 @@ public struct Scene {
                 Scene.Current = null;
                 
                 // Check if the current act is set.
-                if (Act.Current.HasValue) {
+                if (Act.Current != null) {
                     // Advance onto the next scene.
-                    Act.Current.Value.NextScene();
+                    Act.Current.NextScene();
                 } else {
                     // Throw an exception.
                     throw new InvalidOperationException(message: $"Scene \"{this.identifier}\" has finished but it is not part of an Act !");

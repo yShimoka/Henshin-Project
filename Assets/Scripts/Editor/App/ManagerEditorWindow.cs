@@ -20,7 +20,7 @@ namespace Henshin.Editor.App {
 /// Main editor window for the <see cref="Manager"/> class.
 /// Edits <see cref="State"/> instances to make them usable by the developer.
 /// </summary>
-public class ManagerEditor: EditorWindow {
+public class ManagerEditorWindow: EditorWindow {
     // ---  Attributes ---
         // -- Public Attributes --
         // -- Protected Attributes --
@@ -138,21 +138,21 @@ public class ManagerEditor: EditorWindow {
             /// </summary>
             [MenuItem(itemName: "Henshin/App/Manager Editor")]
             private static void _OpenEditor() {
-                ManagerEditor window;
+                ManagerEditorWindow window;
                 // Check if the window already exists.
-                if (EditorWindow.HasOpenInstances<ManagerEditor>()) {
+                if (EditorWindow.HasOpenInstances<ManagerEditorWindow>()) {
                     // Get the editor window.
-                    window = EditorWindow.GetWindow<ManagerEditor>();
+                    window = EditorWindow.GetWindow<ManagerEditorWindow>();
                     
                     // Take the focus.
                     window.Focus();
                 } else {
                     // Create a new window.
-                    window = EditorWindow.CreateWindow<ManagerEditor>();
+                    window = EditorWindow.CreateWindow<ManagerEditorWindow>();
 
                     // Update the window's title and icon.
                     window.titleContent = new GUIContent {
-                        text = nameof(ManagerEditor),
+                        text = nameof(ManagerEditorWindow),
                         tooltip = "Window used to edit the application's State instances.",
                         image = Resources.Load<Texture>(path: "Editor/Icons/ManagerEditor")
                     };

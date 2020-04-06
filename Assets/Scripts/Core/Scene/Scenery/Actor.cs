@@ -14,7 +14,7 @@ namespace Henshin.Core.Scene.Scenery {
 /// Initializes the specified prefab when the <see cref="Scene"/> is created.
 /// Stores a reference to the initialized actor in the <see cref="ActorComponent"/> property.
 /// </summary>
-[CreateAssetMenu(menuName = "Henshin/Scene/Actor", fileName = "SCENE_ACTOR_ActorName", order = 20)]
+[CreateAssetMenu(menuName = "Henshin/Scene/Actor", fileName = "SCENE_ACTOR_ActorName", order = 210)]
 public class Actor: ScriptableObject {
     // ---  Attributes ---
         // -- Serialized Attributes --

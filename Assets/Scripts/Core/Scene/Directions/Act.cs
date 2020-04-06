@@ -11,8 +11,8 @@ namespace Henshin.Core.Scene.Directions {
 /// <summary>
 /// 
 /// </summary>
-[Serializable]
-public struct Act {
+[Serializable, CreateAssetMenu(menuName = "Henshin/Scene/Act", fileName = "ACT_ActName", order = 200)]
+public class Act: ScriptableObject {
     // ---  Attributes ---
         // -- Serialized Attributes --
             /// <summary>
@@ -26,9 +26,8 @@ public struct Act {
             
         // -- Public Attributes --
             /// <summary>Reference to the <see cref="Act"/> that is currently being played.</summary>
-            public static Act? Current { get; private set; }
+            public static Act Current { get; private set; }
             
-        // -- Protected Attributes --
         // -- Private Attributes --
             /// <summary>List of all the <see cref="Scene"/>'s <see cref="GameObject"/> instances.</summary>
             private List<GameObject> _mSceneObjects;
@@ -89,7 +88,7 @@ public struct Act {
             /// <summary>Advances onto the next <see cref="Scene"/> in the list.</summary>
             public void NextScene() {
                 // Disable the current scene.
-                //this._mSceneObjects[index: this._mCurrentSceneIndex].SetActive(value: false);
+                this._mSceneObjects[index: this._mCurrentSceneIndex].SetActive(value: false);
                 // Increment the scene counter.
                 this._mCurrentSceneIndex++;
                 
@@ -117,7 +116,7 @@ public struct Act {
                 
                 // TODO: Advance to the next act.
             }
-        // -- Protected Methods --
+            
         // -- Private Methods --
     // --- /Methods ---
 }

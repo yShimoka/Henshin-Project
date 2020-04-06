@@ -31,7 +31,7 @@ MonoBehaviour:
             actor: {fileID: 11400000, guid: 584b1ade72dd34704b475bdefe74d813, type: 2}
             time: 10
             type: 7
-            colour: {r: 0.9843137, g: 0.007843138, b: 0.02745098, a: 1}
+            colour: {r: 0, g: 0, b: 1, a: 1}
             position: {x: -1, y: 0, z: 0}
             rotation: {x: 0, y: 0, z: 0.8509035, w: 0.525322}
             scale: {x: 0.5, y: 0.5, z: 0.5}
