@@ -2,7 +2,7 @@
 
 # Nomenclature de document pour Sprites :
 
-```<TYPE>_<CATEGORY>_<NAME>[_<POSE>].png```
+`<TYPE>_<CATEGORY>_<NAME>[_<POSE>].png`
 
 - *TYPE* : Définit le type de l'asset :
   - **SPR** :  Ensemble des sprites qui apparaissent dans les scène.
