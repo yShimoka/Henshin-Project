@@ -12,4 +12,8 @@ This is the index page for _Henshin Project's_ documentation website.
 
 [Moodboard](moodboard/)
 
+[Nomenclature de document](nomenclature.md)
+
+[Listes d'assets](listes/index.md)
+
 [Prototype d'interface](interface_prototype/index.html)
