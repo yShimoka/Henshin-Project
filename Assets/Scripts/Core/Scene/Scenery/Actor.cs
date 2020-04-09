@@ -36,6 +36,9 @@ public class Actor: ScriptableObject {
             /// </summary>
             public ActorComponent ActorComponent { get; private set; }
             
+            /// <summary>Reference to the default path to the actors objects.</summary>
+            public const string DEFAULT_PATH = "Serialized/Actors";
+            
         // -- Protected Attributes --
         // -- Private Attributes --
     // --- /Attributes ---

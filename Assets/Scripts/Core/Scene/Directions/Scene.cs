@@ -13,7 +13,7 @@ namespace Henshin.Core.Scene.Directions {
 /// This is the structure defining the scenes of the 
 /// </summary>
 [Serializable]
-public struct Scene {
+public class Scene {
     // ---  Attributes ---
         // -- Serialized Attributes --
             /// <summary>
@@ -23,17 +23,17 @@ public struct Scene {
             public string identifier;
             
             /// <summary>List of all the lines of this <see cref="Scene"/>.</summary>
-            public List<Line> lines;
+            public List<Line> lines = new List<Line>();
             
             /// <summary>List of all the <see cref="Actor"/>s of this <see cref="Scene"/>.</summary>
-            public List<Actor> actors;
+            public List<Actor> actors= new List<Actor>();
             
             /// <summary><see cref="Sprite"/> used as the background of this <see cref="Scene"/>.</summary>
             public Sprite background;
         
         // -- Public Attributes --
             /// <summary>Reference to the <see cref="Scene"/> object that is currently playing.</summary>
-            public static Scene? Current { get; private set; }
+            public static Scene Current { get; private set; }
             
         // -- Protected Attributes --
         // -- Private Attributes --    

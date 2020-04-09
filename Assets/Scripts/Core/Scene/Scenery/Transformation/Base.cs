@@ -19,7 +19,7 @@ public class TransformationTypeAttribute: Attribute {
     // ---  Attributes ---
         // -- Public Attributes --
             /// <summary>Reference to the serialized type of this class.</summary>
-            public Type SerializedType;
+            public readonly string SerializedType;
     // --- /Attributes ---
     
     // ---  Methods ---
@@ -28,7 +28,7 @@ public class TransformationTypeAttribute: Attribute {
             /// Instantiate the attribute object.
             /// </summary>
             /// <param name="serializedType">The serialized type used for this class.</param>
-            public TransformationTypeAttribute(Type serializedType) {
+            public TransformationTypeAttribute(string serializedType) {
                 this.SerializedType = serializedType;
             }
     // --- /Methods ---
@@ -45,20 +45,28 @@ public abstract class Base {
             /// Should be overloaded in every transformation child class.
             /// </summary>
             [Serializable]
-            public abstract class Serialized {
+            public class Serialized {
+                // - Serialization Helper -
+                /// <returns>The type name of the <see cref="Serialized"/> object.</returns>
+                public string type = nameof(Serialized);
+                
+                // - Transformation Data -
                 /// <summary>Unique identifier of the transformation.</summary>
                 public string identifier;
                 
                 /// <summary>List of all the indices for this class's children.</summary>
-                public List<int> nodeIndices;
+                public List<int> nodeIndices = new List<int>();
                 
                 /// <summary>Reference to the Actor transformed.</summary>
                 public Actor actor;
+                
+                // - Node Data -
+                /// <summary>Position of the corresponding <see cref="GraphNode"/> object.</summary>
+                public Vector2 position;
             }
     // --- /Types ---
     
     // ---  Attributes ---
-        // -- Serialized Attributes --
         // -- Public Attributes --
             // - Debugging Parameters -
             /// <summary>Unique identifier of the transformation.</summary>
@@ -66,7 +74,7 @@ public abstract class Base {
             
             // - Tree Behaviour -
             /// <summary>List of all the children nodes.</summary>
-            public List<Base> Nodes;
+            public readonly List<Base> Nodes = new List<Base>();
             
             /// <summary>Stores the number of parents of this transformation.</summary>
             public int ParentCount;
@@ -74,6 +82,10 @@ public abstract class Base {
             // - Transformation Parameters -
             /// <summary>Reference to the Actor transformed.</summary>
             public Actor Actor;
+                
+            // - Node Data -
+            /// <summary>Position of the corresponding <see cref="GraphNode"/> object.</summary>
+            public Vector2 Position;
             
         // -- Protected Attributes --
             /// <summary>Helper to access the actor component.</summary>
@@ -136,6 +148,11 @@ public abstract class Base {
             /// Folds the list of references into a tree.
             /// </summary>
             public static Base Fold(List<Serialized> unfoldedTree, List<Base> deserialized, int current = -1) {
+                // If the tree is empty, return a null.
+                if (unfoldedTree == null || unfoldedTree.Count == 0) {
+                    return null;
+                }
+                
                 // If the current node is not set.
                 if (current == -1) {
                     // Get the root of the tree.
@@ -143,7 +160,7 @@ public abstract class Base {
                 }
                 
                 // Fold the current node.
-                foreach (int index in unfoldedTree[index: current].nodeIndices) {
+                foreach (int index in unfoldedTree[current].nodeIndices) {
                     // Fold the node.
                     deserialized[index: current].Nodes.Add(item: Base.Fold(unfoldedTree: unfoldedTree, deserialized: deserialized, current: index));
                     deserialized[index: index].ParentCount += 1;
@@ -157,16 +174,13 @@ public abstract class Base {
             /// De-serializes the <see cref="Serialized"/> object.
             /// </summary>
             public static Base Deserialize(Serialized serialized) {
-                // Get the type of the serialized object.
-                Type serializedType = serialized.GetType();
-                
                 // Get the first class with the correct transformationType.
                 Type serializedClass = Assembly
                     .GetAssembly(type: typeof(Base))
                     .GetTypes()
                     .FirstOrDefault(predicate: type => type
                         .GetCustomAttributes(attributeType: typeof(TransformationTypeAttribute))
-                        .FirstOrDefault(predicate: attribute => (attribute as TransformationTypeAttribute).SerializedType == serializedType) 
+                        .FirstOrDefault(predicate: attribute => (attribute as TransformationTypeAttribute).SerializedType == serialized.type) 
                         != null
                     );
                     
@@ -182,11 +196,13 @@ public abstract class Base {
                     instance.Actor = serialized.actor;
                     // Get the identifier.
                     instance.Identifier = serialized.identifier;
+                    // Get the position.
+                    instance.Position = serialized.position;
                     
                     // Return the instance.
                     return instance;
                 } else {
-                    throw new InvalidOperationException(message: $"Could not found a transformation serialized with a {serializedType.FullName} object.");
+                    throw new InvalidOperationException(message: $"Could not found a transformation serialized with a {serialized.type} object.");
                 }
             }
             
@@ -206,7 +222,18 @@ public abstract class Base {
             
             // - Serialization -
             /// <summary>Serializes the base object.</summary>
-            protected abstract Serialized _Serialize(Serialized current = null);
+            protected virtual Serialized _Serialize(Serialized current = null) {
+                // Check if the current element is set.
+                if (current == null) { throw new ArgumentException(message: "Serialized an abstract version of the Base !", paramName: nameof(current)); }
+                
+                // Set the identifier, actor and position objects.
+                current.identifier = this.Identifier;
+                current.position = this.Position;
+                current.actor = this.Actor;
+                
+                // Return the serialized object.
+                return current;
+            }
             
             /// <summary>Deserializes the base object.</summary>
             protected abstract void _Deserialize(Serialized serialized);

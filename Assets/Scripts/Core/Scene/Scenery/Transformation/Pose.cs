@@ -1,8 +1,10 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 
+using System;
 using Henshin.Components.Scene.Scenery;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /* Wrap the class within the local namespace. */
 namespace Henshin.Core.Scene.Scenery.Transformation {
@@ -10,55 +12,56 @@ namespace Henshin.Core.Scene.Scenery.Transformation {
 /// <summary>
 /// 
 /// </summary>
-[TransformationType(serializedType: typeof(Serialized))]
+[TransformationType(serializedType: nameof(SerializedPose))]
 public class Pose: Base {
     // ---  Types ---
         // -- Public Types --
             /// <summary>
-            /// Serialized representation of a <see cref="Pose"/> object.
+            /// Serialized representation of a <see cref="pose"/> object.
             /// </summary>
-            private new class Serialized: Base.Serialized {
-                public Sprite Pose;
+            [Serializable]
+            public class SerializedPose: Serialized {
+                public SerializedPose() { type = nameof(SerializedPose); }
+                
+                public Sprite pose;
             }
     // --- /Types ---
     
     // ---  Attributes ---
-        // -- Serialized Attributes --
         // -- Public Attributes --
             /// <summary>Stores the new pose that will be applied to the <see cref="ActorComponent"/></summary>
             public Sprite NewPose;
-        // -- Protected Attributes --
-        // -- Private Attributes --
     // --- /Attributes ---
     
     // ---  Methods ---
-        // -- Unity Events --
-        // -- Public Methods --
         // -- Protected Methods --
             /// <returns>The serialized representation of this transformation.</returns>
-            protected override Base.Serialized _Serialize(Base.Serialized current = null) {
+            protected override Serialized _Serialize(Serialized current = null) {
                 // Check if the current object is set.
                 if (current != null) {
                     // Create a new serialized object.
-                    current = new Serialized {
-                        Pose = this.NewPose
+                    current = new SerializedPose {
+                        pose = this.NewPose
                     };
                 } else {
                     // Downcast the current object and set the pose.
-                    (current as Serialized).Pose = this.NewPose;
+                    (current as SerializedPose).pose = this.NewPose;
                 }
+                
+                // Call the base method.
+                base._Serialize(current: current);
                 
                 // Return the object.
                 return current;
             }
             
             /// <summary>Deserializes the contents of the serialized object.</summary>
-            protected override void _Deserialize(Base.Serialized serialized) {
+            protected override void _Deserialize(Serialized serialized) {
                 // Downcast the serialized object.
-                Serialized current = (Serialized)serialized;
+                SerializedPose current = (SerializedPose)serialized;
                 
                 // Parse the contents of the object.
-                this.NewPose = current.Pose;
+                this.NewPose = current.pose;
             }
             
             /// <summary>Applies the pose transformation.</summary>
@@ -70,7 +73,6 @@ public class Pose: Base {
                 this._Finish();
             }
 
-        // -- Private Methods --
     // --- /Methods ---
 }
 }

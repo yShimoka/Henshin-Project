@@ -29,9 +29,8 @@ public class Line: ISerializationCallbackReceiver {
             public string identifier;
             
             // - Serialization Info -
-            //[HideInInspector]
-            public List<Base.Serialized> serializedTransformations;
-            
+            [HideInInspector]
+            public List<Base.Serialized> serializedTransformations = new List<Base.Serialized>();
             
         // -- Public Attributes --
             // - Static References -
@@ -56,9 +55,15 @@ public class Line: ISerializationCallbackReceiver {
                 // Create a new list of transformations.
                 List<Base> unfolded = new List<Base>();
                 
-                // Serialize the root object.
-                this.RootTransformation.Unfold(unfoldedList: unfolded);
-                this.serializedTransformations = unfolded.Select(selector: transformation => transformation.Serialize(unfoldedTree: unfolded)).ToList();
+                // Check if there is a root transformation.
+                if (this.RootTransformation != null) {
+                    // Serialize the root object.
+                    this.RootTransformation.Unfold(unfoldedList: unfolded);
+                    this.serializedTransformations = unfolded.Select(selector: transformation => transformation.Serialize(unfoldedTree: unfolded)).ToList();
+                } else {
+                    // Log a warning.
+                    Debug.LogWarning(message: "There is no transformation on this Line, this should not be possible...");
+                }
             }
             
             /// <summary>
@@ -66,7 +71,9 @@ public class Line: ISerializationCallbackReceiver {
             /// </summary>
             public void OnAfterDeserialize() {
                 // Deserialize the entire object list.
-                List<Base> deserialized = this.serializedTransformations.Select(selector: Base.Deserialize).ToList();
+                Line.Current = this;
+                List<Base> deserialized = this.serializedTransformations?.Select(selector: Base.Deserialize).ToList();
+                Line.Current = null;
                 
                 // Fold the tree.
                 this.RootTransformation = Base.Fold(unfoldedTree: this.serializedTransformations, deserialized: deserialized);
@@ -99,9 +106,9 @@ public class Line: ISerializationCallbackReceiver {
                 Line.Current = null;
                 
                 // Check if the current scene is set.
-                if (Scene.Current.HasValue) {
+                if (Scene.Current != null) {
                     // Go to the next line.
-                    Scene.Current.Value.NextLine();
+                    Scene.Current.NextLine();
                 } else {
                     // Throw an exception.
                     throw new InvalidOperationException(message: $"Line \"#{this.identifier}\" has finished but it is not part of a Scene !");

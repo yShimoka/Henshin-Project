@@ -3,10 +3,9 @@
  */
 
 using System;
-using Henshin.Core.App;
 
 /* Wrap the class within the local namespace. */
-namespace Henshin.Editor {
+namespace Henshin.Editor.Misc {
 
 /// <summary>
 /// Exception thrown if the requested asset could ne be found in the database.

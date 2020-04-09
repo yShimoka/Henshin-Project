@@ -22,11 +22,16 @@ public class Act: ScriptableObject {
             public string identifier;
             
             /// <summary>List of all the scenes in this act.</summary>
-            public List<Scene> scenes;
+            public List<Scene> scenes = new List<Scene>();
             
         // -- Public Attributes --
             /// <summary>Reference to the <see cref="Act"/> that is currently being played.</summary>
             public static Act Current { get; private set; }
+            
+            /// <summary>
+            /// Default location of the <see cref="Act"/> instances.
+            /// </summary>
+            public const string DEFAULT_PATH = "Serialized/Acts";
             
         // -- Private Attributes --
             /// <summary>List of all the <see cref="Scene"/>'s <see cref="GameObject"/> instances.</summary>

@@ -7,9 +7,13 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Henshin.Core.App;
-
+using Henshin.Core.Scene.Directions;
+using Henshin.Editor.Misc;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.UI;
+using static Henshin.Core.Scene.Directions.Act;
 using Object = UnityEngine.Object;
 
 
@@ -23,59 +27,53 @@ namespace Henshin.Editor.App {
 public class ManagerEditorWindow: EditorWindow {
     // ---  Attributes ---
         // -- Public Attributes --
-        // -- Protected Attributes --
-        // -- Private Attributes --
-            // - State Attributes -
-            /// <summary>
-            /// List of all the <see cref="State"/> objects found in the project.
-            /// </summary>
-            private State[] _mStates;
-            
-            /// <summary>
-            /// Index of the <see cref="State"/> object currently edited.
-            /// </summary>
-            private int _mCurrentStateIndex;
-            
             /// <summary>
             /// Helper property.
             /// Facilitates access to the current <see cref="State"/> instance.
             /// </summary>
-            private State CurrentState => this._mStates[this._mCurrentStateIndex];
+            public static State CurrentState => ManagerEditorState.CurrentState;
+
+        // -- Private Attributes --
+            // - State Attributes -
+            /// <summary>Flag set if the act foldout is opened.</summary>
+            private bool _mActFoldout;
+            
+            // - Reusable Assets -
+            /// <summary><see cref="GUIContent"/> used for the header's refresh button.</summary>
+            private static GUIContent _msRefreshContent;
+             
+            /// <summary><see cref="GUIContent"/> used for the state's locate button.</summary>
+            private static GUIContent _msLocateState;
+             
+            /// <summary><see cref="GUIContent"/> used for the remove act button.</summary>
+            private static GUIContent _msDeleteAct; 
     // --- /Attributes ---
     
     // ---  Methods ---
         // -- Unity Events --
-            /// <summary>
-            /// Unity event triggered when the window gets opened.
-            /// </summary>
-            private void Awake() {
-                // Reload the states of the window.
-                this._ReloadStates();
+            /// <summary>Unity event fired the first time that the window is created.</summary>
+            private void OnEnable() {
+                // Generate the gui content objects.
+                ManagerEditorWindow._msRefreshContent  = new GUIContent { tooltip = "Refresh the available state list.", image = TextureStore.Refresh };
+                ManagerEditorWindow._msLocateState = new GUIContent { tooltip = "Find the State in the project view.", image = TextureStore.Pointer };
+                ManagerEditorWindow._msDeleteAct = new GUIContent { tooltip = "Remove this act from the list.", image = TextureStore.Delete };
             }
             
-            /// <summary>
-            /// Unity event fired when the GUI should be redrawn.
-            /// </summary>
+            /// <summary>Unity event fired when the GUI should be redrawn.</summary>
             private void OnGUI() {
                 // Draw the header.
                 this._DrawHeader();
                 
                 // Check if the indexed object is still valid.
-                if (this.CurrentState != null) {
-                    // Check if there are some states found.
-                    if (this._mStates.Length > 0) {
-                        // Draw the state selector.
-                        this._DrawStateSelector();
-                        
-                        // Draw the contents of the state.
-                        this._DrawStateContents();
-                    } else {
-                        // Draw the warning message.
-                        this._DrawNoStateWarning();
-                    }
+                if (ManagerEditorWindow.CurrentState != null) {
+                    // Draw the state selector.
+                    this._DrawStateSelector();
+                    
+                    // Draw the contents of the state.
+                    this._DrawStateContents();
                 } else {
-                    // Reload the assets.
-                    this._ReloadStates();
+                    // Draw the warning message.
+                    this._DrawNoStateWarning();
                 }
                 
                 // Add the create state button.
@@ -84,82 +82,31 @@ public class ManagerEditorWindow: EditorWindow {
             }
             
         // -- Public Methods --
-        // -- Protected Methods --
         // -- Private Methods --
-            // - State Management -
-            /// <summary>
-            /// Reloads all the <see cref="State"/> instances from their default folder.
-            /// </summary>
-            private void _ReloadStates() {
-                // Load all the State instances in the AssetDatabase.
-                string[] stateGuids = AssetDatabase.FindAssets(filter: $"t:{nameof(State)}");
-                
-                // If the array is empty.
-                if (stateGuids.Length == 0) {
-                    // Reset the array.
-                    this._mStates = new State[] { };
-                    
-                    // Log a warning.
-                    Debug.LogWarning(message: $"There is no State object in the Resources/{State.DEFAULT_PATH} folder");
-                    
-                    // Stop the method.
-                    return;
-                }
-                
-                // Load all the found assets.
-                this._mStates = stateGuids
-                    .Select(selector: stateGuid => 
-                        AssetDatabase.LoadAssetAtPath<State>(assetPath: AssetDatabase.GUIDToAssetPath(guid: stateGuid)))
-                    .ToArray();
-                
-                // Get the currently active state.
-                for (int i = 0; i < this._mStates.Length; i++) {
-                    State state = this._mStates[i];
-                    
-                    // If the state is active.
-                    if (state.isAppState) {
-                        // Store the index of the state.
-                        this._mCurrentStateIndex = i;
-                        
-                        // Stop the loop.
-                        break;
-                    }
-                }
-                
-                // Ensure that the index is still in the bounds of the array.
-                if (this._mCurrentStateIndex >= this._mStates.Length) {
-                    this._mCurrentStateIndex = this._mStates.Length - 1;
-                }
-            }
-            
             // - Window Management -
             /// <summary>
             /// Method used to open the editor window.
             /// </summary>
-            [MenuItem(itemName: "Henshin/App/Manager Editor")]
+            [MenuItem(itemName: "Henshin/Manager Editor")]
             private static void _OpenEditor() {
-                ManagerEditorWindow window;
                 // Check if the window already exists.
                 if (EditorWindow.HasOpenInstances<ManagerEditorWindow>()) {
                     // Get the editor window.
-                    window = EditorWindow.GetWindow<ManagerEditorWindow>();
-                    
-                    // Take the focus.
-                    window.Focus();
+                    EditorWindow.GetWindow<ManagerEditorWindow>(title: nameof(ManagerEditorWindow), focus: true);
                 } else {
                     // Create a new window.
-                    window = EditorWindow.CreateWindow<ManagerEditorWindow>();
+                    ManagerEditorWindow window = EditorWindow.CreateWindow<ManagerEditorWindow>();
 
                     // Update the window's title and icon.
                     window.titleContent = new GUIContent {
                         text = nameof(ManagerEditorWindow),
                         tooltip = "Window used to edit the application's State instances.",
-                        image = Resources.Load<Texture>(path: "Editor/Icons/ManagerEditor")
+                        image = TextureStore.ManagerEditor
                     };
                 }
                 
-                // Reload the window's states.
-                window._ReloadStates();
+                // Reload the states.
+                ManagerEditorState.ForceReloadStates();
             }
             
             // - Window Content -
@@ -174,32 +121,12 @@ public class ManagerEditorWindow: EditorWindow {
                 EditorGUILayout.LabelField(label: "Manager Editor", style: EditorStyles.boldLabel);
                 
                 // Draw the refresh button.
-                GUIStyle refreshStyle = EditorStyles.miniButton;
-                refreshStyle.fixedWidth = refreshStyle.fixedHeight;
-                refreshStyle.stretchHeight = false;
-                refreshStyle.stretchWidth = false;
-                refreshStyle.padding = new RectOffset { left = 2, top = 2, right = 2, bottom = 2 };
-                
-                if (GUILayout.Button(image: Resources.Load<Texture>(path: "Editor/Icons/Refresh"), style: refreshStyle)) {
+                if (GUILayout.Button(content: ManagerEditorWindow._msRefreshContent, style: StyleStore.IconButton)) {
                     // Reload the states.
-                    this._ReloadStates();
+                    ManagerEditorState.ForceReloadStates();
                 }
                 
                 EditorGUILayout.EndHorizontal();
-                
-                // Create the style for the line.
-                GUIStyle lineStyle = new GUIStyle {
-                    normal = {
-                        background = EditorGUIUtility.whiteTexture
-                    },
-                    stretchWidth = true,
-                    fixedHeight = 2,
-                    margin = new RectOffset { top = 1, bottom = 8, left = 4, right = 4}
-                };
-                
-                GUI.color = Color.grey;
-                GUILayout.Box(text: "", style: lineStyle);
-                GUI.color = Color.white;
             }
             
             /// <summary>
@@ -210,20 +137,15 @@ public class ManagerEditorWindow: EditorWindow {
                 EditorGUILayout.BeginHorizontal();
                 
                 // Draw the dropdown.
-                int newState = EditorGUILayout.Popup(
-                    selectedIndex: this._mCurrentStateIndex,
-                    displayedOptions: this._mStates.Select(selector: state => state.identifier).ToArray()
+                ManagerEditorState.CurrentStateIndex = EditorGUILayout.Popup(
+                    selectedIndex: ManagerEditorState.CurrentStateIndex,
+                    displayedOptions: ManagerEditorState.States.Select(selector: state => state.identifier).ToArray()
                 );
                 
-                // Update the state flag.
-                this.CurrentState.isAppState = false;
-                this._mCurrentStateIndex = newState;
-                this.CurrentState.isAppState = true;
-                
                 // Draw the locate button.
-                if (GUILayout.Button(image: Resources.Load<Texture2D>(path: "Editor/Icons/Pointer"), style: EditorStyles.miniButton)) {
+                if (GUILayout.Button(content: ManagerEditorWindow._msLocateState, style: StyleStore.IconButton)) {
                     // Select the asset.
-                    EditorGUIUtility.PingObject(obj: this.CurrentState);
+                    EditorGUIUtility.PingObject(obj: ManagerEditorWindow.CurrentState);
                 }
                 
                 EditorGUILayout.EndHorizontal();
@@ -246,32 +168,76 @@ public class ManagerEditorWindow: EditorWindow {
             /// </summary>
             private void _DrawStateContents() {
                 // Get the serialized representation of the state.
-                SerializedObject state = new SerializedObject(obj: this.CurrentState);
+                SerializedObject state = new SerializedObject(obj: ManagerEditorWindow.CurrentState);
                 
                 // Draw the identifier of the state.
                 EditorGUILayout.PropertyField(property: state.FindProperty(propertyPath: nameof(State.identifier)));
                 
                 // Draw the scene field asset.
-                try {
-                    this._AssetField(
-                        property: state.FindProperty(propertyPath: nameof(State.theatreScene)),
-                        assetName: this.CurrentState.theatreScene,
-                        assetType: typeof(SceneAsset),
-                        baseFolder: "Scenes"
-                    );
-                } catch (AssetNotFoundException) {
-                    Debug.LogWarning(message: $"Could not find a Theatre Scene named {this.CurrentState.theatreScene}.");
-                } catch (MultipleAssetException) {
-                    Debug.LogWarning(message: $"There are multiple Theatre Scenes named {this.CurrentState.theatreScene}.");
-                }
+                EditorGUIHelper.AssetField<SceneAsset>(property: state.FindProperty(propertyPath: nameof(State.theatreScene)), "Scenes");
                 
                 // Draw the prefab asset used by the state.
                 EditorGUILayout.PropertyField(property: state.FindProperty(propertyPath: nameof(State.spectator)));
                 
-                // DEBUG: Draw the act.
-                EditorGUILayout.PropertyField(property: state.FindProperty(propertyPath: nameof(State.debugAct)));
+                // Draw the act foldout.
+                this._mActFoldout = EditorGUILayout.Foldout(foldout: this._mActFoldout, content: "Acts");
                 
-                // Save the changes to the state object.
+                // If the foldout is opened.
+                if (this._mActFoldout) {
+                    // Loop through all the acts.
+                    for (int actIndex = 0; actIndex < ManagerEditorWindow.CurrentState.acts.Count; actIndex++) {
+                        EditorGUILayout.BeginHorizontal();
+                        
+                        // Get a reference to the act.
+                        Act current = ManagerEditorWindow.CurrentState.acts[index: actIndex];
+                        
+                        // If the current object is valid.
+                        if (current != null) {
+                            // Draw the act's index.
+                            int newIndex = EditorGUILayout.IntField(value: actIndex, style: StyleStore.SmallNumberField, GUILayout.Width(width: StyleStore.SmallNumberField.fixedWidth));
+                            
+                            // If the index was altered.
+                            if (newIndex != actIndex) {
+                                // Update the position of the act in the array.
+                                ManagerEditorWindow.CurrentState.acts.Remove(item: current);
+                                ManagerEditorWindow.CurrentState.acts.Insert(index: newIndex, item: current);
+                            }
+                            
+                            // Add a small space in front of the label.
+                            GUILayout.Space(pixels: 8);
+                            // Draw the act name.
+                            GUILayout.Label(text: current.identifier);
+                            
+                            // Draw the delete button.
+                            if (GUILayout.Button(content: ManagerEditorWindow._msDeleteAct, style: StyleStore.IconButton)) {
+                                ManagerEditorWindow.CurrentState.acts.RemoveAt(index: actIndex);
+                            }
+                        } else {
+                            // Remove the act from the list.
+                            ManagerEditorWindow.CurrentState.acts.RemoveAt(index: actIndex);
+                            
+                            // Redraw the current item.
+                            actIndex--;
+                        }
+                        
+                        EditorGUILayout.EndHorizontal();
+                    }
+                    
+                    // Add a drop area for a new act.
+                    Act newAct = EditorGUIHelper.AssetDropArea<Act>(fieldName: "Add act");
+                    if (newAct != null) {
+                        // Add the act to the list.
+                        ManagerEditorWindow.CurrentState.acts.Add(item: newAct);
+                    }
+                    
+                    // Add the create act button.
+                    if (GUILayout.Button(text: "Create act")) {
+                        // Create a new act.
+                        ManagerEditorState.CreateAct();
+                    }
+                }
+                
+                // Apply the property edition.
                 state.ApplyModifiedProperties();
             }
             
@@ -281,126 +247,7 @@ public class ManagerEditorWindow: EditorWindow {
             private void _DrawCreateStateButton() {
                 // Add the option to create a new state object.
                 if (GUILayout.Button(text: "Create new State")) {
-                    // Create a new State object.
-                    State newState = ScriptableObject.CreateInstance<State>();
-                    newState.identifier = $"State#{this._mStates.Length + 1}";
-                    
-                    // Ensure that the folder exists.
-                    if (!AssetDatabase.IsValidFolder(path: $"Assets/Resources/{State.DEFAULT_PATH}")) {
-                        // Create the Resources folder.
-                        AssetDatabase.CreateFolder(parentFolder: "Assets", newFolderName: "Resources");
-                        
-                        // Create the default path for the state.
-                        string currentParent = "Assets/Resources";
-                        foreach (string folder in State.DEFAULT_PATH.Split('/')) {
-                            // Create the folder.
-                            AssetDatabase.CreateFolder(parentFolder: currentParent, newFolderName: folder);
-                            
-                            // Add the folder to the current parent path.
-                            currentParent += $"/{folder}";
-                        }
-                    }
-                    
-                    // Serialize the state.
-                    AssetDatabase.CreateAsset(asset: newState, path: $"Assets/Resources/{State.DEFAULT_PATH}/APP_STATE_{newState.identifier}.asset");
-                    
-                    // Reload the assets.
-                    this._ReloadStates();
-                }
-            }
-            
-            // - Helper Methods -
-            private IEnumerable<Object> LoadAssetsWithFilter(string filter, string baseFolder = null) {
-                // Prepend the "Assets" folder to the base folder.
-                baseFolder = "Assets" + (string.IsNullOrEmpty(value: baseFolder) ? null : $"/{baseFolder}");
-                
-                // Load the asset's GUIDs from the database.
-                string[] assetGuid = AssetDatabase.FindAssets(
-                    filter: filter, 
-                    searchInFolders: new [] { 
-                        baseFolder
-                    }
-                );
-                
-                // Check if a resource was found.
-                if (assetGuid.Length > 0) {
-                    // Load the assets.
-                    return assetGuid.Select(selector: guid => AssetDatabase.LoadAssetAtPath<Object>(assetPath: AssetDatabase.GUIDToAssetPath(guid: guid)));
-                } else {
-                    // Throw an exception.
-                    throw new AssetNotFoundException(message: $"Filter {filter} returned no assets within the {baseFolder} folder.");
-                }
-            }
-            
-            private string _CamelToPretty(string camel) {
-                // If the string is null or less than 1 letter, just return it.
-                if (camel == null) { return null; }
-                if (camel.Length < 2) { return camel; }
-                
-                // Capitalize the first character.
-                string result = camel.Substring(startIndex: 0, length: 1).ToUpper();
-                
-                // Loop through the string.
-                for (int i = 1; i < camel.Length; i++) {
-                    // If the character is an uppercase character.
-                    if (char.IsUpper(c: camel[index: i])) {
-                        // Add a white space.
-                        result += ' ';
-                    }
-                    
-                    // Add the char to the result.
-                    result += camel[index: i];
-                }
-                
-                // Return the result.
-                return result;
-            }
-            
-            private void _AssetField(SerializedProperty property, string assetName, Type assetType, string baseFolder = null) {
-                // Reference used for the property rendering.
-                Object asset = null;
-                Exception error = null;
-                
-                // Check if the asset name is set.
-                if (!string.IsNullOrEmpty(value: assetName)) {
-                    try {
-                        // Load the assets.
-                        Object[] assets = this.LoadAssetsWithFilter(filter: $"{assetName} t:{assetType.Name}", baseFolder: baseFolder).ToArray();
-                        
-                        // Check if there is only one asset.
-                        if (assets.Length == 1) {
-                            // Load the asset.
-                            asset = assets[0];
-                        } else {
-                            // Throw an exception.
-                            error = new MultipleAssetException(message:  "Tried to render an asset field with multiple corresponding assets.\n" +
-                                                                        $"(Name:{assetName}, Type:{assetType.FullName})");
-                        }
-                    } catch (AssetNotFoundException) {
-                        // Throw an exception.
-                        error = new AssetNotFoundException(message:  "Failed to find an asset when rendering an asset field.\n" +
-                                                                    $"(Name:{assetName}, Type:{assetType.FullName})");
-                    }
-                }
-                
-                // Render the field.
-                asset = EditorGUILayout.ObjectField(label: this._CamelToPretty(camel: property.name), obj: asset, objType: assetType, allowSceneObjects: false);
-                
-                // Update the property.
-                switch (property.propertyType) {
-                    case SerializedPropertyType.String:
-                        property.stringValue = asset ? asset.name : null;
-                        break; 
-                    case SerializedPropertyType.ObjectReference:
-                        property.objectReferenceValue = asset;
-                        break;
-                default:
-                    throw new ArgumentOutOfRangeException(paramName: nameof(property), message: $"Tried to draw an asset field with incompatible type: {property.propertyType}");
-                }
-                
-                // Throw the error, if needed.
-                if (error != null) {
-                    throw error;
+                    ManagerEditorState.CreateState();
                 }
             }
     // --- /Methods ---

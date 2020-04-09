@@ -3,6 +3,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using Henshin.Core.Scene.Directions;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -48,6 +49,10 @@ public class State: ScriptableObject {
             public GameObject spectator;
             
             // - Play Info -
+            /// <summary>
+            /// List of all the acts of this state, in order.
+            /// </summary>
+            public List<Act> acts;
         
         // -- Public Attributes --
             // - Utility Attributes -
@@ -74,10 +79,6 @@ public class State: ScriptableObject {
             /// </summary>
             public static Transform Root;
             
-            // - Play Info -
-            // DEBUG
-            public Act debugAct;
-        
         // -- Protected Attributes --
         // -- Private Attributes --
     // --- /Attributes ---

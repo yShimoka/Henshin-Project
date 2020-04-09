@@ -2,6 +2,7 @@
  * Copyright © 2020 - Zimproov.
  */
 
+using Henshin.Core.Scene.Directions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -78,11 +79,18 @@ public static class Manager {
                 GameObject stage = new GameObject { name = "Stage" };
                 stage.transform.SetParent(parent: State.Root, worldPositionStays: false);
                 
-                // DEBUG: Prepare the test act.
-                State.Current.debugAct.Prepare(theatreRoot: stage.transform);
-                
-                // DEUBG: Play the test act.
-                State.Current.debugAct.Play();
+                // Check if the state has an act.
+                if (State.Current.acts.Count > 0) {
+                    Act current = State.Current.acts[index: 0];
+                    
+                    // Prepare that first act.
+                    current.Prepare(theatreRoot: stage.transform);
+                    
+                    // Play that act.
+                    current.Play();
+                } else {
+                    Debug.LogError(message: "There are no acts to play !");
+                }
             }
     // --- /Methods ---
 }
