@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8432b38e430574d038c8fe105a3bc20c, type: 3}
+  m_Name: DATA_APP_Debug
+  m_EditorClassIdentifier: 
+  isAppState: 1
+  spectatorPrefab: {fileID: 9158576721105715496, guid: eb9f5a237a9cb4db09b88c01ccfe6946,
+    type: 3}
+  acts:
+  - scenes:
+    - lines:
+      - stateList: []
+      actors:
+      - {fileID: 11400000, guid: f58f2cf2798494b329ce2c50e1d7aba0, type: 2}
+      background: {fileID: 21300000, guid: 5a9773214595d47a7858a9e37f1033e6, type: 3}
+  identifier: Debug
