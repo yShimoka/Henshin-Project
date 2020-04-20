@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Henshin.Controller.Directions.Transformations;
 using UnityEngine;
 
 /* Wrap the class within the local namespace. */
@@ -52,7 +53,7 @@ public abstract class Transformation {
             
             // - Tree Behaviour -
             /// <summary>Reference to all the children node for this <see cref="Transformation"/>.</summary>
-            public List<Transformation> Nodes;
+            public readonly List<Transformation> Nodes = new List<Transformation>();
             
             /// <summary>Stores the number of <see cref="Transformation"/> parents.</summary>
             [NonSerialized]
@@ -92,7 +93,7 @@ public abstract class Transformation {
                 // If all parents have finished.
                 if (this._mParentFinished > this.ParentCount) {
                     // Wait for a fixed update.
-                    this.State.actor.ActorComponent.ExecuteOnNextUpdate(method: this._Apply);
+                    Henshin.View.Application.ExecuteOnNextUpdate(method: this._Apply);
                 }
             }
             
@@ -104,12 +105,11 @@ public abstract class Transformation {
             /// <returns>The de-serialized controller.</returns>
             public static Transformation Deserialize(State.Directions.Transformation serialized) {
                 // Find the constructor of the controller.
-                Transformation controller = serialized.controller
-                    .GetConstructor(types: new [] { typeof(State.Directions.Transformation) })?
-                    .Invoke(parameters: new object[] { serialized }) as Transformation;
-                    
-                // Ensure that the constructor was called.
-                if (controller != null) {
+                if (serialized.controller
+                    ?.GetConstructor(types: new [] { typeof(State.Directions.Transformation) })
+                    ?.Invoke(parameters: new object[] { serialized }) 
+                    is Transformation controller
+                ) {
                     // Return the instance.
                     return controller;
                 } else {
@@ -131,10 +131,7 @@ public abstract class Transformation {
             /// <returns>The root node of the tree.</returns>
             public static Transformation RebuildTree(List<Transformation> from) {
                 // Seek the Start transformation in the tree.
-                Transformations.Start start = from.FirstOrDefault(predicate: transformation => transformation.State.controller == typeof(Transformations.Start)) as Transformations.Start;
-                
-                // Check if the start transformation was found.
-                if (start == null) {
+                if (!(from.FirstOrDefault(predicate: transformation => transformation.State.controller == typeof(Transformations.Start)) is Start start)) {
                     Debug.LogWarning(message: "Could not find a Start transformation when rebuilding a transformation tree.");
                     return null;
                 }
@@ -205,7 +202,11 @@ public abstract class Transformation {
             /// Marks the current transformation as finished.
             /// </summary>
             protected void _Finish() {
-                
+                // Go through all the children transformations.
+                foreach (Transformation transformation in this.Nodes) {
+                    // Apply the child.
+                    transformation.Apply();
+                }
             }
         // -- Private Methods --
     // --- /Methods ---

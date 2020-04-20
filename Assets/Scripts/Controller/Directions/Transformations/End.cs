@@ -35,11 +35,22 @@ public class End: Transformation {
         // -- Protected Methods --
             /// <inheritdoc cref="Transformation._Apply"/>
             protected override void _Apply() {
-                // Clear the current line.
-                Line.Current = null;
-                
-                // Call the scene's NextLine method.
-                Scene.NextLine();
+#if UNITY_EDITOR
+                // Check if the scene is the test scene.
+                if (Scene.Current.testScene) {
+                    // Stop the application.
+                    UnityEditor.EditorApplication.ExitPlaymode();
+                } else {
+#endif
+                    // Clear the current scene.
+                    Scene.Current = null;
+                    
+                    
+                    // Call the act's NextScene method.
+                    Act.NextScene();
+#if UNITY_EDITOR
+                }
+#endif
             }
     // --- /Methods ---
 }

@@ -33,7 +33,7 @@ public static class Application {
             /// <returns>The instance of the </returns>
             public static State.Application GetCurrent() {
                 try {
-                    // Seek the first state with the isAppState flag set.
+                    // Seek the first state with the isAppState flag set.  
                     return State.Application.Assets.First(predicate: state => state.isAppState);
                 } catch (InvalidOperationException) {
                     // Route to the error scene.
@@ -61,7 +61,9 @@ public static class Application {
             /// <param name="message">The error message to pass to the user.</param>
             public static InvalidOperationException Error(string message) {
                 // Try to load the error scene object.
+#if !UNITY_EDITOR
                 SceneManager.LoadSceneAsync(sceneName: "Error", mode: LoadSceneMode.Single).completed += operation => Application._OnErrorSceneLoaded(errorMessage: message);
+#endif
                 
                 // Return the error to thrown.
                 return new InvalidOperationException(message: message);
@@ -80,6 +82,18 @@ public static class Application {
                 
                 // Load the theatre.
                 View.Application.CreateTheatreScene();
+
+#if UNITY_EDITOR                
+                // Check if there is a scene that is marked as testing.
+                Henshin.State.Directions.Scene debugged = State.Application.Current.acts.SelectMany(selector: act => act.scenes).FirstOrDefault(predicate: scene => scene.testScene);
+                if (debugged) {
+                    // Play the debugged scene.
+                    Directions.Scene.Play(scene: debugged);
+                    
+                    // Stop the method.
+                    return;
+                }
+#endif                
                 
                 // Play the current act.
                 Directions.Act.Play(act: State.Application.Current.CurrentAct);

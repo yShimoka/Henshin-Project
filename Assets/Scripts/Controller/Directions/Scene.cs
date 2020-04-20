@@ -17,8 +17,6 @@ public static class Scene {
         // -- Public Attributes --
             /// <summary>Reference to the <see cref="Henshin.State.Directions.Scene"/> that is currently playing.</summary>
             public static State.Directions.Scene Current;
-        // -- Protected Attributes --
-        // -- Private Attributes --
     // --- /Attributes ---
     
     // ---  Methods ---
@@ -28,43 +26,20 @@ public static class Scene {
             /// </summary>
             /// <param name="scene">The scene instance to play.</param>
             public static void Play(State.Directions.Scene scene) {
+                // Make sure that the scene is set.
+                if (scene == null) throw new System.ArgumentNullException(paramName: nameof(scene), message: "Tried to play a null Scene.");
+                
                 // Set the current scene reference.
                 Scene.Current = scene;
-                // Clear the scene's line index.
-                scene.ClearLineIndex();
                 
-                // Instantiate the scene's actors.
-                foreach (Actor actor in scene.actors) {
-                    Scenery.Actor.Instantiate(actor: actor, parent: View.Application.Stage.transform);
+                // If the root transformation is unset.
+                if (scene.RootTransformation == null) {
+                    throw Application.Error(message: "The line has no transformation assigned to it !");
                 }
                 
-                // Update the stage's background.
-                View.Application.Background = scene.background;
-                
-                // Starts the scene's first line.
-                Line.Play(line: scene.CurrentLine);
+                // Start the scene's transformation chain.
+                scene.RootTransformation.Apply();
             }
-            
-            /// <summary>
-            /// Starts playback of the next line in the scene.
-            /// </summary>
-            public static void NextLine() {
-                // Ensure that there is a scene playing.
-                if (Scene.Current == null) {
-                    throw Application.Error(message: "Tried to advance to the next line when there is no scene playing.");
-                }
-                
-                // Increment the current scene's index.
-                if (Scene.Current.IncrementLineIndex()) {
-                    // Advance to the next scene.
-                    Act.NextScene();
-                } else {
-                    // Play the next line.
-                    Line.Play(line: Scene.Current.CurrentLine);
-                }
-            }
-        // -- Protected Methods --
-        // -- Private Methods --
     // --- /Methods ---
 }
 }

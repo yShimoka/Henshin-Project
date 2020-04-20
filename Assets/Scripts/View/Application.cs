@@ -2,10 +2,7 @@
 
 
 using System;
-using Henshin.State;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
 /* Wrap the class within the local namespace. */
@@ -16,6 +13,14 @@ namespace Henshin.View {
 /// Sets up the theatre scene based on the current <see cref="State.Application"/>.
 /// </summary>
 public static class Application {
+    // ---  Types ---
+        // -- Private Class --
+            /// <summary>
+            /// MonoBehaviour attached to the root GameObject of the application. 
+            /// </summary>
+            private class ApplicationBehaviour: MonoBehaviour {};
+    // --- /Types ---
+    
     // ---  Attributes ---
         // -- Public Attributes --
             /// <summary>Root of the theatre scene.</summary>
@@ -31,7 +36,11 @@ public static class Application {
             public static Sprite Background { set => _SetStageBackground(value); }
             
         // -- Private Attributes --
+            /// <summary>Renderer of the background.</summary>
             private static SpriteRenderer _mBackgroundRenderer;
+            
+            /// <summary>Reference to the root object's <see cref="ApplicationBehaviour"/>.</summary>
+            private static ApplicationBehaviour _msRootApplicationBehaviour;
     // --- /Attributes ---
     
     // ---  Methods ---
@@ -41,25 +50,37 @@ public static class Application {
             /// </summary>
             public static void CreateTheatreScene() {
                 // Get the list of all the loaded scenes.
-                Scene[] loadedScenes = new Scene[SceneManager.sceneCount];
-                for (int sceneIndex = 0; sceneIndex < SceneManager.sceneCount; sceneIndex++) {
+                UnityEngine.SceneManagement.Scene[] loadedScenes = new UnityEngine.SceneManagement.Scene[UnityEngine.SceneManagement.SceneManager.sceneCount];
+                for (int sceneIndex = 0; sceneIndex < UnityEngine.SceneManagement.SceneManager.sceneCount; sceneIndex++) {
                     // Set the scene in the array.
-                    loadedScenes[sceneIndex] = SceneManager.GetSceneAt(index: sceneIndex);
+                    loadedScenes[sceneIndex] = UnityEngine.SceneManagement.SceneManager.GetSceneAt(index: sceneIndex);
                 }
             
                 // Create a new scene object.
-                Scene theatre = SceneManager.CreateScene(sceneName: "Theatre", parameters: new CreateSceneParameters{ localPhysicsMode = LocalPhysicsMode.Physics2D });
-                SceneManager.SetActiveScene(scene: theatre);
+                UnityEngine.SceneManagement.Scene theatre = UnityEngine.SceneManagement.SceneManager.CreateScene(sceneName: "Theatre", parameters: new UnityEngine.SceneManagement.CreateSceneParameters{ localPhysicsMode = UnityEngine.SceneManagement.LocalPhysicsMode.Physics2D });
+                UnityEngine.SceneManagement.SceneManager.SetActiveScene(scene: theatre);
                 
                 // Start unloading all the other scenes.
-                foreach (Scene scene in loadedScenes) { SceneManager.UnloadSceneAsync(scene: scene); }
+                foreach (UnityEngine.SceneManagement.Scene scene in loadedScenes) { UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(scene: scene); }
                 
                 // Create the theatre root.
-                Application.Root = new GameObject(name: "Root");
+                Application.Root = new GameObject(name: "Root", typeof(ApplicationBehaviour));
+                Application._msRootApplicationBehaviour = Application.Root.GetComponent<ApplicationBehaviour>();
                 
                 // Create the spectator and stage.
                 Application._LoadSpectator();
                 Application._PrepareStage();
+            }
+            
+            // - Coroutine Manipulator -
+            /// <summary>
+            /// Executes the specified method on the next <see cref="UnityEngine.PlayerLoop.Update"/> call.
+            /// Uses <see cref="_msRootApplicationBehaviour.StartCoroutine(IEnumerator)"/> internally.
+            /// </summary>
+            /// <param name="method">The method to execute after a fixed update.</param>
+            public static void ExecuteOnNextUpdate(UnityEngine.Events.UnityAction method) {
+                // Start the co routine.
+                Application._msRootApplicationBehaviour.StartCoroutine(routine: Application._ExecuteOnNextUpdate(method: method));
             }
             
         // -- Private Methods --
@@ -88,7 +109,7 @@ public static class Application {
             /// </summary>            
             private static void _PrepareStage() {
                 // Create the stage gameobject.
-                Application.Stage = new GameObject(name: "Stage", components: new [] { typeof(Canvas), typeof(CanvasScaler) });
+                Application.Stage = new GameObject(name: "Stage", components: new [] { typeof(Canvas), typeof(UnityEngine.UI.CanvasScaler) });
                 
                 // Setup the canvas object.
                 Canvas canvas = Application.Stage.GetComponent<Canvas>();
@@ -98,10 +119,10 @@ public static class Application {
                 canvas.sortingLayerID = SortingLayer.NameToID(name: "Middleground"); 
                 
                 // Setup the canvas scaler object.
-                CanvasScaler scaler = Application.Stage.GetComponent<CanvasScaler>();
-                scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+                UnityEngine.UI.CanvasScaler scaler = Application.Stage.GetComponent<UnityEngine.UI.CanvasScaler>();
+                scaler.uiScaleMode = UnityEngine.UI.CanvasScaler.ScaleMode.ScaleWithScreenSize;
                 scaler.referenceResolution = new Vector2(x: 1920, y: 1080);
-                scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Shrink;
+                scaler.screenMatchMode = UnityEngine.UI.CanvasScaler.ScreenMatchMode.Shrink;
                 scaler.referencePixelsPerUnit = 1080;
                 
                 // Attach it to the root.
@@ -127,6 +148,18 @@ public static class Application {
             private static void _SetStageBackground(Sprite bg) {
                 // Update the background's sprite.
                 Application._mBackgroundRenderer.sprite = bg;
+            }
+            
+            /// <summary>
+            /// Executes the specified method on the next Update call.
+            /// </summary>
+            /// <param name="method">The method to execute after a fixed update.</param>
+            private static System.Collections.IEnumerator _ExecuteOnNextUpdate(UnityEngine.Events.UnityAction method) {
+                // Wait for the next fixed update.
+                yield return new WaitForFixedUpdate();
+                
+                // Invoke the method.
+                method.Invoke();
             }
     // --- /Methods ---
 }

@@ -16,6 +16,9 @@ namespace Henshin.State.Directions {
 public class Act {
     // ---  Attributes ---
         // -- Serialized Attributes --
+            /// <summary>Unique identifier of this act.</summary>
+            public string identifier;
+            
             /// <summary>List of all the scenes played in this act.</summary>
             public List<Scene> scenes;
             

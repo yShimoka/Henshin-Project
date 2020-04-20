@@ -106,29 +106,7 @@ public class Actor: MonoBehaviour {
             /// <param name="scale">The new scale of the actor.</param>
             public void SetScale(Vector3 scale) { this.transform.localScale = scale; }
             
-            // - Coroutine Manipulator -
-            /// <summary>
-            /// Executes the specified method on the next <see cref="Update"/> call.
-            /// Uses <see cref="MonoBehaviour.StartCoroutine(IEnumerator)"/> internally.
-            /// </summary>
-            /// <param name="method">The method to execute after a fixed update.</param>
-            public void ExecuteOnNextUpdate(UnityAction method) {
-                // Start the co routine.
-                this.StartCoroutine(routine: this._ExecuteOnNextUpdate(method: method));
-            }
-            
         // -- Private Methods --
-            /// <summary>
-            /// Executes the specified method on the next <see cref="Update"/> call.
-            /// </summary>
-            /// <param name="method">The method to execute after a fixed update.</param>
-            private IEnumerator _ExecuteOnNextUpdate(UnityAction method) {
-                // Wait for the next fixed update.
-                yield return new WaitForFixedUpdate();
-                
-                // Invoke the method.
-                method.Invoke();
-            }
     // --- /Methods ---
 }
 }

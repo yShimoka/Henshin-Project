@@ -28,6 +28,9 @@ public class Act {
             /// </summary>
             /// <param name="act"></param>
             public static void Play(State.Directions.Act act) {
+                // Make sure that the act is set.
+                if (act == null) throw new System.ArgumentNullException(paramName: nameof(act), message: "Tried to play a null Act.");
+                
                 // Store the act's reference.
                 Act.Current = act;
                 // Return to the first scene of the act.

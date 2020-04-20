@@ -1,5 +1,6 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,7 +29,8 @@ public class Application: ScriptableObject {
             /// <summary>
             /// List of all the acts found in the application.
             /// </summary>
-            public List<Directions.Act> acts; 
+            [SerializeField]
+            public List<Directions.Act> acts = new List<Directions.Act>(); 
             
             // - Debugging Attributes -
             /// <summary>Identifier of this act. Used solely for debugging purposes.</summary>
@@ -46,7 +48,7 @@ public class Application: ScriptableObject {
             
             /// <summary>Stores a list of all the <see cref="Application"/> assets found in the project.</summary>
             /// <seealso cref="Controller.Application.LoadAssets"/>
-            public static Application[] Assets;
+            public static Application[] Assets = new Application[0];
             
             /// <summary>Returns a reference to the act currently playing.</summary>
             public Directions.Act CurrentAct => this.acts[index: this._mCurrentActIndex];
