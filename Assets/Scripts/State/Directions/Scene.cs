@@ -14,18 +14,18 @@ namespace Henshin.State.Directions {
 /// <see cref="Scene"/>s are filled with <see cref="Line"/>s that are played in sequence.
 /// </summary>
 [CreateAssetMenu(menuName = "Henshin/Scene", fileName = "DATA_SCENE_Scene")]
-public class Scene: ScriptableObject {
+public class Scene: ScriptableObject, ISerializationCallbackReceiver {
     // ---  Attributes ---
         // -- Serialized Attributes --
             /// <summary>Identifier of the current scene.</summary>
             public string identifier;
             
             /// <summary>List of all the transformation states.</summary>
-            [HideInInspector]
+            //[HideInInspector]
             public List<Transformation> stateList;
             
             /// <summary>List of all the actors that take part in the scene.</summary>
-            [HideInInspector]
+            //[HideInInspector]
             public List<Scenery.Actor> actors;
             
             /// <summary>Reference to the sprite used as this scene's background.</summary>
@@ -51,27 +51,6 @@ public class Scene: ScriptableObject {
     // --- /Attributes ---
     
     // ---  Methods ---
-        // -- Class Constructor --
-            /// <summary>
-            /// Class constructor.
-            /// Creates a new <see cref="Scene"/> instance.
-            /// Loads the start and end transformations of the scene.
-            /// </summary>
-            public Scene(): base() {
-                // Create the start and end transformations.
-                Controller.Directions.Transformation start = new Controller.Directions.Transformations.Start(state: new Transformations.Start());
-                Controller.Directions.Transformation end   = new Controller.Directions.Transformations.End(state: new Transformations.End());
-                
-                // Add the end to the start.
-                start.Nodes.Add(item: end);
-                
-                // Add the transformations to the list.
-                this.Transformations.Add(item: start);
-                this.Transformations.Add(item: end);
-                
-                // Set the start as the root transformation.
-                this.RootTransformation = start;
-            }
         // -- Unity Events --
             // - Serialization Events -
             /// <summary>
@@ -80,7 +59,8 @@ public class Scene: ScriptableObject {
             /// </summary>
             public void OnBeforeSerialize() {
                 // Serialize the entire transformation list.
-                this.stateList = this.Transformations.Select(selector: transformation => transformation.Serialize()).ToList();
+                this.stateList = this.Transformations.Select(selector: transformation => transformation.Serialize()).Select(selector: serialized => serialized.State).ToList();
+                if (this.stateList.Count == 0) Debug.LogWarning(message: "The state list was empty !");
             }
 
             /// <summary>
@@ -92,7 +72,9 @@ public class Scene: ScriptableObject {
                 this.Transformations = this.stateList.Select(selector: Controller.Directions.Transformation.Deserialize).ToList();
                 
                 // Unfold the tree.
-                this.RootTransformation = Controller.Directions.Transformation.RebuildTree(from: this.Transformations);
+                if (this.Transformations != null) {
+                    this.RootTransformation = Controller.Directions.Transformation.RebuildTree(from: this.Transformations);
+                }
             }
             
     // --- /Methods ---

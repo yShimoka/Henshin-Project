@@ -25,7 +25,7 @@ public static class Header {
             
             // - Textures -
             /// <summary>Texture of the header's background.</summary>
-            private static Texture2D _msBackgroundTexture;
+            public static Texture2D _msBackgroundTexture;
             /// <summary>Texture of the header's button background.</summary>
             private static Texture2D _msContentBgTexture;
             /// <summary>Texture of the header's button separator.</summary>
@@ -87,7 +87,8 @@ public static class Header {
                 GUILayout.BeginVertical(style: Helper.NoWidthExpansion);
                 GUILayout.FlexibleSpace();
                 if (GUILayout.Button(content: Header._msSaveContent, style: Header._msSaveStyle)) {
-                    // TODO: Save the state of the scene.
+                    // Save the state of the scene.
+                    Controller.Graph.RenderArea.Save(area: State.SceneEditor.Canvas.CurrentRenderArea);
                 }
                 GUILayout.FlexibleSpace();
                 GUILayout.EndVertical();
@@ -96,7 +97,8 @@ public static class Header {
                 GUILayout.BeginVertical(style: Helper.NoWidthExpansion);
                 GUILayout.FlexibleSpace();
                 if (GUILayout.Button(content: Header._msPlayContent, style: Header._msPlayStyle)) {
-                    // TODO: Save the state of the scene.
+                    // Save the state of the scene.
+                    Controller.Graph.RenderArea.Save(area: State.SceneEditor.Canvas.CurrentRenderArea);
                     
                     // Unset the test scene on all the scenes.
                     foreach (Henshin.State.Directions.Scene scene in State.SceneEditor.Header.SceneList) {
@@ -104,6 +106,9 @@ public static class Header {
                     }
                     // Set the scene as the debug one.
                     State.SceneEditor.Header.CurrentScene.testScene = true;
+                    
+                    // Clear the render area.
+                    State.SceneEditor.Canvas.CurrentRenderArea = null;
                     
                     // Start the editor.
                     EditorApplication.EnterPlaymode();

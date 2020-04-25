@@ -2,6 +2,8 @@
 
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /* Wrap the class within the local namespace. */
@@ -27,11 +29,6 @@ public static class RenderArea {
             public const float TEXTURE_BACKGROUND_GRAY = 0.5f;
             
         // -- Private Attributes --
-            // - Flags -
-            /// <summary>Flag set if the class is initialized.</summary>
-            /// <seealso cref="Initialize"/>
-            private static bool _msIsInitialized;
-            
             // - Textures -
             /// <summary>Texture object used for the background of the render area.</summary>
             private static Texture2D _msBackgroundTexture;
@@ -55,12 +52,6 @@ public static class RenderArea {
             /// </summary>
             /// <exception cref="InvalidOperationException">Thrown if the view object is already initialized.</exception>
             public static void Initialize() {
-                // Check if the view is not already initialized.
-                if (RenderArea._msIsInitialized) {
-                    // Throw an error.
-                    throw new InvalidOperationException(message: "Tried to initialize the already initialized RenderArea view.");
-                }
-                
                 // Create the texture objects.
                 RenderArea._CreateTextures();
                 
@@ -70,8 +61,8 @@ public static class RenderArea {
                 // Create the styles.
                 RenderArea._CreateStyles();
                 
-                // Set the initialized flag.
-                RenderArea._msIsInitialized = true;
+                // Initialize the node view class.
+                Node.Initialize();
             }
             
             /// <summary>
@@ -86,6 +77,28 @@ public static class RenderArea {
                     image: RenderArea._msBackgroundTexture,
                     texCoords: RenderArea._msTextureUv
                 );
+                
+                // Render each of the nodes.
+                foreach (State.Graph.Node node in rendered.nodes) {
+                    View.Graph.Node.Render(node: node);
+                }
+                
+                // Get all of the node's sockets.
+                State.Graph.Socket[] sockets = rendered.nodes
+                    .SelectMany(selector: node => new[] { node.Input, node.Output })
+                    .Where(predicate: socket => socket != null)
+                    .ToArray();
+                // Get all the output sockets.
+                State.Graph.Socket[] outputs = sockets.Where(predicate: socket => !socket.IsInput).ToArray();
+                
+                // Render the node's edges.
+                foreach (State.Graph.Socket socket in outputs) {
+                    View.Graph.Socket.RenderEdges(socket: socket);
+                }
+                // Render the node's sockets.
+                foreach (State.Graph.Socket socket in sockets) {
+                    View.Graph.Socket.RenderSocket(socket: socket);
+                }
             }
             
         // -- Private Methods --

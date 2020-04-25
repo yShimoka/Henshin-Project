@@ -4,19 +4,19 @@
 
 
 /* Wrap the class within the local namespace. */
-namespace Henshin.Controller.Directions.Transformations {
+namespace Henshin.Controller.Directions.Transformations.Scene {
 
 /// <summary>
 /// Transformation controller used to mark the start of a line.
 /// Immediately starts its children nodes' application.
 /// </summary>
-[TransformationState(stateType: typeof(State.Directions.Transformations.Start))]
+[TransformationState(stateType: typeof(Henshin.State.Directions.Transformations.Scene.Start))]
 public class Start: Transformation {
     // ---  Attributes ---
         // -- Serialized Attributes --
         // -- Public Attributes --
             /// <summary>State accessor.</summary>
-            public new State.Directions.Transformations.Start State => base.State as State.Directions.Transformations.Start;
+            public new Henshin.State.Directions.Transformations.Scene.Start State => base.State as Henshin.State.Directions.Transformations.Scene.Start;
             
         // -- Protected Attributes --
         // -- Private Attributes --

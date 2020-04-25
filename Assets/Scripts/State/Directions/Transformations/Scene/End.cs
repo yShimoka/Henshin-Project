@@ -4,12 +4,16 @@
 using System;
 
 /* Wrap the class within the local namespace. */
-namespace Henshin.State.Directions.Transformations {
+namespace Henshin.State.Directions.Transformations.Scene {
 
 /// <summary>
 /// Simple serializable class for the End transformation controller.
 /// Does not hold any data by itself.
 /// </summary>
 [Serializable]
-public class End: Transformation {}
+public class End: Transformation {
+    
+        public End(Transformation from): base(@from: from) {}
+    public End() {}
+}
 }

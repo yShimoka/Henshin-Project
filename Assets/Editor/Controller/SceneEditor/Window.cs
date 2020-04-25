@@ -15,38 +15,27 @@ namespace Henshin.Editor.Controller.SceneEditor {
 public class Window: EditorWindow {
     // ---  Methods ---
         // -- Unity Events --
-            /// <summary>Unity event fired when the window gets enabled.</summary>
-            private void OnEnable() {
-                // Check if there is a selected scene.
-                if (Selection.activeObject is Henshin.State.Directions.Scene scene) {
-                    // Load the graph from the active scene.
-                    State.SceneEditor.Window.CurrentGraph = Graph.RenderArea.Load(scene: scene);
-                    
-                } else {
-                    // Set the current graph to null.
-                    State.SceneEditor.Window.CurrentGraph = null;
-                }
-                
-                // Initialize the repaint callback.
-                Graph.RenderArea.ON_SHOULD_REPAINT.AddListener(call: this.Repaint);
-                
-                // Initialize the header.
-                Header.Initialize();
-                // Initialize the inspector.
-                Inspector.Initialize();
-                // Initialize the canvas.
-                Canvas.Initialize();
-            }
-
             /// <summary>Unity event fired when the window should be rendered.</summary>
             private void OnGUI() {
                 // If this is the first call to OnGUI.
                 if (!State.SceneEditor.Window.WasRenderedOnce) {
+                    // Initialize the repaint callback.
+                    Graph.RenderArea.ON_SHOULD_REPAINT.AddListener(call: this.Repaint);
+                    
+                    // Initialize the header.
+                    Header.Initialize();
+                    // Initialize the inspector.
+                    Inspector.Initialize();
+                    // Initialize the canvas.
+                    Canvas.Initialize();
+                    
                     // Initialize the view.
                     View.SceneEditor.Window.Initialize();
-                    
-                    // Set the was rendered flag.
-                    State.SceneEditor.Window.WasRenderedOnce = true;
+                }
+                
+                // If the canvas is unset.
+                if (State.SceneEditor.Canvas.CurrentRenderArea == null) {
+                    Controller.SceneEditor.Canvas.ReloadRenderArea();
                 }
                 
                 // Update the state's rect.
@@ -63,7 +52,7 @@ public class Window: EditorWindow {
                 View.SceneEditor.Window.Render();
                 
                 // Handle the canvas events.
-                Canvas.AfterRender();
+                Canvas.AfterRender(ev: Event.current);
             }
             
             /// <summary>Opens the window, if it does not already exist.</summary>

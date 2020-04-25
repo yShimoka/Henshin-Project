@@ -4,19 +4,19 @@
 
 
 /* Wrap the class within the local namespace. */
-namespace Henshin.Controller.Directions.Transformations {
+namespace Henshin.Controller.Directions.Transformations.Scene {
 
 /// <summary>
 /// Transformation controller used to mark the end of a line.
 /// Calls the <see cref="Scene.NextLine"/> method.
 /// </summary>
-[TransformationState(stateType: typeof(State.Directions.Transformations.End))]
+[TransformationState(stateType: typeof(Henshin.State.Directions.Transformations.Scene.End))]
 public class End: Transformation {
     // ---  Attributes ---
         // -- Serialized Attributes --
         // -- Public Attributes --
             /// <summary>State accessor.</summary>
-            public new State.Directions.Transformations.Start State => base.State as State.Directions.Transformations.Start;
+            public new Henshin.State.Directions.Transformations.Scene.Start State => base.State as Henshin.State.Directions.Transformations.Scene.Start;
             
         // -- Protected Attributes --
         // -- Private Attributes --
@@ -37,13 +37,15 @@ public class End: Transformation {
             protected override void _Apply() {
 #if UNITY_EDITOR
                 // Check if the scene is the test scene.
-                if (Scene.Current.testScene) {
+                if (Henshin.Controller.Directions.Scene.Current.testScene) {
+                    // Unset the debug flag.
+                    Henshin.Controller.Directions.Scene.Current.testScene = false;
                     // Stop the application.
                     UnityEditor.EditorApplication.ExitPlaymode();
                 } else {
 #endif
                     // Clear the current scene.
-                    Scene.Current = null;
+                    Henshin.Controller.Directions.Scene.Current = null;
                     
                     
                     // Call the act's NextScene method.

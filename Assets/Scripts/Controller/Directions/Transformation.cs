@@ -62,6 +62,9 @@ public abstract class Transformation {
         // -- Private Attributes --
             /// <summary>Counter of all the parent that have declared the action as finished.</summary>
             private int _mParentFinished;
+            
+            /// <summary>Index of the current object in the state's encoded data.</summary>
+            private int _mCurrentSerializationIndex;
     // --- /Attributes ---
     
     // ---  Methods ---
@@ -91,7 +94,7 @@ public abstract class Transformation {
                 this._mParentFinished++;
                 
                 // If all parents have finished.
-                if (this._mParentFinished > this.ParentCount) {
+                if (this._mParentFinished >= this.ParentCount) {
                     // Wait for a fixed update.
                     Henshin.View.Application.ExecuteOnNextUpdate(method: this._Apply);
                 }
@@ -105,11 +108,10 @@ public abstract class Transformation {
             /// <returns>The de-serialized controller.</returns>
             public static Transformation Deserialize(State.Directions.Transformation serialized) {
                 // Find the constructor of the controller.
-                if (serialized.controller
-                    ?.GetConstructor(types: new [] { typeof(State.Directions.Transformation) })
-                    ?.Invoke(parameters: new object[] { serialized }) 
-                    is Transformation controller
-                ) {
+                if (Transformation.CreateTransformation(type: serialized.controller, source: serialized) is Transformation controller) {
+                    // Deserialize the controller.
+                    controller._mCurrentSerializationIndex = -1;
+                    controller._Deserialize();
                     // Return the instance.
                     return controller;
                 } else {
@@ -122,7 +124,7 @@ public abstract class Transformation {
             /// Serializes the object into a serializable <see cref="Henshin.State.Directions.Transformation"/> object.
             /// </summary>
             /// <returns>The state of the controller.</returns>
-            public State.Directions.Transformation Serialize() { return this.State; }
+            public Transformation Serialize() { this.State.encodedData.Clear(); this._Serialize(); return this; }
             
             /// <summary>
             /// Rebuilds the transformation tree from the specified transformation list.
@@ -131,7 +133,7 @@ public abstract class Transformation {
             /// <returns>The root node of the tree.</returns>
             public static Transformation RebuildTree(List<Transformation> from) {
                 // Seek the Start transformation in the tree.
-                if (!(from.FirstOrDefault(predicate: transformation => transformation.State.controller == typeof(Transformations.Start)) is Start start)) {
+                if (!(from.FirstOrDefault(predicate: transformation => transformation.State.controller == typeof(Henshin.Controller.Directions.Transformations.Scene.Start)) is Henshin.Controller.Directions.Transformations.Scene.Start start)) {
                     Debug.LogWarning(message: "Could not find a Start transformation when rebuilding a transformation tree.");
                     return null;
                 }
@@ -152,23 +154,25 @@ public abstract class Transformation {
             }
             
             // - Object Manipulation -
+            
             /// <summary>
-            /// Creates a new Transformation object.
+            /// Creates a new transformation from the specified instance.
             /// </summary>
-            /// <typeparam name="T"></typeparam>
-            /// <returns></returns>
-            public static T CreateTransformation<T>() where T : Transformation {
+            /// <param name="type">The type of the expected transformation object.</param>
+            /// <param name="source">The source data found in the base class.</param>
+            /// <returns>The generated transformation object.</returns>
+            public static Transformation CreateTransformation(Type type, State.Directions.Transformation source = null) {
                 // Get the TransformationStateAttribute from the type.
-                if (!(typeof(T).GetCustomAttributes(attributeType: typeof(TransformationStateAttribute), inherit: false) is TransformationStateAttribute[] attributes) || attributes.Length == 0) {
+                if (!(type.GetCustomAttributes(attributeType: typeof(TransformationStateAttribute), inherit: false) is TransformationStateAttribute[] attributes) || attributes.Length == 0) {
                     // Show an error.
-                    throw Application.Error(message: $"Type {typeof(T).Name} does not implement the TransformationStateAttribute.");
+                    throw Application.Error(message: $"Type {type.Name} does not implement the TransformationStateAttribute.");
                 }
                 
                 // Get the type of the state for the controller.
                 if (!(
                     attributes[0].StateType
-                    .GetConstructor(types: new Type[] { })?
-                    .Invoke(parameters: new object[] { }) 
+                    .GetConstructor(types: source == null ? new Type[] { } : new[] { typeof(State.Directions.Transformation) })?
+                    .Invoke(parameters: source == null ? new object[] { } : new object[] { source }) 
                     is State.Directions.Transformation state
                 )) {
                     // Show an error.
@@ -177,17 +181,27 @@ public abstract class Transformation {
                 
                 // Create a new transformation instance.
                 if (!(
-                    typeof(T)
+                    type
                     .GetConstructor(types: new[] { attributes[0].StateType })?
                     .Invoke(parameters: new object[] { state })
-                    is T controller
+                    is Transformation controller
                 )) {
                     // Show an error.
-                    throw Application.Error(message: $"Transformation Controller type {typeof(T).Name} could not be instantiated.");
+                    throw Application.Error(message: $"Transformation Controller type {type.Name} could not be instantiated.");
                 }
                 
                 // Return the controller.
                 return controller;
+            }
+            
+            /// <summary>
+            /// Creates a new Transformation object.
+            /// </summary>
+            /// <typeparam name="T"></typeparam>
+            /// <returns></returns>
+            public static T CreateTransformation<T>(State.Directions.Transformation source = null) where T : Transformation {
+                // Wrap the base method.
+                return (T) Transformation.CreateTransformation(type: typeof(T), source: source);
             }
             
         // -- Protected Methods --
@@ -208,7 +222,23 @@ public abstract class Transformation {
                     transformation.Apply();
                 }
             }
-        // -- Private Methods --
+            
+            /// <summary>Method called when the object is about to be serialized.</summary>
+            protected virtual void _Serialize() {}
+            
+            /// <summary>Method called when the object is about to be deserialized.</summary>
+            protected virtual void _Deserialize() {}
+            
+            /// <summary>Returns the next serialized string object.</summary>
+            protected string _GetNextSerializedString() {
+                this._mCurrentSerializationIndex++;
+                return this.State.encodedData[index: this._mCurrentSerializationIndex];
+            }
+            
+            /// <summary>Adds the string to the encoded array.</summary>
+            protected void _AddSerializedString(string serialized) {
+                this.State.encodedData.Add(item: serialized);
+            }
     // --- /Methods ---
 }
 }

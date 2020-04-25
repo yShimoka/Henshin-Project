@@ -55,11 +55,13 @@ public class Application: ScriptableObject {
             
         // -- Private Attributes --
             /// <summary>Counter for the list of acts in the application.</summary>
-            private int _mCurrentActIndex;
+            private int _mCurrentActIndex = 0;
     // --- /Attributes ---
     
     // ---  Methods ---
         // -- Public Methods --
+            public void ClearActIndex() { this._mCurrentActIndex = 0; }
+            
             /// <summary>
             /// Increments the act counter.
             /// </summary>

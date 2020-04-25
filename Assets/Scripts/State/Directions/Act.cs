@@ -20,7 +20,7 @@ public class Act {
             public string identifier;
             
             /// <summary>List of all the scenes played in this act.</summary>
-            public List<Scene> scenes;
+            public List<Scene> scenes = new List<Scene>();
             
         // -- Public Attributes --
             /// <summary>Helper method used to access the scene currently playing.</summary>

@@ -35,6 +35,7 @@ public static class Actor {
                     position: Vector3.zero,
                     rotation: Quaternion.identity
                 );
+                actorInstance.transform.localPosition = Vector3.back * 5;
                 
                 // Try to load the component from the actor.
                 View.Scenery.Actor actorComponent = actorInstance.GetComponent<View.Scenery.Actor>();
@@ -51,6 +52,9 @@ public static class Actor {
                 
                 // Set the component in the actor.
                 actor.ActorComponent = actorComponent;
+                
+                // Disable the GameObject.
+                actorInstance.SetActive(value: false);
             }
         // -- Protected Methods --
         // -- Private Methods --

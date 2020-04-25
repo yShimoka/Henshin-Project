@@ -3,6 +3,7 @@
 
 using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 /* Wrap the class within the local namespace. */
 namespace Henshin.Editor.State.Graph {
@@ -15,16 +16,58 @@ namespace Henshin.Editor.State.Graph {
 public class Node {
     // ---  Attributes ---
         // -- Serialized Attributes --
+            /// <summary>Position of the node in the canvas.</summary>
+            public Vector2 position;
+            
+            /// <summary>Index of the transformation that is represented by this node.</summary>
+            public int transformationIndex;
+            
+            /// <summary>Transformation described by this node.</summary>
+            public Henshin.Controller.Directions.Transformation Transformation => this.owner.describedScene.Transformations[index: this.transformationIndex];
+            
+            /// <summary>Reference to the render area that owns this node.</summary>
+            public RenderArea owner;
+            
+            /// <summary>List of all the indices of this node's output socket targets.</summary>
+            [SerializeField]
+            public List<int> targetIndices = new List<int>();
+            
         // -- Public Attributes --
-        // -- Protected Attributes --
-        // -- Private Attributes --
+            // - Constants -
+            /// <summary>Size of the base node.</summary>
+            public static readonly Vector2 BODY_SIZE  = new Vector2{ x = RenderArea.GUI_CELL_SIZE * 8, y = RenderArea.GUI_CELL_SIZE * 4 };
+            /// <summary>Size of the base title.</summary>
+            public static readonly Vector2 HEADER_SIZE = new Vector2{ x = RenderArea.GUI_CELL_SIZE * 8, y = RenderArea.GUI_CELL_SIZE * 2f };
+            
+            // - Rects -
+            /// <summary>Rect used for the node's header.</summary>
+            [NonSerialized]
+            public Rect HeaderRect = new Rect();
+            /// <summary>Rect used for the node's body.</summary>
+            [NonSerialized]
+            public Rect BodyRect = new Rect();
+            /// <summary>Rect used for the node's title.</summary>
+            [NonSerialized]
+            public Rect TextRect = new Rect();
+            
+            public Rect FullRect => new Rect( x: this.HeaderRect.x, y: this.HeaderRect.y, width: this.HeaderRect.width, height: this.HeaderRect.height + this.BodyRect.height);
+            
+            // - Flags -
+            /// <summary>Flag set if the node is being dragged.</summary>
+            [NonSerialized]
+            public bool IsDragged;
+            
+            // - Sockets -
+            /// <summary>Input node of the socket.</summary>
+            [NonSerialized]
+            public Socket Input;
+            
+            /// <summary>Output node of the socket.</summary>
+            [NonSerialized]
+            public Socket Output;
+            
+            /// <summary>Reference to the node that is currently selected.</summary>
+            public static Node CurrentNode;
     // --- /Attributes ---
-    
-    // ---  Methods ---
-        // -- Unity Events --
-        // -- Public Methods --
-        // -- Protected Methods --
-        // -- Private Methods --
-    // --- /Methods ---
 }
 }

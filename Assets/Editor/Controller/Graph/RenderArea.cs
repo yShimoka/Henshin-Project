@@ -2,6 +2,8 @@
 
 
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
@@ -27,31 +29,50 @@ public static class RenderArea {
             /// <param name="area">The render area to initialize.</param>
             public static void InitializeRect(Rect containerRect, State.Graph.RenderArea area) {
                 // Set the position and size of the area.
-                area.Rect.Set(
-                    x:       containerRect.width  / 2 - (float)State.Graph.RenderArea.GUI_CELL_COUNT * State.Graph.RenderArea.GUI_CELL_SIZE / 2, 
-                    y:       containerRect.height / 2 - (float)State.Graph.RenderArea.GUI_CELL_COUNT * State.Graph.RenderArea.GUI_CELL_SIZE / 2, 
-                    width:   State.Graph.RenderArea.GUI_CELL_COUNT * State.Graph.RenderArea.GUI_CELL_SIZE,
-                    height:  State.Graph.RenderArea.GUI_CELL_COUNT * State.Graph.RenderArea.GUI_CELL_SIZE
-                );
-                area.ContainerRect.Set(x: 0, y: 0, width: containerRect.width, height: containerRect.height );
+                area.ContainerRect.Set(x: 0, y: 0, width: containerRect.width, height: containerRect.height);
             }
             
             /// <summary>Updates the rect of the specfiied state..</summary>
             /// <param name="containerRect">The rect of the container into which the area should be rendered.</param>
             /// <param name="area">The render area to initialize.</param>
-            public static void UpdateRect(Rect containerRect, State.Graph.RenderArea area) {
+            public static void BeforeRender(Rect containerRect, State.Graph.RenderArea area) {
+                // Check the bounds of the area.
+                if (area.position.x > +area.Rect.width / 2f) {
+                    area.position.x = +area.Rect.width / 2f;
+                }
+                if (area.position.x < -area.Rect.width / 2f + area.ContainerRect.width) {
+                    area.position.x = -area.Rect.width / 2f + area.ContainerRect.width;
+                }
+                if (area.position.y > +area.Rect.height / 2f) {
+                    area.position.y = +area.Rect.height / 2f;
+                }
+                if (area.position.y < -area.Rect.height / 2f + area.ContainerRect.height) {
+                    area.position.y = -area.Rect.height / 2f + area.ContainerRect.height;
+                }
+                
                 // Set the position and size of the container area.
-                area.ContainerRect.Set(x: 0, y: 0, width: containerRect.width, height: containerRect.height );
+                area.Rect.center = area.position;
+                        
+                area.Rect.size = Vector2.one * (1 / area.scale) * State.Graph.RenderArea.SIZE;
+                area.ContainerRect.Set(x: 0, y: 0, width: containerRect.width, height: containerRect.height);
+                
+                // Update all the nodes.
+                foreach (State.Graph.Node node in area.nodes) {
+                    Controller.Graph.Node.BeforeRender(canvasPosition: area.Position, node: node);
+                }
             }
             
             /// <summary>
+            /// Called right after the render area is rendered.
             /// Handles the specified event object.
             /// Calls the HandleEvent method on all children elements of the specified area object.
             /// Consumes the event if it should not be propagated downwards.
             /// </summary>
-            /// <param name="ev">The event object to parse.</param>
             /// <param name="area">The state object representing the area to manipulate.</param>
-            public static void HandleEvent(Event ev, State.Graph.RenderArea area) {
+            public static void AfterRender(State.Graph.RenderArea area) {
+                // Get the current event.
+                Event ev = Event.current;
+                
                 // Check if the area's drag flag is set.
                 if (area.IsDragged) {
                     // Check if the mouse or alt key was released.
@@ -63,30 +84,64 @@ public static class RenderArea {
                     // Check if the mouse dragged on the screen.
                     if (ev.type == EventType.MouseDrag) {
                         // Move the area around.
-                        area.Rect.position += ev.delta;
-                        
-                        // Ensure that the position of the area is valid.
-                        if (area.Rect.x > 0) {
-                            area.Rect.x = 0;
-                        }
-                        if (area.Rect.y > 0) {
-                            area.Rect.y = 0;
-                        }
-                        if (area.Rect.x + area.Rect.width < area.ContainerRect.width) {
-                            area.Rect.x = area.ContainerRect.width - area.Rect.width;
-                        }
-                        if (area.Rect.y + area.Rect.height < area.ContainerRect.height) {
-                            area.Rect.y = area.ContainerRect.height - area.Rect.height;
-                        }
+                        area.position += ev.delta;
                         
                         // Fire the repaint event.
                         RenderArea.ON_SHOULD_REPAINT.Invoke();
+                        
+                        // Use the event.
+                        ev.Use();
                     } 
                 } else {
+                    // Check if the scroll wheel was moved.
+                    if (ev.type == EventType.ScrollWheel) {
+                        // Update the scale of the canvas.
+                        const float FACTOR = 1.15f;
+                        switch (Mathf.RoundToInt(f: Mathf.Sign(f: ev.delta.y))) {
+                            case +1:
+                                area.scale *= FACTOR;
+                                break;
+                            case -1:
+                                area.scale /= FACTOR;
+                                break;
+                        }
+                        
+                        // Clamp the area's scale.
+                        area.scale = Mathf.Clamp(value: area.scale, min: 0.5f, max: 2f);
+                        
+                        // Fire the repaint event.
+                        RenderArea.ON_SHOULD_REPAINT.Invoke();
+                    }
+                    
                     // Check if the right mouse button was pressed, with the alt key.
-                    if ((ev.modifiers & EventModifiers.Alt) != 0 && ev.type == EventType.MouseDown && ev.button == (int)MouseButton.RightMouse) {
+                    if ((ev.modifiers & EventModifiers.Alt) != 0 && ev.type == EventType.MouseDown && ev.button == (int)MouseButton.LeftMouse) {
                         // Set the dragging flag.
                         area.IsDragged = true;
+                        
+                        // Use the event.
+                        ev.Use();
+                    }
+                }
+                
+                // Loop through the nodes in reverse order.
+                for (int i = area.nodes.Count; i > 0; i--) {
+                    // Call the after render method.
+                    Node.AfterRender(ev: ev, node: area.nodes[index: i - 1]);
+                }
+                
+                // If there is a selected socket.
+                if (State.Graph.Socket.CurrentSource != null) {
+                    switch (ev.type) {
+                    // If the user released the mouse button.
+                    case EventType.MouseUp:
+                        // Clear the current source.
+                        State.Graph.Socket.CurrentSource = null;
+                        goto case EventType.MouseDrag;
+                    // If the user moved the 
+                    case EventType.MouseDrag:
+                        // Repaint the window.
+                        Controller.Graph.RenderArea.ON_SHOULD_REPAINT.Invoke();
+                        break;
                     }
                 }
             }
@@ -99,19 +154,29 @@ public static class RenderArea {
             /// <param name="area">The area object that should be saved.</param>
             /// <exception cref="InvalidOperationException">Thrown if the <see cref="area"/> object has no <see cref="Henshin.State.Directions.Scene"/> reference.</exception>
             public static void Save(State.Graph.RenderArea area) {
+                // Serialize the nodes in the list.
+                foreach (State.Graph.Node node in area.nodes) {
+                    Node.Serialize(node: node, allNodes: area.nodes);
+                }
+                        
                 // Check if the scene object is set.
                 if (area.describedScene != null) {
+                    // If there are deserialized transformations.
+                    if (area.describedScene.Transformations != null) {
+                        // Rebuild the transformation tree.
+                        area.describedScene.RootTransformation = Henshin.Controller.Directions.Transformation.RebuildTree(from: area.describedScene.Transformations);
+                    }
+                
                     // Check if the area is already stored in an asset.
                     if (string.IsNullOrEmpty(value: AssetDatabase.GetAssetPath(assetObject: area))) {
                         // Add the area object to the scene.
                         AssetDatabase.AddObjectToAsset(objectToAdd: area, assetObject: area.describedScene);
                     } else {
-                        // Save the asset.
-                        AssetDatabase.SaveAssets();
+                        AssetDatabase.ForceReserializeAssets();
                     }
                 } else {
                     // Throw an error.
-                    throw new InvalidOperationException(message: $"Cannot save a RenderArea that does no refer to a scene !");
+                    Debug.LogError(message: "Cannot save a RenderArea that does no refer to a scene !");
                 }
             }
             
@@ -127,8 +192,24 @@ public static class RenderArea {
                 
                 // If the state could not be loaded.
                 if (state == null) {
+                    Debug.LogWarning(message: $"Could not find a render area in the scene {scene.identifier}");
                     // Create a new state object.
-                    state = new State.Graph.RenderArea{ describedScene = scene };
+                    state = ScriptableObject.CreateInstance<State.Graph.RenderArea>();
+                    state.describedScene = scene;
+                    state.name = scene.identifier + " - RenderArea";
+                } else {
+                    // Deserialize the nodes in the list.
+                    List<State.Graph.Node> deserializedNodes = state.nodes
+                        .Select(selector: (node, index) => Node.CreateNode(type: node.Transformation.GetType(), transformationIndex: index, at: node.position, owner: state, nodeIndices: node.targetIndices))
+                        .ToList();
+                    
+                    // Deserialize the individual nodes and their links.
+                    foreach (State.Graph.Node node in deserializedNodes) {
+                        Node.Deserialize(node: node, allNodes: deserializedNodes);
+                    }
+                    
+                    // Store the node list.
+                    state.nodes = deserializedNodes;
                 }
                 
                 // Return the state object.

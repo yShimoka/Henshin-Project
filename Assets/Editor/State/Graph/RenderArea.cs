@@ -14,7 +14,7 @@ namespace Henshin.Editor.State.Graph {
 /// <seealso cref="Controller.Graph.RenderArea"/>
 /// <seealso cref="View.Graph.RenderArea"/>
 [Serializable]
-public class RenderArea: UnityEngine.Object {
+public class RenderArea: ScriptableObject {
     // ---  Attributes ---
         // -- Serialized Attributes --
             // - Contents -
@@ -24,6 +24,12 @@ public class RenderArea: UnityEngine.Object {
             // - References -
             /// <summary>Reference to the <see cref="Henshin.State.Directions.Scene"/> represented by this <see cref="RenderArea"/>.</summary>
             public Henshin.State.Directions.Scene describedScene;
+            
+            /// <summary>Position of the canvas.</summary>
+            public Vector2 position;
+            
+            /// <summary>Current scale of the render area.</summary>
+            public float scale = 1f;
             
         // -- Public Attributes --
             // - Constants -
@@ -46,6 +52,9 @@ public class RenderArea: UnityEngine.Object {
             /// </summary>
             [NonSerialized]
             public Rect Rect;
+            
+            /// <summary>Size of the canvas.</summary>
+            public const int SIZE = State.Graph.RenderArea.GUI_CELL_COUNT * State.Graph.RenderArea.GUI_CELL_SIZE;
             
             /// <summary>
             /// Position of the area on the screen.

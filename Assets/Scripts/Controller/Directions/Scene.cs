@@ -37,6 +37,14 @@ public static class Scene {
                     throw Application.Error(message: "The line has no transformation assigned to it !");
                 }
                 
+                // Load the background.
+                View.Application.Background = scene.background;
+                
+                // Load all the actors.
+                foreach (Actor actor in Scene.Current.actors) {
+                    Controller.Scenery.Actor.Instantiate(actor: actor, parent: View.Application.Stage.transform);
+                }
+                
                 // Start the scene's transformation chain.
                 scene.RootTransformation.Apply();
             }

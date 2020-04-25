@@ -46,7 +46,7 @@ public static class Application {
                 // Increment the act counter.
                 if (State.Application.Current.IncrementActIndex()) {
                     // DEBUG: Throw an error message.
-                    Application.Error(message: "Vous êtes arrivé à la fin du jeu dans son état actuel."); 
+                    throw Application.Error(message: "Vous êtes arrivé à la fin du jeu dans son état actuel."); 
                 } else {
                     // Play the next act.
                     Directions.Act.Play(act: State.Application.Current.CurrentAct);
@@ -61,9 +61,9 @@ public static class Application {
             /// <param name="message">The error message to pass to the user.</param>
             public static InvalidOperationException Error(string message) {
                 // Try to load the error scene object.
-#if !UNITY_EDITOR
+//#if !UNITY_EDITOR
                 SceneManager.LoadSceneAsync(sceneName: "Error", mode: LoadSceneMode.Single).completed += operation => Application._OnErrorSceneLoaded(errorMessage: message);
-#endif
+//#endif
                 
                 // Return the error to thrown.
                 return new InvalidOperationException(message: message);
@@ -80,12 +80,18 @@ public static class Application {
                 // Load all the state assets.
                 Application.LoadAssets();
                 
+                // Reset the current act index.
+                State.Application.Current.ClearActIndex();
+                
                 // Load the theatre.
                 View.Application.CreateTheatreScene();
 
-#if UNITY_EDITOR                
+#if UNITY_EDITOR
                 // Check if there is a scene that is marked as testing.
-                Henshin.State.Directions.Scene debugged = State.Application.Current.acts.SelectMany(selector: act => act.scenes).FirstOrDefault(predicate: scene => scene.testScene);
+                Henshin.State.Directions.Scene debugged = State.Application.Current.acts
+                    ?.SelectMany(selector: act => act.scenes)
+                    .Where(predicate: scene => scene != null)
+                    .FirstOrDefault(predicate: scene => scene.testScene);
                 if (debugged) {
                     // Play the debugged scene.
                     Directions.Scene.Play(scene: debugged);

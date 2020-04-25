@@ -3,6 +3,7 @@
 
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
 /* Wrap the class within the local namespace. */
@@ -18,7 +19,19 @@ public static class Application {
             /// <summary>
             /// MonoBehaviour attached to the root GameObject of the application. 
             /// </summary>
-            private class ApplicationBehaviour: MonoBehaviour {};
+            public class ApplicationBehaviour: MonoBehaviour {
+                // ---  Attributes ---
+                    // -- Public Attributes --
+                        /// <summary>Event triggered on each <see cref="Update"/> call.</summary>
+                        public readonly UnityEngine.Events.UnityEvent OnUpdate = new UnityEngine.Events.UnityEvent();
+                // --- /Attributes ---
+                
+                // ---  Methods ---
+                    // -- Unity Events --
+                        /// <summary>Unity event fired on every frame.</summary>
+                        private void Update() { this.OnUpdate.Invoke(); }
+                // --- /Methods ---
+            }
     // --- /Types ---
     
     // ---  Attributes ---
@@ -33,11 +46,14 @@ public static class Application {
             public static GameObject Stage;
             
             /// <summary>Setter used to update the stage background image.</summary>
-            public static Sprite Background { set => _SetStageBackground(value); }
+            public static Sprite Background { set => Application._SetStageBackground(bg: value); }
+            
+            /// <summary>Accessor to the application behaviour.</summary>
+            public static ApplicationBehaviour AppBehaviour => Application._msRootApplicationBehaviour;
             
         // -- Private Attributes --
             /// <summary>Renderer of the background.</summary>
-            private static SpriteRenderer _mBackgroundRenderer;
+            private static Image _mBackgroundRenderer;
             
             /// <summary>Reference to the root object's <see cref="ApplicationBehaviour"/>.</summary>
             private static ApplicationBehaviour _msRootApplicationBehaviour;
@@ -130,11 +146,19 @@ public static class Application {
                 
                 
                 // Create the background renderer.
-                GameObject background = new GameObject(name: "Background", components: new[] { typeof(SpriteRenderer) });
+                GameObject background = new GameObject(name: "Background", components: new[] { typeof(Image), typeof(Canvas) });
                 
                 // Prepare the background parameters.
-                Application._mBackgroundRenderer = background.GetComponent<SpriteRenderer>();
-                Application._mBackgroundRenderer.sortingLayerID = SortingLayer.NameToID(name: "Background");
+                Application._mBackgroundRenderer = background.GetComponent<Image>();
+                RectTransform bgRect = background.GetComponent<RectTransform>();
+                bgRect.anchorMin = Vector2.zero;
+                bgRect.anchorMax = Vector2.one;
+                bgRect.position = Vector2.one / 2;
+                bgRect.anchoredPosition = Vector2.zero;
+                
+                Canvas bgCanvas = background.GetComponent<Canvas>();
+                bgCanvas.overrideSorting = true;
+                bgCanvas.sortingLayerID = SortingLayer.NameToID(name: "Background");
                 
                 // Attach the background to the stage.
                 background.transform.SetParent(parent: Application.Stage.transform, worldPositionStays: false);

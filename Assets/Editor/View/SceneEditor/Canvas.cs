@@ -35,7 +35,11 @@ public static class Canvas {
                 GUILayout.BeginArea(screenRect: State.SceneEditor.Canvas.Rect);
                 
                 // Render the render area.
-                View.Graph.RenderArea.Render(rendered: State.SceneEditor.Canvas.CurrentRenderArea);
+                if (State.SceneEditor.Canvas.CurrentRenderArea != null) {
+                    View.Graph.RenderArea.Render(rendered: State.SceneEditor.Canvas.CurrentRenderArea);
+                } else {
+                    EditorGUILayout.HelpBox(message: "There is no area to render !", type: MessageType.Error);
+                }
                 
                 // End the gui area.
                 GUILayout.EndArea();

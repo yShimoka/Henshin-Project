@@ -13,6 +13,83 @@ MonoBehaviour:
   m_Name: DATA_SCENE_Debug
   m_EditorClassIdentifier: 
   identifier: Debug Scene
-  stateList: []
-  actors: []
-  background: {fileID: 0}
+  stateList:
+  - nodeIndices: 03000000
+    actor: {fileID: 0}
+    encodedData: []
+    controllerTypeName: Henshin.Controller.Directions.Transformations.Start
+  - nodeIndices: 
+    actor: {fileID: 0}
+    encodedData: []
+    controllerTypeName: Henshin.Controller.Directions.Transformations.End
+  - nodeIndices: 0400000005000000
+    actor: {fileID: 11400000, guid: f58f2cf2798494b329ce2c50e1d7aba0, type: 2}
+    encodedData:
+    - True
+    - False
+    controllerTypeName: Henshin.Controller.Directions.Transformations.Active
+  - nodeIndices: 02000000
+    actor: {fileID: 11400000, guid: f58f2cf2798494b329ce2c50e1d7aba0, type: 2}
+    encodedData:
+    - 0
+    - -500
+    - 0
+    controllerTypeName: Henshin.Controller.Directions.Transformations.MoveTo
+  - nodeIndices: 01000000
+    actor: {fileID: 11400000, guid: f58f2cf2798494b329ce2c50e1d7aba0, type: 2}
+    encodedData:
+    - 2
+    - -250
+    - 0
+    controllerTypeName: Henshin.Controller.Directions.Transformations.MoveTo
+  - nodeIndices: 01000000
+    actor: {fileID: 11400000, guid: f58f2cf2798494b329ce2c50e1d7aba0, type: 2}
+    encodedData:
+    - 1
+    - 1.5
+    - 1.5
+    controllerTypeName: Henshin.Controller.Directions.Transformations.Scale
+  actors:
+  - {fileID: 11400000, guid: f58f2cf2798494b329ce2c50e1d7aba0, type: 2}
+  background: {fileID: 21300000, guid: 697edb151371c4e6da93df87c1143373, type: 3}
+  testScene: 0
+--- !u!114 &3009873898481066746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f97f8ea7a7f64624957b33fc42508b18, type: 3}
+  m_Name: Debug Scene - RenderArea
+  m_EditorClassIdentifier: 
+  nodes:
+  - position: {x: -59, y: -46}
+    transformationIndex: 0
+    owner: {fileID: 3009873898481066746}
+    targetIndices: 03000000
+  - position: {x: -19, y: -46}
+    transformationIndex: 1
+    owner: {fileID: 3009873898481066746}
+    targetIndices: 
+  - position: {x: -39, y: -46}
+    transformationIndex: 2
+    owner: {fileID: 3009873898481066746}
+    targetIndices: 0400000005000000
+  - position: {x: -49, y: -46}
+    transformationIndex: 3
+    owner: {fileID: 3009873898481066746}
+    targetIndices: 02000000
+  - position: {x: -29, y: -39}
+    transformationIndex: 4
+    owner: {fileID: 3009873898481066746}
+    targetIndices: 01000000
+  - position: {x: -29, y: -46}
+    transformationIndex: 5
+    owner: {fileID: 3009873898481066746}
+    targetIndices: 01000000
+  describedScene: {fileID: 11400000}
+  position: {x: 1170.9507, y: 1055.12}
+  scale: 0.8745031

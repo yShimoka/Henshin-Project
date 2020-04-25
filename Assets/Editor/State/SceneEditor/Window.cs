@@ -25,7 +25,7 @@ public static class Window {
             public static Graph.RenderArea CurrentGraph;
             
             /// <summary>Flag set if the window's OnGUI method was called.</summary>
-            public static bool WasRenderedOnce = false;
+            public static bool WasRenderedOnce => View.SceneEditor.Header._msBackgroundTexture != null;
             
         // -- Private Attributes --
     // --- /Attributes ---

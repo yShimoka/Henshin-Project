@@ -2,6 +2,7 @@
 
 
 using UnityEngine;
+using UnityEditor;
 
 /* Wrap the class within the local namespace. */
 namespace Henshin.Editor.State.SceneEditor {
@@ -24,7 +25,9 @@ public static class Canvas {
             // - Rendered Items -
             /// <summary>Reference to the render area found within the current scene.</summary>
             public static State.Graph.RenderArea CurrentRenderArea;
-        // -- Private Attributes --
+            
+            /// <summary>Contextual menu that is rendered when the user right-clicks on the screen.</summary>
+            public static GenericMenu ContextMenu;
     // --- /Attributes ---
 }
 }

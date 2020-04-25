@@ -78,6 +78,12 @@ public class Actor: MonoBehaviour {
             /// <param name="value">The new value of the horizontal flip.</param>
             public void SetHorizontalFlip(bool value) { this._mSprite.flipX = value; }
             
+            /// <summary>
+            /// Defines the active state of the game object.
+            /// </summary>
+            /// <param name="value">The value of the active status.</param>
+            public void SetActive(bool value) { this.gameObject.SetActive(value: value); }
+            
             /// <returns>The current <see cref="Color"/> of the <see cref="SpriteRenderer"/>.</returns>
             public Color GetColour() { return this._mSprite.color; }
             
@@ -86,7 +92,7 @@ public class Actor: MonoBehaviour {
             public void SetColour(Color colour) { this._mSprite.color = colour; }
             
             /// <returns>The current position of the actor, in local space.</returns>
-            public Vector3 GetPosition() { return this.transform.localPosition; }
+            public Vector2 GetPosition() { return this.transform.localPosition; }
             
             /// <returns>The current rotation of the actor, in local space.</returns>
             public Quaternion GetRotation() { return this.transform.localRotation; }
@@ -96,7 +102,7 @@ public class Actor: MonoBehaviour {
             
             /// <summary>Sets the local position of the actor.</summary>
             /// <param name="position">The new position of the actor.</param>
-            public void SetPosition(Vector3 position) { this.transform.localPosition = position; }
+            public void SetPosition(Vector2 position) { this.transform.localPosition = new Vector3(x: position.x, y: position.y, z: this.transform.localPosition.z); }
             
             /// <summary>Sets the local rotation of the actor.</summary>
             /// <param name="rotation">The new rotation of the actor.</param>
@@ -104,7 +110,7 @@ public class Actor: MonoBehaviour {
             
             /// <summary>Sets the local scale of the actor.</summary>
             /// <param name="scale">The new scale of the actor.</param>
-            public void SetScale(Vector3 scale) { this.transform.localScale = scale; }
+            public void SetScale(Vector2 scale) { this.transform.localScale = new Vector3(x: scale.x, y: scale.y, z: this.transform.localScale.z); }
             
         // -- Private Methods --
     // --- /Methods ---
