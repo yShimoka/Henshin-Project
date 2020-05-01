@@ -37,8 +37,8 @@ public static class Scene {
                     throw Application.Error(message: "The line has no transformation assigned to it !");
                 }
                 
-                // Load the background.
-                View.Application.Background = scene.background;
+                // Create the scene objects.
+                View.Directions.Scene.UpdateSceneObjects(scene: scene);
                 
                 // Load all the actors.
                 foreach (Actor actor in Scene.Current.actors) {

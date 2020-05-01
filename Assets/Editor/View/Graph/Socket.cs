@@ -83,8 +83,8 @@ public static class Socket {
                     Handles.DrawBezier(
                         startPosition: socket.Rect.center,
                         endPosition: Event.current.mousePosition,
-                        startTangent: socket.Rect.center + Vector2.right * 100,
-                        endTangent: Event.current.mousePosition + Vector2.left * 100,
+                        startTangent: socket.Rect.center + Vector2.right * 50 * (1 / socket.Owner.owner.scale),
+                        endTangent: Event.current.mousePosition + Vector2.left * 50 * (1 / socket.Owner.owner.scale),
                         color: Color.white, 
                         texture: Texture2D.whiteTexture, 
                         width: 3 * (1 / socket.Owner.owner.scale)

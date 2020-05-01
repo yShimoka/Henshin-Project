@@ -31,6 +31,18 @@ public class Scene: ScriptableObject, ISerializationCallbackReceiver {
             /// <summary>Reference to the sprite used as this scene's background.</summary>
             public Sprite background;
             
+            /// <summary>Stores the gameplay mode associated with this scene.</summary>
+            public Henshin.State.Scenery.TextBox.EMode gameplayMode;
+            
+            /// <summary>Stores the original text.</summary>
+            public string original;
+            
+            /// <summary>Stores the translated text.</summary>
+            public string translated;
+            
+            /// <summary>Stores all the data of the proposition.</summary>
+            public string[] data;
+            
 #if UNITY_EDITOR
             /// <summary>Flag set if the scene should be played for testing.</summary>
             public bool testScene;

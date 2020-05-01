@@ -24,6 +24,12 @@ public class MoveTo: Henshin.State.Directions.Transformations.Scene.Delay {
             /// </summary>
             [System.NonSerialized]
             public Vector2 Start;
+            
+            /// <summary>
+            /// Easing function used for the movement.
+            /// </summary>
+            [System.NonSerializedAttribute]
+            public View.Misc.EasingFunction.Ease EaseMode;
     // --- /Attributes ---
     
     // ---  Methods ---

@@ -35,8 +35,11 @@ public class Start: Transformation {
         // -- Protected Methods --
             /// <inheritdoc cref="Transformation._Apply"/>
             protected override void _Apply() {
-                // Immediately finish the action.
-                this._Finish();
+                // Wait three frames for the program to be initialized.
+                View.Application.AppBehaviour.WaitForFrames(frames: 3, action: () => {
+                    // Finish the action.
+                    this._Finish();
+                });
             }
     // --- /Methods ---
 }

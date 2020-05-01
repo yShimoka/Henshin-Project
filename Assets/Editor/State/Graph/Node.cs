@@ -23,9 +23,20 @@ public class Node {
             public int transformationIndex;
             
             /// <summary>Transformation described by this node.</summary>
-            public Henshin.Controller.Directions.Transformation Transformation => this.owner.describedScene.Transformations[index: this.transformationIndex];
-            
-            /// <summary>Reference to the render area that owns this node.</summary>
+            public Henshin.Controller.Directions.Transformation Transformation {
+                get {
+                    // Check if the index is valid.
+                    if (this.transformationIndex >= 0 && this.transformationIndex < this.owner.describedScene.Transformations.Count) {
+                        // Return the transformation reference.
+                        return this.owner.describedScene.Transformations[index: this.transformationIndex];
+                    } else {
+                        // Throw a new IndexOutOfRange exception.
+                        throw new IndexOutOfRangeException(message: $"A node references a transformation index ({this.transformationIndex}) that does not exist.");
+                    }
+                }
+            }
+
+    /// <summary>Reference to the render area that owns this node.</summary>
             public RenderArea owner;
             
             /// <summary>List of all the indices of this node's output socket targets.</summary>
@@ -37,7 +48,9 @@ public class Node {
             /// <summary>Size of the base node.</summary>
             public static readonly Vector2 BODY_SIZE  = new Vector2{ x = RenderArea.GUI_CELL_SIZE * 8, y = RenderArea.GUI_CELL_SIZE * 4 };
             /// <summary>Size of the base title.</summary>
-            public static readonly Vector2 HEADER_SIZE = new Vector2{ x = RenderArea.GUI_CELL_SIZE * 8, y = RenderArea.GUI_CELL_SIZE * 2f };
+            public static readonly Vector2 HEADER_SIZE = new Vector2{ x = Node.BODY_SIZE.x, y = RenderArea.GUI_CELL_SIZE * 2f };
+            /// <summary>Size of full node.</summary>
+            public static readonly Vector2 NODE_SIZE = new Vector2{ x = Node.BODY_SIZE.x, y = Node.BODY_SIZE.y + Node.HEADER_SIZE.y };
             
             // - Rects -
             /// <summary>Rect used for the node's header.</summary>

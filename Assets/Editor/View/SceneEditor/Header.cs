@@ -34,12 +34,20 @@ public static class Header {
             private static Texture2D _msSaveTexture;
             /// <summary>Texture of the play button.</summary>
             private static Texture2D _msPlayTexture;
+            /// <summary>Texture of the center button.</summary>
+            private static Texture2D _msCenterTexture;
+            /// <summary>Texture of the scale button.</summary>
+            private static Texture2D _msScaleTexture;
             
             // - Contents -
             /// <summary>Content of the save button.</summary>
             private static GUIContent _msSaveContent;
             /// <summary>Content of the play button.</summary>k
             private static GUIContent _msPlayContent;
+            /// <summary>Content of the center button.</summary>k
+            private static GUIContent _msCenterContent;
+            /// <summary>Content of the scale button.</summary>k
+            private static GUIContent _msScaleContent;
             
             // - Styles -
             /// <summary>Style of the background texture.</summary>
@@ -54,6 +62,10 @@ public static class Header {
             private static GUIStyle _msSaveStyle;
             /// <summary>Style of the play button.</summary>
             private static GUIStyle _msPlayStyle;
+            /// <summary>Style of the center button.</summary>
+            private static GUIStyle _msCenterStyle;
+            /// <summary>Style of the scale button.</summary>
+            private static GUIStyle _msScaleStyle;
             
     // --- /Attributes ---
     
@@ -82,6 +94,9 @@ public static class Header {
                 
                 // Draw the current scene selector.
                 Header._DrawSceneSelector();
+                
+                // Draw the separator.
+                GUILayout.Box(content: GUIContent.none, style: Header._msContentSeparatorStyle);
                 
                 // Draw the centered save button.
                 GUILayout.BeginVertical(style: Helper.NoWidthExpansion);
@@ -112,6 +127,29 @@ public static class Header {
                     
                     // Start the editor.
                     EditorApplication.EnterPlaymode();
+                }
+                GUILayout.FlexibleSpace();
+                GUILayout.EndVertical();
+                
+                // Draw the separator.
+                GUILayout.Box(content: GUIContent.none, style: Header._msContentSeparatorStyle);
+                
+                // Draw the center button.
+                GUILayout.BeginVertical(style: Helper.NoWidthExpansion);
+                GUILayout.FlexibleSpace();
+                if (GUILayout.Button(content: Header._msCenterContent, style: Header._msCenterStyle)) {
+                    // Center the render area.
+                    Controller.SceneEditor.Canvas.Center(area: State.SceneEditor.Canvas.CurrentRenderArea);
+                }
+                GUILayout.FlexibleSpace();
+                GUILayout.EndVertical();
+                
+                // Draw the scale reset button.
+                GUILayout.BeginVertical(style: Helper.NoWidthExpansion);
+                GUILayout.FlexibleSpace();
+                if (GUILayout.Button(content: Header._msScaleContent, style: Header._msScaleStyle)) {
+                    // Center the render area.
+                    State.SceneEditor.Canvas.CurrentRenderArea.scale = 1f;
                 }
                 GUILayout.FlexibleSpace();
                 GUILayout.EndVertical();
@@ -150,6 +188,10 @@ public static class Header {
                 Header._msSaveTexture = Resources.Load<Texture2D>(path: "Editor/Elements/UI_EDITOR_Save");
                 // Load the play texture.
                 Header._msPlayTexture = Resources.Load<Texture2D>(path: "Editor/Elements/UI_EDITOR_Play");
+                // Load the center texture.
+                Header._msCenterTexture = Resources.Load<Texture2D>(path: "Editor/Elements/UI_EDITOR_Center");
+                // Load the scale texture.
+                Header._msScaleTexture = Resources.Load<Texture2D>(path: "Editor/Elements/UI_EDITOR_Scale");
             }
             
             /// <summary>
@@ -160,6 +202,10 @@ public static class Header {
                 Header._msSaveContent = new GUIContent{ image = Header._msSaveTexture, tooltip = "Save the scene" };
                 // Create the play button contents.
                 Header._msPlayContent = new GUIContent{ image = Header._msPlayTexture, tooltip = "Play from the current scene" };
+                // Create the play button contents.
+                Header._msCenterContent = new GUIContent{ image = Header._msCenterTexture, tooltip = "Return to the center of the area" };
+                // Create the reset scale button contents.
+                Header._msScaleContent = new GUIContent{ image = Header._msScaleTexture, tooltip = "Reset the scale of the area" };
             }
             
             /// <summary>
@@ -197,6 +243,10 @@ public static class Header {
                 };
                 // Create the play button style.
                 Header._msPlayStyle = new GUIStyle(other: Header._msSaveStyle){ };
+                // Create the save button style.
+                Header._msCenterStyle = new GUIStyle(other: Header._msSaveStyle) {};
+                // Create the scale button style.
+                Header._msScaleStyle = new GUIStyle(other: Header._msSaveStyle) {};
             }
             
             // - Renderers -
@@ -227,9 +277,6 @@ public static class Header {
                 // End the horizontal element.
                 GUILayout.FlexibleSpace();
                 GUILayout.EndVertical();
-                
-                // Draw the separator.
-                GUILayout.Box(content: GUIContent.none, style: Header._msContentSeparatorStyle);
             }
     // --- /Methods ---
 }

@@ -30,7 +30,10 @@ public class Application: ScriptableObject {
             /// List of all the acts found in the application.
             /// </summary>
             [SerializeField]
-            public List<Directions.Act> acts = new List<Directions.Act>(); 
+            public List<Directions.Act> acts = new List<Directions.Act>();
+            
+            /// <summary>Reference to the sprite used as the background text box.</summary>
+            public Sprite textBox; 
             
             // - Debugging Attributes -
             /// <summary>Identifier of this act. Used solely for debugging purposes.</summary>

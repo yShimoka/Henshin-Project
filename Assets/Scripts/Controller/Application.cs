@@ -85,24 +85,24 @@ public static class Application {
                 
                 // Load the theatre.
                 View.Application.CreateTheatreScene();
-
+                
 #if UNITY_EDITOR
-                // Check if there is a scene that is marked as testing.
-                Henshin.State.Directions.Scene debugged = State.Application.Current.acts
-                    ?.SelectMany(selector: act => act.scenes)
-                    .Where(predicate: scene => scene != null)
-                    .FirstOrDefault(predicate: scene => scene.testScene);
-                if (debugged) {
-                    // Play the debugged scene.
-                    Directions.Scene.Play(scene: debugged);
-                    
-                    // Stop the method.
-                    return;
-                }
+                    // Check if there is a scene that is marked as testing.
+                    Henshin.State.Directions.Scene debugged = State.Application.Current.acts
+                        ?.SelectMany(selector: act => act.scenes)
+                        .Where(predicate: scene => scene != null)
+                        .FirstOrDefault(predicate: scene => scene.testScene);
+                    if (debugged) {
+                        // Play the debugged scene.
+                        Directions.Scene.Play(scene: debugged);
+                        
+                        // Stop the method.
+                        return;
+                    }
 #endif                
                 
-                // Play the current act.
-                Directions.Act.Play(act: State.Application.Current.CurrentAct);
+                    // Play the current act.
+                    Directions.Act.Play(act: State.Application.Current.CurrentAct);
             }
             
             // - Asynchronous Calls -

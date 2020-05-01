@@ -36,6 +36,10 @@ public static class RenderArea {
             /// <param name="containerRect">The rect of the container into which the area should be rendered.</param>
             /// <param name="area">The render area to initialize.</param>
             public static void BeforeRender(Rect containerRect, State.Graph.RenderArea area) {
+                // Set the sizes fo the rect and the container.
+                area.Rect.size = Vector2.one * (1 / area.scale) * State.Graph.RenderArea.SIZE;
+                area.ContainerRect.Set(x: 0, y: 0, width: containerRect.width, height: containerRect.height);
+            
                 // Check the bounds of the area.
                 if (area.position.x > +area.Rect.width / 2f) {
                     area.position.x = +area.Rect.width / 2f;
@@ -52,9 +56,6 @@ public static class RenderArea {
                 
                 // Set the position and size of the container area.
                 area.Rect.center = area.position;
-                        
-                area.Rect.size = Vector2.one * (1 / area.scale) * State.Graph.RenderArea.SIZE;
-                area.ContainerRect.Set(x: 0, y: 0, width: containerRect.width, height: containerRect.height);
                 
                 // Update all the nodes.
                 foreach (State.Graph.Node node in area.nodes) {
@@ -107,7 +108,7 @@ public static class RenderArea {
                         }
                         
                         // Clamp the area's scale.
-                        area.scale = Mathf.Clamp(value: area.scale, min: 0.5f, max: 2f);
+                        area.scale = Mathf.Clamp(value: area.scale, min: 0.5f, max: 1.5f);
                         
                         // Fire the repaint event.
                         RenderArea.ON_SHOULD_REPAINT.Invoke();
@@ -132,12 +133,7 @@ public static class RenderArea {
                 // If there is a selected socket.
                 if (State.Graph.Socket.CurrentSource != null) {
                     switch (ev.type) {
-                    // If the user released the mouse button.
-                    case EventType.MouseUp:
-                        // Clear the current source.
-                        State.Graph.Socket.CurrentSource = null;
-                        goto case EventType.MouseDrag;
-                    // If the user moved the 
+                    // If the user moved the mouse.
                     case EventType.MouseDrag:
                         // Repaint the window.
                         Controller.Graph.RenderArea.ON_SHOULD_REPAINT.Invoke();

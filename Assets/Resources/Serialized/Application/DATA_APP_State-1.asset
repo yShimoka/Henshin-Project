@@ -19,4 +19,5 @@ MonoBehaviour:
   - identifier: Act 1
     scenes:
     - {fileID: 11400000, guid: 325b3980b5003452c9cd5735f61fb37a, type: 2}
+  textBox: {fileID: 21300000, guid: 603a017a958654481bc4cd547b37268d, type: 3}
   identifier: Debug State

@@ -53,6 +53,15 @@ public static class Actor {
                 // Set the component in the actor.
                 actor.ActorComponent = actorComponent;
                 
+                // Set the default pose.
+                if (actor.poses.Count > 0) {
+                    // Load the default pose.
+                    actor.ActorComponent.UpdatePose(to: actor.poses[index: 0].sprite);
+                } else {
+                    // Log a warning.
+                    Debug.LogWarning(message: $"Actor \"#{actor.name}\" has no pose ! It will not be visible during gameplay.");
+                }
+                
                 // Disable the GameObject.
                 actorInstance.SetActive(value: false);
             }

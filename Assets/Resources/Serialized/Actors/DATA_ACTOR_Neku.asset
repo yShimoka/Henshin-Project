@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97f3d7393df64671922963a99bc1202f, type: 3}
+  m_Name: DATA_ACTOR_Neku
+  m_EditorClassIdentifier: 
+  actorPrefab: {fileID: 3384091525149449289, guid: b76d7392b54d84a2b875f287faff1bfd,
+    type: 3}
+  poses:
+  - identifier: Idle
+    sprite: {fileID: 21300000, guid: 0f976a968d67046c4b3e5ef15e8226d8, type: 3}
+  - identifier: Smile
+    sprite: {fileID: 21300000, guid: 33368877614ae4c12bb7a87e285dd245, type: 3}

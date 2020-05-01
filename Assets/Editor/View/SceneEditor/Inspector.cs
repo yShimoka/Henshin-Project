@@ -18,7 +18,7 @@ public static class Inspector {
         // -- Private Attributes --
             // - Constants -
             /// <summary></summary>
-            private const float _mBACKGROUND_GRAY_LEVEL = 0.7f;
+            private const float _mBACKGROUND_GRAY_LEVEL = 0.75f;
             
             // - Textures -
             /// <summary>Texture used for the inspector's background.</summary>
@@ -37,6 +37,9 @@ public static class Inspector {
         // -- Public Methods --
             /// <summary>Initialize the inspector view.</summary>
             public static void Initialize() {
+                // Initialize the scene inspector.
+                SceneInspector.Initialize();
+                
                 // Create all the required textures.
                 Inspector._CreateTextures();
                 // Create all the required GUIContent objects.
@@ -53,8 +56,11 @@ public static class Inspector {
                 // Begin a new GUILayout area.
                 GUILayout.BeginArea(screenRect: State.SceneEditor.Inspector.Rect, style: Inspector._msInspectorContainer);
                 
+                // Render the scene inspector.
+                SceneInspector.Render(area: State.SceneEditor.Inspector.Rect);
+                
                 // Check if a node is selected.
-                if (State.Graph.Node.CurrentNode != null) {
+                /*if (State.Graph.Node.CurrentNode != null) {
                     // Check the type of the node.
                     switch (State.Graph.Node.CurrentNode.Transformation.GetType().Name) {
                         case "Start":
@@ -84,6 +90,8 @@ public static class Inspector {
                                 
                                 // Print the position.
                                 moveTo.State.Target = EditorGUILayout.Vector2Field(label: "Target", value: moveTo.State.Target);
+                                // Print the ease value.
+                                moveTo.State.EaseMode = (Henshin.View.Misc.EasingFunction.Ease)EditorGUILayout.EnumPopup(selected: moveTo.State.EaseMode);
                             }
                             goto case nameof(Henshin.State.Directions.Transformations.Scene.Delay);
                         case nameof(Henshin.State.Directions.Transformations.Actor.Colour):
@@ -110,6 +118,40 @@ public static class Inspector {
                                 active.State.Activate = EditorGUILayout.Toggle(label: "Set active", value: active.State.Activate);
                             }
                             break;
+                        case nameof(Henshin.State.Directions.Transformations.Actor.Pose):
+                            if (State.Graph.Node.CurrentNode.Transformation is Henshin.Controller.Directions.Transformations.Actor.Pose pose) {
+                                // Print the actor selector.
+                                pose.State.actor = Inspector._DrawActorPopup();
+                                
+                                // Check if the pose has an actor.
+                                if (pose.State.actor != null) {
+                                    // Check if the pose list is set.
+                                    if (pose.State.actor.poses != null && pose.State.actor.poses.Count > 0) {
+                                        // Draw the pose list popup.
+                                        pose.State.PoseIndex = EditorGUILayout.Popup(
+                                            label: "Pose: ",
+                                            selectedIndex: pose.State.PoseIndex,
+                                            displayedOptions: pose.State.actor.poses.Select(selector: actorPose => actorPose.identifier).ToArray()
+                                        );
+                                    } else {
+                                        EditorGUILayout.HelpBox(message: "There is no pose for this actor !", type: MessageType.Info);
+                                    }
+                                }
+                            }
+                            break;
+                        case nameof(Henshin.State.Directions.Transformations.Actor.Flip):
+                            if (State.Graph.Node.CurrentNode.Transformation is Henshin.Controller.Directions.Transformations.Actor.Flip flip) {
+                                // Print the actor selector.
+                                flip.State.actor = Inspector._DrawActorPopup();
+                                
+                                // Check if the pose has an actor.
+                                if (flip.State.actor != null) {
+                                    // Show both toggles.
+                                    flip.State.Vertical = EditorGUILayout.Toggle(label: "Vertical Flip", value: flip.State.Vertical);
+                                    flip.State.Horizontal = EditorGUILayout.Toggle(label: "Horizontal Flip", value: flip.State.Horizontal);
+                                }
+                            }
+                            break;
                     default:
                             // Draw an error.
                             EditorGUILayout.HelpBox(message: $"Unsupported transformation type: {State.Graph.Node.CurrentNode.Transformation.GetType().Name}", type: MessageType.Error);
@@ -120,7 +162,7 @@ public static class Inspector {
                     // Draw a help box.
                     EditorGUILayout.HelpBox(message: "There is no selected transformation.", type: MessageType.Info);
                 }
-                
+                */
                 // End the area.
                 GUILayout.EndArea();
             }
@@ -153,7 +195,10 @@ public static class Inspector {
                 };
                 // Create the inspector container style.
                 Inspector._msInspectorContainer = new GUIStyle {
-                    padding = { left = 8, top = 16, right = 8, bottom = 16 },
+                    padding = { left = 0, top = 0, right = 0, bottom = 0 },
+                    margin =  { left = 0, top = 0, right = 0, bottom = 0 },
+                    border =  { left = 0, top = 0, right = 0, bottom = 0 },
+                    
                 };
             }
             
@@ -170,7 +215,7 @@ public static class Inspector {
                 int actorIndex = EditorGUILayout.Popup(
                     label: "Actor",
                     selectedIndex: node.Transformation.State.actor == null ? 0 : actors.IndexOf(item: node.Transformation.State.actor),
-                    displayedOptions: actors.Select(selector: actor => actor.name).ToArray()
+                    displayedOptions: actors.Select(selector: actor => actor.name).Select(selector: name => name.Substring(startIndex: name.LastIndexOf(value: '_') + 1)).ToArray()
                 );
                 
                 // Return the new actor.

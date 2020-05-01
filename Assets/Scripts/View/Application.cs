@@ -24,12 +24,46 @@ public static class Application {
                     // -- Public Attributes --
                         /// <summary>Event triggered on each <see cref="Update"/> call.</summary>
                         public readonly UnityEngine.Events.UnityEvent OnUpdate = new UnityEngine.Events.UnityEvent();
+                        
+                        /// <summary>Event triggered on the next <see cref="Update"/> call.</summary>
+                        [NonSerialized]
+                        public UnityEngine.Events.UnityEvent OnNextUpdate = new UnityEngine.Events.UnityEvent();
                 // --- /Attributes ---
                 
                 // ---  Methods ---
                     // -- Unity Events --
                         /// <summary>Unity event fired on every frame.</summary>
-                        private void Update() { this.OnUpdate.Invoke(); }
+                        private void Update() {
+                            // Invoke the OnUpdate call.
+                            this.OnUpdate.Invoke(); 
+                            
+                            // Invoke the next update listeners.
+                            this.OnNextUpdate.Invoke(); 
+                            // Clear the event.
+                            this.OnNextUpdate.RemoveAllListeners();
+                        }
+                        
+                    // -- Public Methods --
+                        /// <summary>
+                        /// Waits for the specified amount of frames before calling the specified action.
+                        /// </summary>
+                        /// <param name="frames">The number of frames to wait.</param>
+                        /// <param name="action">The action to execute.</param>
+                        public void WaitForFrames(int frames, UnityEngine.Events.UnityAction action) {
+                            // Wrap to the private method.
+                            this.StartCoroutine(routine: this._WaitForFrames(frames: frames, action: action));
+                        }
+                        
+                    // -- Private Methods --
+                        private System.Collections.IEnumerator _WaitForFrames(int frames, UnityEngine.Events.UnityAction action) {
+                            // Wait for the number of required frames.
+                            for (int index = 0; index < frames; index++) {
+                                yield return new WaitForFixedUpdate();
+                            }
+                            
+                            // Call the action.
+                            action.Invoke();
+                        }
                 // --- /Methods ---
             }
     // --- /Types ---
@@ -45,15 +79,19 @@ public static class Application {
             /// <summary>Reference to the theatre's stage root object.</summary>
             public static GameObject Stage;
             
-            /// <summary>Setter used to update the stage background image.</summary>
-            public static Sprite Background { set => Application._SetStageBackground(bg: value); }
+            /// <summary>Reference to the theatre's UI root object.</summary>
+            // ReSharper disable once InconsistentNaming
+            public static GameObject UI;
+            
+            /// <summary>Size of the camera in pixels.</summary>
+            public static Vector2 CameraSize { get; private set; }
             
             /// <summary>Accessor to the application behaviour.</summary>
             public static ApplicationBehaviour AppBehaviour => Application._msRootApplicationBehaviour;
             
         // -- Private Attributes --
-            /// <summary>Renderer of the background.</summary>
-            private static Image _mBackgroundRenderer;
+            /// <summary>Reference to the camera of the spectator.</summary>
+            private static Camera _msCamera;
             
             /// <summary>Reference to the root object's <see cref="ApplicationBehaviour"/>.</summary>
             private static ApplicationBehaviour _msRootApplicationBehaviour;
@@ -83,9 +121,13 @@ public static class Application {
                 Application.Root = new GameObject(name: "Root", typeof(ApplicationBehaviour));
                 Application._msRootApplicationBehaviour = Application.Root.GetComponent<ApplicationBehaviour>();
                 
-                // Create the spectator and stage.
+                // Create the spectator, stage and UI.
                 Application._LoadSpectator();
                 Application._PrepareStage();
+                Application._PrepareUI();
+                
+                // Create the scene objects.
+                Directions.Scene.CreateSceneObjects();
             }
             
             // - Coroutine Manipulator -
@@ -118,6 +160,13 @@ public static class Application {
                 );
                 // Set the name of the spectator.
                 Application.Spectator.name = "Spectator";
+                
+                // Load the camera component from the camera.
+                if (!(Application.Spectator.GetComponentInChildren<Camera>() is Camera camera)) {
+                    // Throw an error.
+                    throw Controller.Application.Error(message: "There is no Camera component in the provided Spectator prefab");
+                }
+                Application._msCamera = camera;
             }
             
             /// <summary>
@@ -138,40 +187,43 @@ public static class Application {
                 UnityEngine.UI.CanvasScaler scaler = Application.Stage.GetComponent<UnityEngine.UI.CanvasScaler>();
                 scaler.uiScaleMode = UnityEngine.UI.CanvasScaler.ScaleMode.ScaleWithScreenSize;
                 scaler.referenceResolution = new Vector2(x: 1920, y: 1080);
-                scaler.screenMatchMode = UnityEngine.UI.CanvasScaler.ScreenMatchMode.Shrink;
+                scaler.screenMatchMode = UnityEngine.UI.CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+                scaler.matchWidthOrHeight = 0f;
                 scaler.referencePixelsPerUnit = 1080;
+                
+                // Load the view dimensions.
+                // NOTE: We need to wait two frames before the sizeDelta value is correct.
+                Application.AppBehaviour.WaitForFrames(frames: 2, action: () => {
+                    Application.CameraSize = canvas.GetComponent<RectTransform>().sizeDelta;
+                });
                 
                 // Attach it to the root.
                 Application.Stage.transform.SetParent(parent: Application.Root.transform, worldPositionStays: false);
-                
-                
-                // Create the background renderer.
-                GameObject background = new GameObject(name: "Background", components: new[] { typeof(Image), typeof(Canvas) });
-                
-                // Prepare the background parameters.
-                Application._mBackgroundRenderer = background.GetComponent<Image>();
-                RectTransform bgRect = background.GetComponent<RectTransform>();
-                bgRect.anchorMin = Vector2.zero;
-                bgRect.anchorMax = Vector2.one;
-                bgRect.position = Vector2.one / 2;
-                bgRect.anchoredPosition = Vector2.zero;
-                
-                Canvas bgCanvas = background.GetComponent<Canvas>();
-                bgCanvas.overrideSorting = true;
-                bgCanvas.sortingLayerID = SortingLayer.NameToID(name: "Background");
-                
-                // Attach the background to the stage.
-                background.transform.SetParent(parent: Application.Stage.transform, worldPositionStays: false);
             }
             
-        // -- Private Methods --
             /// <summary>
-            /// Updates the background of the stage.
-            /// </summary>
-            /// <param name="bg">The background of the stage.</param>
-            private static void _SetStageBackground(Sprite bg) {
-                // Update the background's sprite.
-                Application._mBackgroundRenderer.sprite = bg;
+            /// Prepares the ui root of the theatre.
+            /// </summary>            
+            private static void _PrepareUI() {
+                // Create the ui gameobject.
+                Application.UI = new GameObject(name: "UI", components: new [] { typeof(Canvas), typeof(UnityEngine.UI.CanvasScaler) });
+                // Attach it to the root.
+                Application.UI.transform.SetParent(parent: Application.Root.transform, worldPositionStays: false);
+                
+                // Setup the canvas object.
+                Canvas canvas = Application.UI.GetComponent<Canvas>();
+                canvas.worldCamera = Application.Spectator.GetComponentInChildren<Camera>();
+                canvas.renderMode = RenderMode.ScreenSpaceCamera;
+                canvas.planeDistance = 10;
+                canvas.sortingLayerID = SortingLayer.NameToID(name: "GUI"); 
+                
+                // Setup the canvas scaler object.
+                UnityEngine.UI.CanvasScaler scaler = Application.UI.GetComponent<UnityEngine.UI.CanvasScaler>();
+                scaler.uiScaleMode = UnityEngine.UI.CanvasScaler.ScaleMode.ScaleWithScreenSize;
+                scaler.referenceResolution = new Vector2(x: 1920, y: 1080);
+                scaler.screenMatchMode = UnityEngine.UI.CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+                scaler.matchWidthOrHeight = 0f;
+                scaler.referencePixelsPerUnit = 1080;
             }
             
             /// <summary>

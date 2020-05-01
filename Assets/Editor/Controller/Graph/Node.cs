@@ -189,14 +189,28 @@ public static class Node {
             /// Deserializes the specified node object.
             /// </summary>
             public static void Deserialize(State.Graph.Node node, List<State.Graph.Node> allNodes) {
-                // Loop through the target ids of the node.
-                foreach (Henshin.Editor.State.Graph.Node child in Enumerable.Select(source: node.targetIndices, selector: index => allNodes[index: index])) {
-                    // Add the node as the target of the node output.
-                    node.Output.Targets.Add(item: child);
-                    
-                    // Add the node as the target of the child input.
-                    child.Input.Targets.Add(item: node);
-                }
+                    // Loop through the target ids of the node.
+                    for (int index = 0; index < node.targetIndices.Count; index++) {
+                        // Check the index of the child.
+                        int childIndex = node.targetIndices[index: index];
+                        if (childIndex >= 0 && childIndex < allNodes.Count) {
+                            try {
+                                // Add the node as the target of the node output.
+                                node.Output.Targets.Add(item: allNodes[index: childIndex]);
+                                
+                                // Add the node as the target of the child input.
+                                allNodes[index: childIndex].Input.Targets.Add(item: node);
+                            } catch (System.NullReferenceException) {
+                                // Log an error.
+                                Debug.LogError(message: "Tried to attach an invalid child item.");
+                            }
+                        } else {
+                            // Log an error.
+                            Debug.LogError(message: $"The node #{allNodes.IndexOf(item: node)} has an invalid child index: {childIndex}");
+                            // Remove the node from the list.
+                            node.targetIndices.RemoveAt(index: index);
+                        }
+                    }
             }
             
             /// <summary>

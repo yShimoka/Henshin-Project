@@ -10,7 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 97f3d7393df64671922963a99bc1202f, type: 3}
-  m_Name: DATA_ACTOR_Debug
+  m_Name: DATA_ACTOR_Shiki
   m_EditorClassIdentifier: 
   actorPrefab: {fileID: 3384091525149449289, guid: b76d7392b54d84a2b875f287faff1bfd,
     type: 3}
+  poses:
+  - identifier: Idle
+    sprite: {fileID: 21300000, guid: 48cea823693034275a7b6ebd2c165a02, type: 3}
+  - identifier: Smile
+    sprite: {fileID: 21300000, guid: 320f812da51134fef8c977618962d7ed, type: 3}

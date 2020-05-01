@@ -61,12 +61,6 @@ public static class Canvas {
                     height: State.SceneEditor.Canvas.RATIO.height * container.height
                 );
                 
-                // If the current render area is unset.
-                if (State.SceneEditor.Canvas.CurrentRenderArea == null) {
-                    // Reload the render area.
-                    //Canvas._ReloadRenderArea();
-                }
-                
                 // Update the render area's rect.
                 Controller.Graph.RenderArea.BeforeRender(containerRect: State.SceneEditor.Canvas.Rect, area: State.SceneEditor.Canvas.CurrentRenderArea);
             }
@@ -79,14 +73,32 @@ public static class Canvas {
             public static void AfterRender(Event ev) {
                 // Handle the events for the render area.
                 Controller.Graph.RenderArea.AfterRender(area: State.SceneEditor.Canvas.CurrentRenderArea);
-                
+
+                switch (ev.type) {
                 // If the event is a context click.
-                if (ev.type == EventType.ContextClick) {
+                case EventType.ContextClick:
                     // Store the mouse's position.
-                    Canvas._msLastMousePosition = ev.mousePosition - State.SceneEditor.Canvas.CurrentRenderArea.Position - State.SceneEditor.Canvas.Rect.position;
+                    Canvas._msLastMousePosition = State.SceneEditor.Canvas.CurrentRenderArea.scale *(ev.mousePosition - State.SceneEditor.Canvas.CurrentRenderArea.Position - State.SceneEditor.Canvas.Rect.position);
                     // Render the menu.
                     State.SceneEditor.Canvas.ContextMenu.ShowAsContext();
+                    // Re-render the area.
+                    Controller.Graph.RenderArea.ON_SHOULD_REPAINT.Invoke();
+                    break;
+                // If the mouse was released.
+                case EventType.MouseUp:
+                    // Clear the socket.
+                    State.Graph.Socket.CurrentSource = null;
+                    // Re-render the area.
+                    Controller.Graph.RenderArea.ON_SHOULD_REPAINT.Invoke();
+                    break;
                 }
+            }
+            
+            /// <summary>
+            /// Centers the render area in its container rect.
+            /// </summary>
+            public static void Center(State.Graph.RenderArea area) {
+                area.position = area.ContainerRect.center;
             }
             
         // -- Private Methods --
@@ -121,6 +133,8 @@ public static class Canvas {
                 menu.AddItem(content: new GUIContent{ text = "Scale" }, on: false, func: () => Canvas._CreateNode<Henshin.Controller.Directions.Transformations.Actor.Scale>(unique: false));
                 menu.AddItem(content: new GUIContent{ text = "Colour" }, on: false, func: () => Canvas._CreateNode<Henshin.Controller.Directions.Transformations.Actor.Colour>(unique: false));
                 menu.AddItem(content: new GUIContent{ text = "Visible" }, on: false, func: () => Canvas._CreateNode<Henshin.Controller.Directions.Transformations.Actor.Visible>(unique: false));
+                menu.AddItem(content: new GUIContent{ text = "Pose" }, on: false, func: () => Canvas._CreateNode<Henshin.Controller.Directions.Transformations.Actor.Pose>(unique: false));
+                menu.AddItem(content: new GUIContent{ text = "Flip" }, on: false, func: () => Canvas._CreateNode<Henshin.Controller.Directions.Transformations.Actor.Flip>(unique: false));
                 
                 // Store the instance.
                 State.SceneEditor.Canvas.ContextMenu = menu;
@@ -145,10 +159,27 @@ public static class Canvas {
                         at: Canvas._msLastMousePosition, 
                         owner: current
                     );
-                    node.position -= node.FullRect.size / 2;
+                    node.position -= State.Graph.Node.NODE_SIZE / 2f * current.scale;
+                    node.position.Set(
+                        newX: Mathf.FloorToInt(f: node.position.x / State.Graph.RenderArea.GUI_CELL_SIZE),  
+                        newY: Mathf.FloorToInt(f: node.position.y / State.Graph.RenderArea.GUI_CELL_SIZE)
+                    );
                     
                     // Add the node to the list
                     current.nodes.Add(item: node);
+                    
+                    // If there is a selected socket.
+                    if (State.Graph.Socket.CurrentSource != null) {
+                        // If the node has an input.
+                        if (node.Input != null) {
+                            // Bind the nodes.
+                            State.Graph.Socket.CurrentSource.Owner.Output.Targets.Add(item: node);
+                            node.Input.Targets.Add(item: State.Graph.Socket.CurrentSource.Owner);
+                        }
+                        
+                        // Clear the current source.
+                        State.Graph.Socket.CurrentSource = null;
+                    }
                 }
             }
     // --- /Methods ---

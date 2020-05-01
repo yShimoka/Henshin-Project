@@ -92,17 +92,31 @@ public class Actor: MonoBehaviour {
             public void SetColour(Color colour) { this._mSprite.color = colour; }
             
             /// <returns>The current position of the actor, in local space.</returns>
-            public Vector2 GetPosition() { return this.transform.localPosition; }
+            public Vector2 GetPosition() {
+                Vector3 localPosition = this.transform.localPosition;
+                return new Vector2(
+                    x: localPosition.x / (View.Application.CameraSize.x / 2),
+                    y: localPosition.y / (View.Application.CameraSize.y / 2)
+                );
+            }
             
             /// <returns>The current rotation of the actor, in local space.</returns>
             public Quaternion GetRotation() { return this.transform.localRotation; }
             
             /// <returns>The current scale of the actor, in local space.</returns>
-            public Vector3 GetScale() { return this.transform.localScale; }
+            public Vector2 GetScale() {
+                return this.transform.localScale;
+            }
             
             /// <summary>Sets the local position of the actor.</summary>
             /// <param name="position">The new position of the actor.</param>
-            public void SetPosition(Vector2 position) { this.transform.localPosition = new Vector3(x: position.x, y: position.y, z: this.transform.localPosition.z); }
+            public void SetPosition(Vector2 position) {
+                this.transform.localPosition = new Vector3(
+                    x: position.x * (View.Application.CameraSize.x / 2), 
+                    y: position.y * (View.Application.CameraSize.y / 2), 
+                    z: this.transform.localPosition.z
+                );
+            }
             
             /// <summary>Sets the local rotation of the actor.</summary>
             /// <param name="rotation">The new rotation of the actor.</param>
