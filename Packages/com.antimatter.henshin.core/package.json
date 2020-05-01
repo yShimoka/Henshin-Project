@@ -1,0 +1,13 @@
+{
+    "name": "com.antimatter.henshin.core",
+    "version": "0.1.0",
+    "displayName": "Henshin Project - Core",
+    "description": "The core package that groups all the henshin project code.",
+    "unity": "2019.3",
+    "unityRelease": "3f6",
+    "author": {
+        "email": "contact@jb-caillaud.fr",
+        "name": "Anti Matter Studios",
+        "url": "https://jb-caillaud.fr"
+    }
+}
