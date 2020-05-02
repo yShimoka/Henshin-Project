@@ -28,7 +28,7 @@ public class ActState {
             /// <summary>
             /// Accessor to the identifier of this act.
             /// </summary>
-            public string Identifier => $"Act - {this.Index}";
+            public string Identifier => $"Act - {this.Index + 1}";
             
             // - Runtime Parameters -
             /// <summary>
@@ -37,8 +37,37 @@ public class ActState {
             [System.NonSerializedAttribute]
             public Runtime.Application.ApplicationState Owner;
             
-        // -- Protected Attributes --
-        // -- Private Attributes --
+            /// <summary>
+            /// Index of the scene that is currently playing.
+            /// </summary>
+            [System.NonSerializedAttribute]
+            public int CurrentSceneIndex;
+            
+            // - Static References -
+            /// <summary>
+            /// Reference to the act that is currently being played.
+            /// </summary>
+            [System.NonSerializedAttribute]
+            public static ActState Current;
+            
+            // - Helper Properties -
+            /// <summary>
+            /// Helper accessor to the current scene object.
+            /// </summary>
+            [JetBrains.Annotations.CanBeNullAttribute]
+            public Runtime.Directions.Scene.SceneState CurrentScene {
+                get {
+                    // Check if the scene index is valid.
+                    if (this.CurrentSceneIndex >= 0 && this.CurrentSceneIndex < this.SceneList.Length) {
+                        // Return the scene instance.
+                        return this.SceneList[this.CurrentSceneIndex];
+                    } else {
+                        // Return a null.
+                        return null;
+                    }
+                }
+            }
+            
     // --- /Attributes ---
 }
 }

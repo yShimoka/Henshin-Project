@@ -1,7 +1,5 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
-using UnityEngine;
-
 /* Wrap the class within the local namespace. */
 namespace Runtime.Actor {
 
@@ -13,16 +11,35 @@ namespace Runtime.Actor {
 public class ActorState {
     // ---  Attributes ---
         // -- Serialized Attributes --
+            // - Identifiers -
+            /// <summary>
+            /// Name of this actor.
+            /// </summary>
+            public string Identifier;
+            
+            /// <summary>
+            /// Prefab instance used by the actor.
+            /// </summary>
+            public UnityEngine.GameObject Prefab;
+            
+            /// <summary>
+            /// List of all the poses that the actor can take.
+            /// </summary>
+            public System.Collections.Generic.List<UnityEngine.Sprite> PoseList = 
+                new System.Collections.Generic.List<UnityEngine.Sprite>();
+            
         // -- Public Attributes --
-        // -- Protected Attributes --
-        // -- Private Attributes --
+            /// <summary>
+            /// Instance of the actor's <see cref="UnityEngine.GameObject"/> in the scene.
+            /// </summary>
+            [System.NonSerializedAttribute]
+            public UnityEngine.GameObject Instance;
+            
+            /// <summary>
+            /// Instance of the actor's <see cref="UnityEngine.SpriteRenderer"/> component.
+            /// </summary>
+            [System.NonSerializedAttribute]
+            public UnityEngine.SpriteRenderer SpriteRenderer;
     // --- /Attributes ---
-    
-    // ---  Methods ---
-        // -- Unity Events --
-        // -- Public Methods --
-        // -- Protected Methods --
-        // -- Private Methods --
-    // --- /Methods ---
 }
 }

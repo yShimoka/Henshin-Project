@@ -9,6 +9,37 @@ namespace Runtime.Application {
 /// </summary>
 public static class ApplicationView {
     // ---  SubObjects ---
+        // -- Public Enumerators --
+            /// <summary>
+            /// Class used as a list of all the possible sorting layer identifiers.
+            /// </summary>
+            public static class SortingLayers {
+                /// <summary>
+                /// ID of the background layer.
+                /// </summary>
+                // ReSharper disable once InconsistentNaming
+                // ReSharper disable once MemberHidesStaticFromOuterClass
+                public static readonly int Background = UnityEngine.SortingLayer.NameToID(name: "Background");
+                
+                /// <summary>
+                /// ID of the middleground layer.
+                /// </summary>
+                // ReSharper disable once InconsistentNaming
+                public static readonly int Middleground = UnityEngine.SortingLayer.NameToID(name: "Middleground");
+                
+                /// <summary>
+                /// ID of the foreground layer.
+                /// </summary>
+                // ReSharper disable once InconsistentNaming
+                public static readonly int Foreground = UnityEngine.SortingLayer.NameToID(name: "Foreground");
+                
+                /// <summary>
+                /// ID of the GUI layer.
+                /// </summary>
+                // ReSharper disable once InconsistentNaming
+                // ReSharper disable once MemberHidesStaticFromOuterClass
+                public static readonly int GUI = UnityEngine.SortingLayer.NameToID(name: "Foreground");
+            }
         // -- Private Classes --
             /// <summary>
             /// Exception thrown if any problem arose during the creation of the application.
@@ -105,20 +136,20 @@ public static class ApplicationView {
             /// Otherwise, opens a message box to the developer.
             /// </summary>
             /// <param name="message">Message that gets displayed to the user.</param>
-            /// <param name="details">Additional details to send to the developer.</param>
-            public static void Error(string message, string details) {
+            /// <param name="details">(Optional) Additional details to send to the developer.</param>
+            public static void Error(string message, string details = null) {
 #if UNITY_EDITOR
                     // Show a text box to the developer.
                     UnityEditor.EditorUtility.DisplayDialog(
                         title: "An error was thrown during the application's runtime.",
-                        message: $"Error details: {details}",
+                        message: $"Message: {message}\n\nError details: {details}",
                         ok: "Close" 
                     );
                     // Show an error in the console.
                     UnityEngine.Debug.LogError(message: $"Error thrown: {message}");
                     
                     // Stop the runtime execution.
-                    UnityEditor.EditorApplication.ExitPlaymode();
+                    //UnityEditor.EditorApplication.ExitPlaymode();
 #else
                     // Load the error scene.
                     _LoadErrorScene(message: message, details: details);

@@ -1,7 +1,6 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 using System.Linq;
-using UnityEngine;
 
 /* Wrap the class within the local namespace. */
 namespace Runtime.Actions {
@@ -87,7 +86,7 @@ public abstract class ActionController {
                     // Ensure that the index is valid.
                     if (childIndex < 0 || childIndex > owner.ActionList.Length) {
                         // Log an error.
-                        Debug.LogError(message: $"There is an action that has an invalid child : {child}");
+                        UnityEngine.Debug.LogError(message: $"There is an action that has an invalid child : {child}");
                     }
 
                     // Store the index in the list.
@@ -141,6 +140,33 @@ public abstract class ActionController {
             }
             
             // - Controller Manipulation -
+            /// <summary>
+            /// Applies the specified action state.
+            /// Starts the action chain from the specified starting point.
+            /// </summary>
+            /// <param name="state">The state of the </param>
+            public static void Apply(ActionState state) {
+                // Check if the state is valid.
+                if (state != null) {
+                    // Increment the state's counter.
+                    state.ParentFinishedCounter++;
+                    
+                    // Check if the counter is greater than the number of parents.
+                    if (state.ParentFinishedCounter >= state.ParentCount) {
+                        // Create the state's controller.
+                        ActionController controller = ActionController._CreateActionController(
+                            controller: state.ActionControllerName, 
+                            state: state
+                        );
+                        
+                        // Wait 1 frame to ensure that the chain does not overflow the stack.
+                        Runtime.Application.ApplicationController.OnNextTick.AddListener(
+                            call: _ => { controller.Apply(); }
+                        );
+                    }
+                }
+            }
+            
             /// <summary>
             /// Creates a new <see cref="ActionController"/> instance.
             /// </summary>
@@ -199,6 +225,32 @@ public abstract class ActionController {
             }
             
         // -- Protected Methods --
+            // - Play Handlers -
+            /// <summary>
+            /// Applies the action.
+            /// This should be overloaded on every action object.
+            /// </summary>
+            protected abstract void Apply();
+            
+            /// <summary>
+            /// Marks the action as being finished.
+            /// Applies all the children actions.
+            /// </summary>
+            protected void Finish() {
+                // Check if there are children in the list.
+                if (this.State.ChildrenList.Count == 0) {
+                    // Log a warning.
+                    UnityEngine.Debug.LogWarning(message: "There was an action in the tree that had no children.");
+                }
+                
+                // Loop through the children actions.
+                foreach (ActionState actionState in this.State.ChildrenList) {
+                    // Apply the child action.
+                    ActionController.Apply(state: actionState);
+                }
+            }
+            
+            // - Serialization -
             /// <summary>
             /// Method called right before serialization.
             /// Stores the parameters into the <see cref="ActionState.Parameters"/> array.

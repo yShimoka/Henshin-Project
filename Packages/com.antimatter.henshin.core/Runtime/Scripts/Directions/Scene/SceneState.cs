@@ -31,6 +31,13 @@ public class SceneState {
             /// </summary>
             public Runtime.Actions.ActionState[] ActionList;
             
+#if UNITY_EDITOR
+            /// <summary>
+            /// Flag set in debug mode if this scene should be played on its own.
+            /// </summary>
+            public bool IsDebugScene;
+#endif
+            
         // -- Public Attributes --
             // - Identifiers -
             /// <summary>
@@ -42,7 +49,7 @@ public class SceneState {
             /// <summary>
             /// Accessor to the identifier of the scene.
             /// </summary>
-            public string Identifier => $"Scene - {this.Index}";
+            public string Identifier => $"Scene - {this.Index + 1}";
             
             // - Runtime Parameters -
             /// <summary>
@@ -57,6 +64,12 @@ public class SceneState {
             /// </summary>
             [System.NonSerializedAttribute]
             public Runtime.Directions.Act.ActState Owner;
+            
+            // - Static References -
+            /// <summary>
+            /// Reference to the scene that is currently playing.
+            /// </summary>
+            public static SceneState Current;
             
         // -- Protected Attributes --
         // -- Private Attributes --

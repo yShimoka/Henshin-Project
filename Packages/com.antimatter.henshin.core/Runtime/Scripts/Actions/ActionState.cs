@@ -46,6 +46,14 @@ public class ActionState {
             [System.NonSerializedAttribute]
             public int ParentCount = 0;
             
+            /// <summary>
+            /// Counts the number of parents that are finished.
+            /// While this value is below <see cref="ParentCount"/>,
+            /// the action should not be applied.
+            /// </summary>
+            [System.NonSerializedAttribute]
+            public int ParentFinishedCounter;
+            
     // --- /Attributes ---
 }
 }

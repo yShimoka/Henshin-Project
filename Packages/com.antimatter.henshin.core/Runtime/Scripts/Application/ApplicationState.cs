@@ -40,11 +40,34 @@ public class ApplicationState: UnityEngine.ScriptableObject, UnityEngine.ISerial
         // -- Public Attributes --
             // - Runtime Parameters -
             /// <summary>
+            /// Index of the act that is currently playing.
+            /// </summary>
+            [System.NonSerializedAttribute]
+            public int CurrentActIndex;
+        
+            // - Static References -
+            /// <summary>
             /// Reference to the current application's state.
             /// </summary>
             public static ApplicationState Own;
-        
-        // -- Private Attributes --
+            
+            // - Helper Accessors -
+            /// <summary>
+            /// Returns a reference to the act that is currently being played.
+            /// </summary>
+            [JetBrains.Annotations.CanBeNullAttribute]
+            public Runtime.Directions.Act.ActState CurrentAct {
+                get {
+                    // Check if the act index value is valid.
+                    if (this.CurrentActIndex >= 0 && this.CurrentActIndex < this.ActList.Length) {
+                        // Return the act reference.
+                        return this.ActList[this.CurrentActIndex];
+                    } else {
+                        // Return a null.
+                        return null;
+                    }
+                }
+            }
     // --- /Attributes ---
     
     // ---  Methods ---

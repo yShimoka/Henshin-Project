@@ -49,8 +49,65 @@ public static class ActController {
                 act.Index = System.Array.IndexOf(array: owner.ActList, value: act);
             }
             
-        // -- Protected Methods --
-        // -- Private Methods --
+            // - Play Controller -
+            /// <summary>
+            /// Plays the specified act.
+            /// Plays the first scene of the act.
+            /// </summary>
+            /// <param name="act">The act to play.</param>
+            public static void Play(ActState act) {
+                // Check if the act is valid.
+                if (act != null) {
+                    // Store the reference of the current act.
+                    ActState.Current = act;
+                    // Reset the scene index counter.
+                    act.CurrentSceneIndex = 0;
+                    
+                    // Check if the act has any scene.
+                    if (act.CurrentScene != null) {
+                        // Play the first scene of the act.
+                        Runtime.Directions.Scene.SceneController.Play(scene: act.CurrentScene);
+                    } else {
+                        // Log a warning.
+                        UnityEngine.Debug.LogWarning(
+                            message: $"Skipped over act \"{act.Identifier}\" as it had no scenes to play."
+                        );
+                        
+                        // Play the next act.
+                        Runtime.Application.ApplicationController.NextAct();
+                    }
+                } else {
+                    // Throw an error.
+                    Runtime.Application.ApplicationView.Error(
+                        message: "Tried to play an act that is null !"
+                    );
+                }
+            }
+            
+            /// <summary>
+            /// Starts the next scene in the current act.
+            /// </summary>
+            public static void NextScene() {
+                // Check if the current act is set.
+                if (ActState.Current != null) {
+                    // Increment the scene counter.
+                    ActState.Current.CurrentSceneIndex++;
+                    
+                    // Check if there is a next scene.
+                    if (ActState.Current.CurrentScene != null) {
+                        // Play the next scene.
+                        Runtime.Directions.Scene.SceneController.Play(scene: ActState.Current.CurrentScene);
+                    } else {
+                        // Play the next act.
+                        Runtime.Application.ApplicationController.NextAct();
+                    }
+                } else {
+                    // Throw an error.
+                    Runtime.Application.ApplicationView.Error(
+                        message: "Tried to advance to the next scene when there is no act currently playing."
+                    );
+                }
+            }
     // --- /Methods ---
 }
 }
