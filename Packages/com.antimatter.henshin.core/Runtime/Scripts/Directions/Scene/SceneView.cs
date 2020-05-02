@@ -1,7 +1,7 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 /* Wrap the class within the local namespace. */
-namespace Runtime.Directions.Scene {
+namespace Henshin.Runtime.Directions.Scene {
 
 /// <summary>
 /// Static class used to manipulate the view of the scene.

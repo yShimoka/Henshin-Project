@@ -1,7 +1,8 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 /* Wrap the class within the local namespace. */
-namespace Runtime.Actions.Scene {
+
+namespace Henshin.Runtime.Actions.Scene {
 
 /// <summary>
 /// Controller class used to manipulate <see cref="StartAction.State"/> objects.

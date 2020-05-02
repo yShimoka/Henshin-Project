@@ -3,7 +3,7 @@
 using System.Linq;
 
 /* Wrap the class within the local namespace. */
-namespace Runtime.Application {
+namespace Henshin.Runtime.Application {
 
 /// <summary>
 /// Class used for the <see cref="ApplicationController"/>'s Tick delegates.

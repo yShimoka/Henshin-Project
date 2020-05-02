@@ -1,0 +1,118 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 724f214c2ca441e7869db8b40d73a761, type: 3}
+  m_Name: DATA_EDITOR_Skin
+  m_EditorClassIdentifier: 
+  TextureObject:
+    Delete: {fileID: 0}
+    NodeBody: {fileID: 0}
+    ActorNodeHeader: {fileID: 0}
+    GameplayNodeHeader: {fileID: 0}
+    StartNodeHeader: {fileID: 0}
+    EndNodeHeader: {fileID: 0}
+    DebugBoxBackgroundColor: {r: 0.5019608, g: 0, b: 1, a: 1}
+  ContentObject:
+    SkinEditorRefresh:
+      m_Text: Refresh
+      m_Image: {fileID: 0}
+      m_Tooltip: Refreshes the editor skin.
+    SceneEditorTitle:
+      m_Text: Scene Editor
+      m_Image: {fileID: 2800000, guid: 266e7d03982414494aa3847ef3681809, type: 3}
+      m_Tooltip: Henshin's scene editor window.
+  StyleObject:
+    DebugBoxStyle:
+      m_Name: 
+      m_Normal:
+        m_Background: {fileID: 2800000, guid: a53158a8d6d6541f5b72a8d8a50647af, type: 2}
+        m_ScaledBackgrounds: []
+        m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+      m_Hover:
+        m_Background: {fileID: 0}
+        m_ScaledBackgrounds: []
+        m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+      m_Active:
+        m_Background: {fileID: 0}
+        m_ScaledBackgrounds: []
+        m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+      m_Focused:
+        m_Background: {fileID: 0}
+        m_ScaledBackgrounds: []
+        m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+      m_OnNormal:
+        m_Background: {fileID: 0}
+        m_ScaledBackgrounds: []
+        m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+      m_OnHover:
+        m_Background: {fileID: 0}
+        m_ScaledBackgrounds: []
+        m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+      m_OnActive:
+        m_Background: {fileID: 0}
+        m_ScaledBackgrounds: []
+        m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+      m_OnFocused:
+        m_Background: {fileID: 0}
+        m_ScaledBackgrounds: []
+        m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+      m_Border:
+        m_Left: 0
+        m_Right: 0
+        m_Top: 0
+        m_Bottom: 0
+      m_Margin:
+        m_Left: 0
+        m_Right: 0
+        m_Top: 0
+        m_Bottom: 0
+      m_Padding:
+        m_Left: 0
+        m_Right: 0
+        m_Top: 0
+        m_Bottom: 0
+      m_Overflow:
+        m_Left: 0
+        m_Right: 0
+        m_Top: 0
+        m_Bottom: 0
+      m_Font: {fileID: 0}
+      m_FontSize: 0
+      m_FontStyle: 0
+      m_Alignment: 0
+      m_WordWrap: 0
+      m_RichText: 1
+      m_TextClipping: 0
+      m_ImagePosition: 0
+      m_ContentOffset: {x: 0, y: 0}
+      m_FixedWidth: 0
+      m_FixedHeight: 0
+      m_StretchWidth: 1
+      m_StretchHeight: 0
+  RatioObject:
+    SceneEditorHeaderRatio:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 1
+      height: 0.2
+    SceneEditorInspectorRatio:
+      serializedVersion: 2
+      x: 0
+      y: 0.2
+      width: 0.2
+      height: 0.8
+    SceneEditorGraphAreaRatio:
+      serializedVersion: 2
+      x: 0.2
+      y: 0.2
+      width: 0.8
+      height: 0.8

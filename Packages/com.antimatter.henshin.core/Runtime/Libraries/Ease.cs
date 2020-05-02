@@ -57,7 +57,7 @@
 
 using UnityEngine;
 
-namespace Runtime.Libraries {
+namespace Henshin.Runtime.Libraries {
 public static class EasingFunction
 {
     public enum Ease

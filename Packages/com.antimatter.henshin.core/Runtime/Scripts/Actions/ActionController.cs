@@ -3,7 +3,7 @@
 using System.Linq;
 
 /* Wrap the class within the local namespace. */
-namespace Runtime.Actions {
+namespace Henshin.Runtime.Actions {
 
 /// <summary>
 /// Controller class used to manipulate <see cref="ActionState"/> objects.

@@ -1,7 +1,7 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 /* Wrap the class within the local namespace. */
-namespace Runtime.Actor {
+namespace Henshin.Runtime.Actor {
 
 /// <summary>
 /// View class used to represent actors in the scene.

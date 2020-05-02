@@ -1,9 +1,10 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 using System.Linq;
+using ActionController = Henshin.Runtime.Actions.ActionController;
 
 /* Wrap the class within the local namespace. */
-namespace Runtime.Directions.Scene {
+namespace Henshin.Runtime.Directions.Scene {
 
 /// <summary>
 /// Controller class used to manipulate <see cref="SceneState"/> objects.
@@ -28,7 +29,7 @@ public static class SceneController {
             public static void Serialize(Runtime.Directions.Act.ActState owner, SceneState scene) {
                 // Serialize all the transformations.
                 foreach (Runtime.Actions.ActionState actionState in scene.ActionList) {
-                    Runtime.Actions.ActionController.Serialize(owner: scene, action: actionState);
+                    ActionController.Serialize(owner: scene, action: actionState);
                 }
             }
             
@@ -45,7 +46,7 @@ public static class SceneController {
                 
                 // Deserialize all the transformations.
                 foreach (Runtime.Actions.ActionState actionState in scene.ActionList) {
-                    Runtime.Actions.ActionController.Deserialize(owner: scene, action: actionState);
+                    ActionController.Deserialize(owner: scene, action: actionState);
                 }
                 
                 // Check if the action list is not empty.
@@ -76,7 +77,7 @@ public static class SceneController {
                     // Check if there is a root action set.
                     if (scene.RootAction != null) {
                         // Apply it.
-                        Runtime.Actions.ActionController.Apply(state: scene.RootAction);
+                        ActionController.Apply(state: scene.RootAction);
                     } else {
                         // Log an error.
                         UnityEngine.Debug.LogError(

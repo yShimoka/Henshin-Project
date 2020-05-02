@@ -20,7 +20,7 @@ MonoBehaviour:
         Prefab: {fileID: 8948660713939356513, guid: fe69b606a464349b08ef514cf9e1986d,
           type: 3}
         PoseList:
-        - {fileID: 21300000, guid: 70f43f7e316dd4bfaa4fc133f3a235d3, type: 3}
+        - {fileID: 21300000, guid: 8a31dd2e1cbed49c6ace09c8b92b9d50, type: 3}
         - {fileID: 21300000, guid: 93bb385c23bbc438eb520c3082d74de9, type: 3}
       ActionList: []
       IsDebugScene: 0

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8948660713939356515}
   - component: {fileID: 8948660713939356512}
   m_Layer: 0
-  m_Name: Actor
+  m_Name: PREF_ACTOR_Default
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

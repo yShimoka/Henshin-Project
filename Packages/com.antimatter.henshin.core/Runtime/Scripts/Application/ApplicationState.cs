@@ -1,7 +1,7 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 /* Wrap the class within the local namespace. */
-namespace Runtime.Application {
+namespace Henshin.Runtime.Application {
 
 /// <summary>
 /// State class used to represent the application.

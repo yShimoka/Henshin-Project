@@ -1,9 +1,9 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
-using System.Linq;
+
 
 /* Wrap the class within the local namespace. */
-namespace Runtime.Directions.Act {
+namespace Henshin.Runtime.Directions.Act {
 
 /// <summary>
 /// Controller class used to manipulate <see cref="ActState"/> objects.

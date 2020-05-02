@@ -1,9 +1,9 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
-using UnityEngine;
+
 
 /* Wrap the class within the local namespace. */
-namespace Runtime.Actions {
+namespace Henshin.Runtime.Actions {
 
 /// <summary>
 /// Base class used for all the action states.
@@ -22,12 +22,12 @@ public class ActionState {
             
             /// <summary>
             /// List of all the parameters for this action state.
-            /// This list is used by the <see cref="ActionController"/> overrides to handle action-specific parameters.
+            /// This list is used by the <see cref="Runtime.Actions.ActionController"/> overrides to handle action-specific parameters.
             /// </summary>
             public System.Collections.Generic.List<string> Parameters;
             
             /// <summary>
-            /// Name of the <see cref="ActionController"/>'s class.
+            /// Name of the <see cref="Runtime.Actions.ActionController"/>'s class.
             /// </summary>
             public string ActionControllerName;
             

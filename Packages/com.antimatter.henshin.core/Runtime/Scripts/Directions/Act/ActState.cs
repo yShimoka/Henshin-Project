@@ -1,7 +1,7 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 /* Wrap the class within the local namespace. */
-namespace Runtime.Directions.Act {
+namespace Henshin.Runtime.Directions.Act {
 
 /// <summary>
 /// State class used to describe the state of an act.
