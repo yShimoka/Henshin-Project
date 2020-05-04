@@ -1,5 +1,11 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
+using System;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
 /* Wrap the class within the local namespace. */
 namespace Henshin.Runtime.Application {
 
@@ -19,33 +25,33 @@ public static class ApplicationView {
                 /// </summary>
                 // ReSharper disable once InconsistentNaming
                 // ReSharper disable once MemberHidesStaticFromOuterClass
-                public static readonly int Background = UnityEngine.SortingLayer.NameToID(name: "Background");
+                public static readonly int Background = SortingLayer.NameToID(name: "Background");
                 
                 /// <summary>
                 /// ID of the middleground layer.
                 /// </summary>
                 // ReSharper disable once InconsistentNaming
-                public static readonly int Middleground = UnityEngine.SortingLayer.NameToID(name: "Middleground");
+                public static readonly int Middleground = SortingLayer.NameToID(name: "Middleground");
                 
                 /// <summary>
                 /// ID of the foreground layer.
                 /// </summary>
                 // ReSharper disable once InconsistentNaming
-                public static readonly int Foreground = UnityEngine.SortingLayer.NameToID(name: "Foreground");
+                public static readonly int Foreground = SortingLayer.NameToID(name: "Foreground");
                 
                 /// <summary>
                 /// ID of the GUI layer.
                 /// </summary>
                 // ReSharper disable once InconsistentNaming
                 // ReSharper disable once MemberHidesStaticFromOuterClass
-                public static readonly int GUI = UnityEngine.SortingLayer.NameToID(name: "Foreground");
+                public static readonly int GUI = SortingLayer.NameToID(name: "Foreground");
             }
         // -- Private Classes --
             /// <summary>
             /// Exception thrown if any problem arose during the creation of the application.
             /// Thrown and caught within the <see cref="ApplicationView.Initialize"/> method.
             /// </summary>
-            private class ApplicationCreationException: System.Exception {
+            private class ApplicationCreationException: Exception {
                 /// <summary>
                 /// Message constructor.
                 /// Wraps the base class constructor.
@@ -63,38 +69,38 @@ public static class ApplicationView {
             /// This controller is guaranteed to be on the <see cref="UnityEngine.GameObject"/>
             /// at the root of the scene. 
             /// </summary>
-            public static Application.ApplicationController Root;
+            public static ApplicationController Root;
             
             /// <summary>
             /// Application stage instance.
             /// All rendered object of the play should be held within this transform.
             /// </summary>
-            public static UnityEngine.Transform Stage;
+            public static Transform Stage;
             
             /// <summary>
             /// Application background element.
             /// Image that can be set to anything and will always be rendered behind the main scene.
             /// </summary>
-            public static UnityEngine.UI.Image Background;
+            public static Image Background;
             
             /// <summary>
             /// Application GUI root.
             /// All elements of the graphical user interface should be rendered below this transform.
             /// </summary>
             // ReSharper disable once InconsistentNaming
-            public static UnityEngine.Transform GUI;
+            public static Transform GUI;
             
             /// <summary>
             /// Reference to the <see cref="UnityEngine.Camera"/> that renders the whole application.
             /// </summary>
-            public static UnityEngine.Camera WorldCamera;
+            public static Camera WorldCamera;
             
         // -- Private Attributes --
             // - Scene Info -
             /// <summary>
             /// Scene object containing a handler to the current theatre scene.
             /// </summary>
-            private static UnityEngine.SceneManagement.Scene _msTheatreScene;
+            private static Scene _msTheatreScene;
     // --- /Attributes ---
     
     // ---  Methods ---
@@ -121,7 +127,7 @@ public static class ApplicationView {
                         message: "The application could not initialize itself",
                         details: exception.Message
                     );
-                } catch (System.NullReferenceException exception) {
+                } catch (NullReferenceException exception) {
                     // Show an error.
                     ApplicationView.Error(
                         message: "NullReferenceException in application initialization",
@@ -140,16 +146,16 @@ public static class ApplicationView {
             public static void Error(string message, string details = null) {
 #if UNITY_EDITOR
                     // Show a text box to the developer.
-                    UnityEditor.EditorUtility.DisplayDialog(
+                    EditorUtility.DisplayDialog(
                         title: "An error was thrown during the application's runtime.",
                         message: $"Message: {message}\n\nError details: {details}",
                         ok: "Close" 
                     );
                     // Show an error in the console.
-                    UnityEngine.Debug.LogError(message: $"Error thrown: {message}");
+                    Debug.LogError(message: $"Error thrown: {message}");
                     
                     // Stop the runtime execution.
-                    //UnityEditor.EditorApplication.ExitPlaymode();
+                    EditorApplication.ExitPlaymode();
 #else
                     // Load the error scene.
                     _LoadErrorScene(message: message, details: details);
@@ -171,35 +177,34 @@ public static class ApplicationView {
                 }
             
                 // Prepare the array of all the loaded scenes.
-                UnityEngine.SceneManagement.Scene[] loadedScenes = 
-                    new UnityEngine.SceneManagement.Scene[UnityEngine.SceneManagement.SceneManager.sceneCount];
+                Scene[] loadedScenes = new Scene[SceneManager.sceneCount];
                 // Get all the currently loaded scenes.
-                for (int i = 0; i < UnityEngine.SceneManagement.SceneManager.sceneCount; i++) {
-                    loadedScenes[i] = UnityEngine.SceneManagement.SceneManager.GetSceneAt(index: i);
+                for (int i = 0; i < SceneManager.sceneCount; i++) {
+                    loadedScenes[i] = SceneManager.GetSceneAt(index: i);
                 }
                 
                 // Create the theatre scene.
-                ApplicationView._msTheatreScene = UnityEngine.SceneManagement.SceneManager.CreateScene(
+                ApplicationView._msTheatreScene = SceneManager.CreateScene(
                     sceneName: "Henshin - Theatre",
-                    parameters: new UnityEngine.SceneManagement.CreateSceneParameters {
-                        localPhysicsMode = UnityEngine.SceneManagement.LocalPhysicsMode.Physics2D
+                    parameters: new CreateSceneParameters {
+                        localPhysicsMode = LocalPhysicsMode.Physics2D
                     }
                 );
                 // Set the scene as the currently active one.
-                UnityEngine.SceneManagement.SceneManager.SetActiveScene(scene: ApplicationView._msTheatreScene);
+                SceneManager.SetActiveScene(scene: ApplicationView._msTheatreScene);
                 
                 // Unload all the current scenes.
-                foreach (UnityEngine.SceneManagement.Scene scene in loadedScenes) {
-                    UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(scene: scene);
+                foreach (Scene scene in loadedScenes) {
+                    SceneManager.UnloadSceneAsync(scene: scene);
                 }
                 
                 // Create the theatre root.
-                UnityEngine.GameObject root = new UnityEngine.GameObject(
+                GameObject root = new GameObject(
                     name: "Root", 
-                    components: new []{ typeof(Application.ApplicationController )}
+                    components: new []{ typeof(ApplicationController) }
                 );
                 // Load the application controller game object.
-                ApplicationView.Root = root.GetComponent<Application.ApplicationController>();
+                ApplicationView.Root = root.GetComponent<ApplicationController>();
             }
             
             /// <summary>
@@ -208,25 +213,25 @@ public static class ApplicationView {
             /// </summary>
             private static void _CreateSpectator() {
                 // Create the spectator game object.
-                ApplicationView.WorldCamera = new UnityEngine.GameObject(
+                ApplicationView.WorldCamera = new GameObject(
                     name: "Spectator", 
-                    components: new [] { typeof(UnityEngine.Camera)}
-                ).GetComponent<UnityEngine.Camera>();
+                    components: new [] { typeof(Camera)}
+                ).GetComponent<Camera>();
                 
                 // Attach the spectator to the root.
                 ApplicationView.WorldCamera.transform.SetParent(p: ApplicationView.Root.transform);
                 
                 // Setup the camera.
                 ApplicationView.WorldCamera.orthographic = true;
-                if (Application.ApplicationState.Own != null)
-                    ApplicationView.WorldCamera.backgroundColor = Application.ApplicationState.Own.ClearColor;
-                ApplicationView.WorldCamera.clearFlags = UnityEngine.CameraClearFlags.Color;
+                if (ApplicationState.Own != null)
+                    ApplicationView.WorldCamera.backgroundColor = ApplicationState.Own.ClearColor;
+                ApplicationView.WorldCamera.clearFlags = CameraClearFlags.Color;
                 ApplicationView.WorldCamera.orthographicSize = 1f;
                 ApplicationView.WorldCamera.farClipPlane = 15f;
                 ApplicationView.WorldCamera.nearClipPlane = 5f;
                 
                 // Move the camera backwards by 10 units.
-                ApplicationView.WorldCamera.transform.position = new UnityEngine.Vector3(x: 0f, y: 0f, z: -10f);
+                ApplicationView.WorldCamera.transform.position = new Vector3(x: 0f, y: 0f, z: -10f);
             }
             
             /// <summary>
@@ -234,31 +239,31 @@ public static class ApplicationView {
             /// </summary>
             private static void _CreateStage() {
                 // Create the stage root.
-                ApplicationView.Stage = new UnityEngine.GameObject(
+                ApplicationView.Stage = new GameObject(
                     name: "Stage", 
-                    components: new []{ typeof(UnityEngine.Canvas), typeof(UnityEngine.UI.CanvasScaler) }
+                    components: new []{ typeof(Canvas), typeof(CanvasScaler) }
                 ).transform;
                 // Attach it to the scene root.
                 ApplicationView.Stage.SetParent(p: ApplicationView.Root.transform);
                 
                 // Set the canvas up.
-                UnityEngine.Canvas canvas = ApplicationView.Stage.GetComponent<UnityEngine.Canvas>();
-                canvas.renderMode = UnityEngine.RenderMode.ScreenSpaceCamera;
+                Canvas canvas = ApplicationView.Stage.GetComponent<Canvas>();
+                canvas.renderMode = RenderMode.ScreenSpaceCamera;
                 canvas.worldCamera = ApplicationView.WorldCamera;
                 canvas.planeDistance = 10f;
-                canvas.sortingLayerID = UnityEngine.SortingLayer.NameToID(name: "Middleground");
+                canvas.sortingLayerID = SortingLayer.NameToID(name: "Middleground");
                 
                 // Set the canvas scaler up.
-                UnityEngine.UI.CanvasScaler scaler = canvas.GetComponent<UnityEngine.UI.CanvasScaler>();
-                scaler.uiScaleMode = UnityEngine.UI.CanvasScaler.ScaleMode.ScaleWithScreenSize;
-                scaler.screenMatchMode = UnityEngine.UI.CanvasScaler.ScreenMatchMode.Shrink;
-                scaler.referenceResolution = new UnityEngine.Vector2(x: 1920, y: 1080);
+                CanvasScaler scaler = canvas.GetComponent<CanvasScaler>();
+                scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+                scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Shrink;
+                scaler.referenceResolution = new Vector2(x: 1920, y: 1080);
                 
                 // Add the stage background element.
-                ApplicationView.Background = new UnityEngine.GameObject(
+                ApplicationView.Background = new GameObject(
                     name: "Background", 
-                    components: new []{ typeof(UnityEngine.UI.Image), typeof(UnityEngine.Canvas) }
-                ).GetComponent<UnityEngine.UI.Image>();
+                    components: new []{ typeof(Image), typeof(Canvas) }
+                ).GetComponent<Image>();
                 // Attach it to the stage.
                 ApplicationView.Background.transform.SetParent(
                     parent: ApplicationView.Stage.transform,
@@ -269,17 +274,17 @@ public static class ApplicationView {
                 ApplicationView.Background.preserveAspect = true;
                 
                 // Set the parameters of the background's rect.
-                UnityEngine.RectTransform bgRect = ApplicationView.Background.GetComponent<UnityEngine.RectTransform>();
-                bgRect.anchorMin = UnityEngine.Vector2.zero;
-                bgRect.anchorMax = UnityEngine.Vector2.one;
-                bgRect.pivot = new UnityEngine.Vector2(x: 0.5f, y: 0.5f);
-                bgRect.anchoredPosition3D = UnityEngine.Vector3.zero;
-                bgRect.sizeDelta = UnityEngine.Vector2.zero;
+                RectTransform bgRect = ApplicationView.Background.GetComponent<RectTransform>();
+                bgRect.anchorMin = Vector2.zero;
+                bgRect.anchorMax = Vector2.one;
+                bgRect.pivot = new Vector2(x: 0.5f, y: 0.5f);
+                bgRect.anchoredPosition3D = Vector3.zero;
+                bgRect.sizeDelta = Vector2.zero;
                 
                 // Set the parameters of the background's canvas.
-                UnityEngine.Canvas bgCanvas = ApplicationView.Background.GetComponent<UnityEngine.Canvas>();
+                Canvas bgCanvas = ApplicationView.Background.GetComponent<Canvas>();
                 bgCanvas.overrideSorting = true;
-                bgCanvas.sortingLayerID = UnityEngine.SortingLayer.NameToID(name: "Background");
+                bgCanvas.sortingLayerID = SortingLayer.NameToID(name: "Background");
             }
             
             /// <summary>
@@ -287,25 +292,25 @@ public static class ApplicationView {
             /// </summary>
             private static void _CreateGUI() {
                 // Create the GUI root.
-                ApplicationView.GUI = new UnityEngine.GameObject(
+                ApplicationView.GUI = new GameObject(
                     name: "GUI", 
-                    components: new []{ typeof(UnityEngine.Canvas), typeof(UnityEngine.UI.CanvasScaler) }
+                    components: new []{ typeof(Canvas), typeof(CanvasScaler) }
                 ).transform;
                 // Attach it to the scene root.
                 ApplicationView.GUI.SetParent(p: ApplicationView.Root.transform);
                 
                 // Set the canvas up.
-                UnityEngine.Canvas canvas = ApplicationView.GUI.GetComponent<UnityEngine.Canvas>();
-                canvas.renderMode = UnityEngine.RenderMode.ScreenSpaceCamera;
+                Canvas canvas = ApplicationView.GUI.GetComponent<Canvas>();
+                canvas.renderMode = RenderMode.ScreenSpaceCamera;
                 canvas.worldCamera = ApplicationView.WorldCamera;
                 canvas.planeDistance = 10f;
-                canvas.sortingLayerID = UnityEngine.SortingLayer.NameToID(name: "GUI");
+                canvas.sortingLayerID = SortingLayer.NameToID(name: "GUI");
                 
                 // Set the canvas scaler up.
-                UnityEngine.UI.CanvasScaler scaler = canvas.GetComponent<UnityEngine.UI.CanvasScaler>();
-                scaler.uiScaleMode = UnityEngine.UI.CanvasScaler.ScaleMode.ScaleWithScreenSize;
-                scaler.screenMatchMode = UnityEngine.UI.CanvasScaler.ScreenMatchMode.Shrink;
-                scaler.referenceResolution = new UnityEngine.Vector2(x: 1920, y: 1080);
+                CanvasScaler scaler = canvas.GetComponent<CanvasScaler>();
+                scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+                scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Shrink;
+                scaler.referenceResolution = new Vector2(x: 1920, y: 1080);
             }
             
             // - Error Management -
@@ -317,34 +322,34 @@ public static class ApplicationView {
             /// <param name="details">The details of the error.</param>
             private static void _LoadErrorScene(string message, string details) {
                 // Check if the error scene is loaded.
-                UnityEngine.SceneManagement.Scene errorScene = UnityEngine.SceneManagement.SceneManager.GetSceneByName(
+                Scene errorScene = SceneManager.GetSceneByName(
                     name: "Error"
                 ); 
                 if (!errorScene.IsValid()) {
                     // Create the error scene.
-                    errorScene = UnityEngine.SceneManagement.SceneManager.CreateScene(
+                    errorScene = SceneManager.CreateScene(
                         sceneName: "Error"
                     );
                     
                     // Try to unload the current scene.
                     if (ApplicationView._msTheatreScene.IsValid()) {
-                        UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(scene: ApplicationView._msTheatreScene);
+                        SceneManager.UnloadSceneAsync(scene: ApplicationView._msTheatreScene);
                     }
                 } else {
                     // Delete the root game objects.
-                    foreach (UnityEngine.GameObject gameObject in errorScene.GetRootGameObjects()) {
+                    foreach (GameObject gameObject in errorScene.GetRootGameObjects()) {
                         UnityEngine.Object.Destroy(obj: gameObject);
                     }
                 }
                 
                 // Set it as active.
-                UnityEngine.SceneManagement.SceneManager.SetActiveScene(scene: errorScene);
+                SceneManager.SetActiveScene(scene: errorScene);
                 
                 // Create the root game object.
-                ApplicationView.Root = new UnityEngine.GameObject(
+                ApplicationView.Root = new GameObject(
                     name: "Root",
-                    components: new []{ typeof(Application.ApplicationController) }
-                ).GetComponent<Application.ApplicationController>();
+                    components: new []{ typeof(ApplicationController) }
+                ).GetComponent<ApplicationController>();
                 
                 // Catch any exception thrown by the _CreateSpectator method.
                 try {
@@ -352,69 +357,69 @@ public static class ApplicationView {
                     ApplicationView._CreateSpectator();
                     
                     // Create the error canvas.
-                    UnityEngine.Canvas canvas = new UnityEngine.GameObject(
+                    Canvas canvas = new GameObject(
                         name: "Canvas",
-                        components: new []{ typeof(UnityEngine.Canvas), typeof(UnityEngine.UI.CanvasScaler) }
-                    ).GetComponent<UnityEngine.Canvas>();
+                        components: new []{ typeof(Canvas), typeof(CanvasScaler) }
+                    ).GetComponent<Canvas>();
                     
                     // Set the canvas up.
-                    canvas.renderMode = UnityEngine.RenderMode.ScreenSpaceCamera;
+                    canvas.renderMode = RenderMode.ScreenSpaceCamera;
                     canvas.worldCamera = ApplicationView.WorldCamera;
                     canvas.planeDistance = 10f;
-                    canvas.sortingLayerID = UnityEngine.SortingLayer.NameToID(name: "GUI");
+                    canvas.sortingLayerID = SortingLayer.NameToID(name: "GUI");
                     
                     // Set the canvas scaler up.
-                    UnityEngine.UI.CanvasScaler scaler = canvas.GetComponent<UnityEngine.UI.CanvasScaler>();
-                    scaler.uiScaleMode = UnityEngine.UI.CanvasScaler.ScaleMode.ScaleWithScreenSize;
-                    scaler.screenMatchMode = UnityEngine.UI.CanvasScaler.ScreenMatchMode.Shrink;
-                    scaler.referenceResolution = new UnityEngine.Vector2(x: 1920, y: 1080);
+                    CanvasScaler scaler = canvas.GetComponent<CanvasScaler>();
+                    scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+                    scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Shrink;
+                    scaler.referenceResolution = new Vector2(x: 1920, y: 1080);
                     
                     // Create the error icon.
-                    UnityEngine.UI.Image errorIcon = new UnityEngine.GameObject(
+                    Image errorIcon = new GameObject(
                         name: "Error Icon",
-                        components: new []{ typeof(UnityEngine.UI.Image) }
-                    ).GetComponent<UnityEngine.UI.Image>();
+                        components: new []{ typeof(Image) }
+                    ).GetComponent<Image>();
                     // Attach it to the canvas.
                     errorIcon.transform.SetParent(parent: canvas.transform, worldPositionStays: false);
                     
                     // Prepare the error image.
                     if (ApplicationState.Own != null) errorIcon.sprite = ApplicationState.Own.ErrorIcon;
-                    errorIcon.type = UnityEngine.UI.Image.Type.Simple;
+                    errorIcon.type = Image.Type.Simple;
                     errorIcon.preserveAspect = true;
                     
                     // Set the image's rect up.
-                    UnityEngine.RectTransform errorIconRect = errorIcon.GetComponent<UnityEngine.RectTransform>();
-                    errorIconRect.anchorMin = UnityEngine.Vector2.up;
-                    errorIconRect.anchorMax = UnityEngine.Vector2.one;
-                    errorIconRect.pivot = new UnityEngine.Vector2(x: 0.5f, y: 1f);
-                    errorIconRect.sizeDelta = new UnityEngine.Vector2(x: 0f, y: 250f);
-                    errorIconRect.anchoredPosition3D = UnityEngine.Vector3.zero;
+                    RectTransform errorIconRect = errorIcon.GetComponent<RectTransform>();
+                    errorIconRect.anchorMin = Vector2.up;
+                    errorIconRect.anchorMax = Vector2.one;
+                    errorIconRect.pivot = new Vector2(x: 0.5f, y: 1f);
+                    errorIconRect.sizeDelta = new Vector2(x: 0f, y: 250f);
+                    errorIconRect.anchoredPosition3D = Vector3.zero;
                     
                     // Create the error message.
-                    UnityEngine.UI.Text errorMessage = new UnityEngine.GameObject(
+                    Text errorMessage = new GameObject(
                         name: "Error Message",
-                        components: new []{ typeof(UnityEngine.UI.Text) }
-                    ).GetComponent<UnityEngine.UI.Text>();
+                        components: new []{ typeof(Text) }
+                    ).GetComponent<Text>();
                     // Attach it to the canvas.
                     errorMessage.transform.SetParent(parent: canvas.transform, worldPositionStays: false);
                     
                     // Set the message of the error.
                     errorMessage.text = $"Une erreur est survenue durant la partie: \n{message}";
-                    errorMessage.alignment = UnityEngine.TextAnchor.MiddleCenter;
+                    errorMessage.alignment = TextAnchor.MiddleCenter;
                     errorMessage.fontSize = 64;
-                    errorMessage.font = UnityEngine.Font.CreateDynamicFontFromOSFont(fontname: "Futura", size: 64);
+                    errorMessage.font = Font.CreateDynamicFontFromOSFont(fontname: "Futura", size: 64);
                     
                     // Set the text's rect up.
-                    UnityEngine.RectTransform errorMessageRect = errorMessage.GetComponent<UnityEngine.RectTransform>();
-                    errorMessageRect.anchorMin = UnityEngine.Vector2.zero;
-                    errorMessageRect.anchorMax = UnityEngine.Vector2.right;
-                    errorMessageRect.pivot = new UnityEngine.Vector2(x: 0.5f, y: 0f);
-                    errorMessageRect.sizeDelta = new UnityEngine.Vector2(x: 0f, y: 500f);
-                    errorMessageRect.anchoredPosition3D = UnityEngine.Vector3.zero;
+                    RectTransform errorMessageRect = errorMessage.GetComponent<RectTransform>();
+                    errorMessageRect.anchorMin = Vector2.zero;
+                    errorMessageRect.anchorMax = Vector2.right;
+                    errorMessageRect.pivot = new Vector2(x: 0.5f, y: 0f);
+                    errorMessageRect.sizeDelta = new Vector2(x: 0f, y: 500f);
+                    errorMessageRect.anchoredPosition3D = Vector3.zero;
                     
                 } catch (ApplicationCreationException) {
                     // TODO: Panic.
-                    UnityEngine.Debug.LogError(message: "Something terrible has happened ...");
+                    Debug.LogError(message: "Something terrible has happened ...");
                 }
             }
     // --- /Methods ---

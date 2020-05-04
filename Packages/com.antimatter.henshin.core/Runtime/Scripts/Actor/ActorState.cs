@@ -1,5 +1,9 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
 /* Wrap the class within the local namespace. */
 namespace Henshin.Runtime.Actor {
 
@@ -7,7 +11,7 @@ namespace Henshin.Runtime.Actor {
 /// State class used to describe a <see cref="Directions.Scene.SceneState"/>'s actor.
 /// Actors are shared across multiple scenes. 
 /// </summary>
-[System.SerializableAttribute]
+[Serializable]
 public class ActorState {
     // ---  Attributes ---
         // -- Serialized Attributes --
@@ -20,26 +24,25 @@ public class ActorState {
             /// <summary>
             /// Prefab instance used by the actor.
             /// </summary>
-            public UnityEngine.GameObject Prefab;
+            public GameObject Prefab;
             
             /// <summary>
             /// List of all the poses that the actor can take.
             /// </summary>
-            public System.Collections.Generic.List<UnityEngine.Sprite> PoseList = 
-                new System.Collections.Generic.List<UnityEngine.Sprite>();
+            public List<Sprite> PoseList = new List<Sprite>();
             
         // -- Public Attributes --
             /// <summary>
             /// Instance of the actor's <see cref="UnityEngine.GameObject"/> in the scene.
             /// </summary>
-            [System.NonSerializedAttribute]
-            public UnityEngine.GameObject Instance;
+            [NonSerialized]
+            public GameObject Instance;
             
             /// <summary>
             /// Instance of the actor's <see cref="UnityEngine.SpriteRenderer"/> component.
             /// </summary>
-            [System.NonSerializedAttribute]
-            public UnityEngine.SpriteRenderer SpriteRenderer;
+            [NonSerialized]
+            public SpriteRenderer SpriteRenderer;
     // --- /Attributes ---
 }
 }

@@ -1,5 +1,9 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
+using Henshin.Runtime.Actor;
+using Henshin.Runtime.Application;
+using JetBrains.Annotations;
+
 /* Wrap the class within the local namespace. */
 namespace Henshin.Runtime.Directions.Scene {
 
@@ -15,14 +19,14 @@ public static class SceneView {
             /// Creates the actors and updates the background.
             /// </summary>
             /// <param name="scene">The scene object that must be prepared.</param>
-            public static void Prepare([JetBrains.Annotations.NotNullAttribute] SceneState scene) {
+            public static void Prepare([NotNull] SceneState scene) {
                 // Create all the scene's actors.
-                foreach (Runtime.Actor.ActorState actorState in scene.ActorList) {
-                    Runtime.Actor.ActorView.InstantiateActor(actor: actorState);
+                foreach (Actor.ActorState actorState in scene.ActorList) {
+                    ActorView.InstantiateActor(actor: actorState);
                 }
                 
                 // Update the view's background.
-                Runtime.Application.ApplicationView.Background.sprite = scene.Background;
+                ApplicationView.Background.sprite = scene.Background;
             }
         // -- Private Methods --
     // --- /Methods ---

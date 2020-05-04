@@ -30,7 +30,7 @@ public class SceneEditorController: UnityEditor.EditorWindow {
                 
                 // Set the title of the editor window.
                 window.titleContent = new UnityEngine.GUIContent(
-                    src: Henshin.Editor.Skin.SkinState.Contents.SceneEditorTitle
+                    src: Skin.SkinState.Contents.SceneEditorTitle
                 );
                 
                 // Refresh the window indices.
@@ -72,8 +72,16 @@ public class SceneEditorController: UnityEditor.EditorWindow {
                 // Call the view's Render method.
                 SceneEditorView.Render(state: this.State);
             }
-            
-        // -- Public Methods --
+
+            /// <summary>
+            /// Event called when an element of the project has changed.
+            /// </summary>
+            private void OnProjectChange() {
+                // Reload the application states.
+                Header.HeaderController.ReloadApplicationStates();
+            }
+
+    // -- Public Methods --
         // -- Private Methods --
             // - Events -
             /// <summary>
@@ -82,7 +90,7 @@ public class SceneEditorController: UnityEditor.EditorWindow {
             /// </summary>
             private void _Initialize() {
                 // Initialize the header object.
-                SceneEditor.Header.HeaderController.Initialize(header: this.State.Header, owner: this);
+                Header.HeaderController.Initialize(header: this.State.Header, owner: this);
                 // Initialize the inspector object.
                 //SceneEditor.Inspector.InspectorController.Initialize(inspector: this.State.Inspector, owner: this);
                 // Initialize the graph area object.
@@ -103,7 +111,7 @@ public class SceneEditorController: UnityEditor.EditorWindow {
                 );
                 
                 // Call the prepare method on the header.
-                Henshin.Editor.SceneEditor.Header.HeaderController.Prepare(header: this.State.Header);
+                Header.HeaderController.Prepare(header: this.State.Header);
                 // Call the prepare method on the inspector.
                 //Henshin.Editor.SceneEditor.Inspector.InspectorController.Prepare(inspector: this.State.Inspector);
                 // Call the prepare method on the graph area.
@@ -124,7 +132,7 @@ public class SceneEditorController: UnityEditor.EditorWindow {
                     
                     // Update the title of the window.
                     window.titleContent.text = 
-                        Henshin.Editor.Skin.SkinState.Contents.SceneEditorTitle.text 
+                        Skin.SkinState.Contents.SceneEditorTitle.text 
                         + $" #{index + 1}";
                 }
             }

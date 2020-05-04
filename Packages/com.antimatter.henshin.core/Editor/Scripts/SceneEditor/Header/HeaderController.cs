@@ -1,20 +1,16 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 /* Wrap the class within the local namespace. */
+
+using System.Linq;
+
 namespace Henshin.Editor.SceneEditor.Header {
 
 /// <summary>
 /// Controller class used to manipulate <see cref="HeaderState"/> objects.
 /// Prepares the state for rendering and handles related events.
 /// </summary>
-public class HeaderController {
-    // ---  Attributes ---
-        // -- Serialized Attributes --
-        // -- Public Attributes --
-        // -- Protected Attributes --
-        // -- Private Attributes --
-    // --- /Attributes ---
-    
+public static class HeaderController {
     // ---  Methods ---
         // -- Public Methods --
             // - Initialization -
@@ -27,6 +23,27 @@ public class HeaderController {
             public static void Initialize(HeaderState header, SceneEditorController owner) {
                 // Store the reference to the owner in the header.
                 header.Owner = owner.State;
+                
+                // Reload the application states.
+                HeaderController.ReloadApplicationStates();
+            }
+            
+            /// <summary>
+            /// Reloads the list of application states.
+            /// Updates the <see cref="HeaderState.EditableApplications"/> list.
+            /// </summary>
+            public static void ReloadApplicationStates() {
+                // Find all the application objects in the project.
+                string[] appGuids = UnityEditor.AssetDatabase.FindAssets(
+                    filter: $"t:{nameof(Runtime.Application.ApplicationState)}",
+                    searchInFolders: new []{ "Assets/Resources" }
+                );
+                
+                // Load all the application objects.
+                HeaderState.EditableApplications = appGuids
+                    .Select(selector: UnityEditor.AssetDatabase.GUIDToAssetPath)
+                    .Select(selector: UnityEditor.AssetDatabase.LoadAssetAtPath<Runtime.Application.ApplicationState>)
+                    .ToArray();
             }
             
             // - Runtime Events -
@@ -36,9 +53,9 @@ public class HeaderController {
             /// <param name="header">The header state to manipulate.</param>
             public static void Prepare(HeaderState header) {
                 // Prepare the rect of the header.
-                Henshin.Editor.Skin.SkinState.RatioStruct.ApplyRatio(
+                Skin.SkinState.RatioStruct.ApplyRatio(
                     from: header.Owner.WindowRect,
-                    ratio: Henshin.Editor.Skin.SkinState.Ratios.SceneEditorHeaderRatio,
+                    ratio: Skin.SkinState.Ratios.SceneEditorHeaderRatio,
                     to: ref header.Rect
                 );
             }

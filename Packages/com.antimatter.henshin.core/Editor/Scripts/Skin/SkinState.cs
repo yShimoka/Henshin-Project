@@ -51,14 +51,72 @@ public class SkinState: UnityEngine.ScriptableObject {
                         /// </summary>
                         public UnityEngine.Texture2D EndNodeHeader;
                         
+                        /// <summary>
+                        /// Color used behind the contents of the scene header.
+                        /// </summary>
+                        [UnityEngine.HeaderAttribute(header: "Scene Editor Textures", order = 0)] 
+                        [UnityEngine.TooltipAttribute(tooltip: "Color behind the header's background.")]
+                        public UnityEngine.Color SceneHeaderColor;
+                        
+                        /// <summary>
+                        /// Color used for the scene header's separator.
+                        /// </summary>
+                        [UnityEngine.TooltipAttribute(tooltip: "Color of the header's separator.")]
+                        public UnityEngine.Color SceneHeaderSeparatorColor;
+                        
+                        /// <summary>
+                        /// Color used for the background of the scene header.
+                        /// </summary>
+                        [UnityEngine.TooltipAttribute(tooltip: "Color of the header's background.")]
+                        public UnityEngine.Color SceneHeaderBackgroundColor;
+                        
+                        /// <summary>
+                        /// Color used for the border of the scene header.
+                        /// </summary>
+                        [UnityEngine.TooltipAttribute(tooltip: "Color of the header's background border.")]
+                        public UnityEngine.Color SceneHeaderBackgroundBorderColor;
+                        
+                        /// <summary>
+                        /// Size of the scene header's border.
+                        /// </summary>
+                        [UnityEngine.TooltipAttribute(tooltip: "Size of the header's background border.")]
+                        public int SceneHeaderBackgroundBorderSize;
+                        
+                        /// <summary>
+                        /// Size of the scene header's border radius.
+                        /// </summary>
+                        [UnityEngine.TooltipAttribute(tooltip: "Radius of the header's background corners.")]
+                        public int SceneHeaderBackgroundBorderRadius;
+                        
                         // - Simple Textures -
-                        [UnityEngine.HeaderAttribute(header: "Simple Colored Textures", order = 2)]
+                        [UnityEngine.HeaderAttribute(header: "Simple Colored Textures", order = 9)]
                         public UnityEngine.Color DebugBoxBackgroundColor;
                     
                     // -- Public Attributes --
                         // - Generated Textures -
+                        /// <summary>
+                        /// Simple texture used for the background of the debug boxes.
+                        /// </summary>
                         [System.NonSerializedAttribute]
                         public UnityEngine.Texture2D DebugBoxBackground;
+                        
+                        /// <summary>
+                        /// Texture used behind the contents of the scene header.
+                        /// </summary>
+                        [System.NonSerializedAttribute]
+                        public UnityEngine.Texture2D SceneHeaderContents;
+                        
+                        /// <summary>
+                        /// Texture used for the background of the scene header.
+                        /// </summary>
+                        [System.NonSerializedAttribute]
+                        public UnityEngine.Texture2D SceneHeaderBackground;
+                        
+                        /// <summary>
+                        /// Texture used for the header separator.
+                        /// </summary>
+                        [System.NonSerializedAttribute]
+                        public UnityEngine.Texture2D SceneHeaderSeparator;
                 // --- /Attributes ---
                 
                 // ---  Methods ---
@@ -67,81 +125,30 @@ public class SkinState: UnityEngine.ScriptableObject {
                         /// Creates all the texture objects that are not loaded from disk.
                         /// </summary>
                         public void CreateTextures() {
+                            // Create the scene content background.
+                            this.SceneHeaderContents = Misc.TextureGenerator.CreateSimple(
+                                name: nameof(this.SceneHeaderContents),
+                                colour: this.SceneHeaderColor
+                            );
+                            // Create the scene header background.
+                            this.SceneHeaderBackground = Misc.TextureGenerator.CreateBordered(
+                                name: nameof(this.SceneHeaderBackground),
+                                innerColour: this.SceneHeaderBackgroundColor,
+                                borderSize: this.SceneHeaderBackgroundBorderSize,
+                                borderColour: this.SceneHeaderBackgroundBorderColor,
+                                borderRadius: this.SceneHeaderBackgroundBorderRadius
+                            );
+                            // Create the scene header separator.
+                            this.SceneHeaderSeparator = Misc.TextureGenerator.CreateSimple(
+                                name: nameof(this.SceneHeaderSeparator),
+                                colour: this.SceneHeaderSeparatorColor
+                            );
+                            
                             // Create the generic background texture.
-                            this.DebugBoxBackground = this.LoadTextureFromCache(
+                            this.DebugBoxBackground = Misc.TextureGenerator.CreateSimple(
                                 name: nameof(this.DebugBoxBackground), 
-                                color: this.DebugBoxBackgroundColor
+                                colour: this.DebugBoxBackgroundColor
                             );
-                        }
-                    
-                    // -- Private Methods --
-                        /// <summary>
-                        /// Loads the specified texture from the cache.
-                        /// </summary>
-                        /// <param name="name">The name of the texture to load.</param>
-                        /// <param name="color">The expected color of the texture.</param>
-                        /// <returns>A reference to the texture object.</returns>
-                        private UnityEngine.Texture2D LoadTextureFromCache(string name, UnityEngine.Color color) {
-                            // Search for the texture in the project.
-                            string[] texturePath = UnityEditor.AssetDatabase.FindAssets(
-                                filter: $"{name} t:{nameof(UnityEngine.Texture2D)}",
-                                searchInFolders: new []{ $"{SkinState.EditorPath}/UI/Textures/Simple" }
-                            );
-                            
-                            // Check if the texture exists in the database.
-                            if (texturePath.Length > 0) {
-                                // Load the texture object.
-                                UnityEngine.Texture2D diskTexture = UnityEditor.AssetDatabase
-                                    .LoadAssetAtPath<UnityEngine.Texture2D>(
-                                        assetPath: texturePath[0]
-                                );
-                                
-                                // Check if the texture is valid.
-                                if (diskTexture != null && diskTexture.GetPixel(x: 0, y: 0) == color) {
-                                    // Return the texture.
-                                    return diskTexture;
-                                }
-                            }
-                            
-                            // Re-create the texture.
-                            UnityEngine.Texture2D texture = this._GenerateSimpleTexture(color: color);
-                            
-                            // Save it to a file.
-                            UnityEditor.AssetDatabase.CreateAsset(
-                                asset: texture, 
-                                path: $"{SkinState.EditorPath}/UI/Textures/Simple/UI_EDITOR_TEXTURE_{name}.asset"
-                            );
-                            
-                            // Return the texture.
-                            return texture;
-                        }
-                        
-                        /// <summary>
-                        /// Generates a new simple texture. 
-                        /// </summary>
-                        /// <param name="color">The color to set in the texture.</param>
-                        /// <returns>The newly created texture object.</returns>
-                        private UnityEngine.Texture2D _GenerateSimpleTexture(UnityEngine.Color color) {
-                            // Create a new texture.
-                            UnityEngine.Texture2D texture = new UnityEngine.Texture2D(
-                                width: 1,
-                                height: 1,
-                                textureFormat: UnityEngine.Mathf.Approximately(a: color.a, b: 1f) ? 
-                                    UnityEngine.TextureFormat.RGB24 : 
-                                    UnityEngine.TextureFormat.ARGB32,
-                                mipChain: false
-                            );
-                            
-                            // Set its unique pixel value.
-                            texture.SetPixel(x: 0, y: 0, color: color);
-                            
-                            // Set its wrap and filter modes.
-                            texture.wrapMode = UnityEngine.TextureWrapMode.Repeat;
-                            texture.filterMode = UnityEngine.FilterMode.Point;
-                            
-                            // Return the texture.
-                            texture.Apply();
-                            return texture;
                         }
                 // --- /Methods ---
             }
@@ -154,6 +161,22 @@ public class SkinState: UnityEngine.ScriptableObject {
                 // ---  Attributes ---
                     // -- Serialized Attributes --
                         // - Contents -
+                        /// <summary>
+                        /// Contents displayed in the scene editor's save button.
+                        /// </summary>
+                        [UnityEngine.HeaderAttribute(header: "Scene Editor", order = 0)]
+                        public UnityEngine.GUIContent SceneEditorSave;
+                        
+                        /// <summary>
+                        /// Contents displayed in the scene editor's play button.
+                        /// </summary>
+                        public UnityEngine.GUIContent SceneEditorPlay;
+                        
+                        /// <summary>
+                        /// Contents displayed in the scene editor's header separator.
+                        /// </summary>
+                        public UnityEngine.GUIContent SceneEditorSeparator;
+                        
                         /// <summary>
                         /// Contents displayed in the skin editor's refresh button.
                         /// </summary>
@@ -177,6 +200,27 @@ public class SkinState: UnityEngine.ScriptableObject {
                     // -- Serialized Attributes --
                         // - Styles -
                         /// <summary>
+                        /// Style applied to the header of the scene editor.
+                        /// </summary>
+                        [UnityEngine.HeaderAttribute(header: "Scene Editor", order = 0)]
+                        public UnityEngine.GUIStyle SceneHeaderContents;
+                        
+                        /// <summary>
+                        /// Style applied to the scene editor header's background
+                        /// </summary>
+                        public UnityEngine.GUIStyle SceneHeaderBackground;
+                        
+                        /// <summary>
+                        /// Style applied to the scene header's separator.
+                        /// </summary>
+                        public UnityEngine.GUIStyle SceneHeaderSeparator;
+                        
+                        /// <summary>
+                        /// Style applied to the scene editor header's buttons.
+                        /// </summary>
+                        public UnityEngine.GUIStyle SceneHeaderButton;
+                        
+                        /// <summary>
                         /// Style used for the skin editor's refresh button.
                         /// </summary>
                         [UnityEngine.HeaderAttribute(header: "Skin Editor", order = 9)]
@@ -197,6 +241,15 @@ public class SkinState: UnityEngine.ScriptableObject {
                         /// to the corresponding styles.
                         /// </summary>
                         public void ApplyTextures() {
+                            // Apply the scene header's texture and radius.
+                            {
+                                int b = SkinState.Textures.SceneHeaderBackgroundBorderRadius + SkinState.Textures.SceneHeaderBackgroundBorderSize;
+                                this.SceneHeaderBackground.border = new UnityEngine.RectOffset{ left = b, top = b, right = b, bottom = b};
+                                this.SceneHeaderBackground.normal.background = SkinState.Textures.SceneHeaderBackground;
+                                this.SceneHeaderContents.normal.background = SkinState.Textures.SceneHeaderContents;
+                            }
+                            
+                            // Apply the debug box's background image.
                             this.DebugBox.normal.background = SkinState.Textures.DebugBoxBackground;
                         }
                 // --- /Methods ---

@@ -1,6 +1,8 @@
 {
     "name": "com.antimatter.henshin.core.editor",
-    "references": [],
+    "references": [
+        "GUID:8f149fdf80a614d97950063c8e84e1ab"
+    ],
     "includePlatforms": [
         "Editor"
     ],

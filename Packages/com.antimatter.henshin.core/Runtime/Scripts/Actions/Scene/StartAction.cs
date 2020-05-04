@@ -1,7 +1,8 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
-/* Wrap the class within the local namespace. */
+using System;
 
+/* Wrap the class within the local namespace. */
 namespace Henshin.Runtime.Actions.Scene {
 
 /// <summary>
@@ -15,7 +16,7 @@ public class StartAction: ActionController {
             /// <summary>
             /// State class used to represent a <see cref="StartAction"/>.
             /// </summary>
-            [System.SerializableAttribute]
+            [Serializable]
             public class StartState: ActionState { }
     // --- /SubObjects ---
     

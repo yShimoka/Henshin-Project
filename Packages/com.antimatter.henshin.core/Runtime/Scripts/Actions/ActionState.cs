@@ -3,13 +3,17 @@
 
 
 /* Wrap the class within the local namespace. */
+
+using System;
+using System.Collections.Generic;
+
 namespace Henshin.Runtime.Actions {
 
 /// <summary>
 /// Base class used for all the action states.
 /// This class is used by the <see cref="Directions.Scene.SceneState"/> to list all the actions of the scene.
 /// </summary>
-[System.SerializableAttribute]
+[SerializableAttribute]
 public class ActionState {
     // ---  Attributes ---
         // -- Serialized Attributes --
@@ -24,7 +28,7 @@ public class ActionState {
             /// List of all the parameters for this action state.
             /// This list is used by the <see cref="Runtime.Actions.ActionController"/> overrides to handle action-specific parameters.
             /// </summary>
-            public System.Collections.Generic.List<string> Parameters;
+            public List<string> Parameters;
             
             /// <summary>
             /// Name of the <see cref="Runtime.Actions.ActionController"/>'s class.
@@ -36,14 +40,13 @@ public class ActionState {
             /// <summary>
             /// List of all the children of this <see cref="ActionState"/>.
             /// </summary>
-            [System.NonSerializedAttribute]
-            public System.Collections.Generic.List<ActionState> ChildrenList 
-                = new System.Collections.Generic.List<ActionState>();
+            [NonSerialized]
+            public List<ActionState> ChildrenList = new List<ActionState>();
             
             /// <summary>
             /// Number of parents of this <see cref="ActionState"/>.
             /// </summary>
-            [System.NonSerializedAttribute]
+            [NonSerialized]
             public int ParentCount = 0;
             
             /// <summary>
@@ -51,7 +54,7 @@ public class ActionState {
             /// While this value is below <see cref="ParentCount"/>,
             /// the action should not be applied.
             /// </summary>
-            [System.NonSerializedAttribute]
+            [NonSerialized]
             public int ParentFinishedCounter;
             
     // --- /Attributes ---

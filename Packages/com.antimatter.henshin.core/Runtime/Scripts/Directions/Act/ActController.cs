@@ -1,6 +1,9 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
-
+using System;
+using Henshin.Runtime.Application;
+using Henshin.Runtime.Directions.Scene;
+using UnityEngine;
 
 /* Wrap the class within the local namespace. */
 namespace Henshin.Runtime.Directions.Act {
@@ -25,10 +28,10 @@ public static class ActController {
             /// </summary>
             /// <param name="owner">The owner of the serialized act.</param>
             /// <param name="act">The raw act object.</param>
-            public static void Serialize(Runtime.Application.ApplicationState owner, ActState act) {
+            public static void Serialize(ApplicationState owner, ActState act) {
                 // Serialize all the scenes.
-                foreach (Runtime.Directions.Scene.SceneState sceneState in act.SceneList) {
-                    Runtime.Directions.Scene.SceneController.Serialize(owner: act, scene: sceneState);
+                foreach (SceneState sceneState in act.SceneList) {
+                    SceneController.Serialize(owner: act, scene: sceneState);
                 }
             }
             
@@ -38,15 +41,15 @@ public static class ActController {
             /// </summary>
             /// <param name="owner">The owner of the deserialized act.</param>
             /// <param name="act">The serialized act object.</param>
-            public static void Deserialize(Runtime.Application.ApplicationState owner, ActState act) {
+            public static void Deserialize(ApplicationState owner, ActState act) {
                 // Deserialize all the scene objects.
-                foreach (Runtime.Directions.Scene.SceneState sceneState in act.SceneList) {
-                    Runtime.Directions.Scene.SceneController.Deserialize(owner: act, scene: sceneState);
+                foreach (SceneState sceneState in act.SceneList) {
+                    SceneController.Deserialize(owner: act, scene: sceneState);
                 }
                 
                 // Set the public attributes.
                 act.Owner = owner;
-                act.Index = System.Array.IndexOf(array: owner.ActList, value: act);
+                act.Index = Array.IndexOf(array: owner.ActList, value: act);
             }
             
             // - Play Controller -
@@ -66,19 +69,19 @@ public static class ActController {
                     // Check if the act has any scene.
                     if (act.CurrentScene != null) {
                         // Play the first scene of the act.
-                        Runtime.Directions.Scene.SceneController.Play(scene: act.CurrentScene);
+                        SceneController.Play(scene: act.CurrentScene);
                     } else {
                         // Log a warning.
-                        UnityEngine.Debug.LogWarning(
+                        Debug.LogWarning(
                             message: $"Skipped over act \"{act.Identifier}\" as it had no scenes to play."
                         );
                         
                         // Play the next act.
-                        Runtime.Application.ApplicationController.NextAct();
+                        ApplicationController.NextAct();
                     }
                 } else {
                     // Throw an error.
-                    Runtime.Application.ApplicationView.Error(
+                    ApplicationView.Error(
                         message: "Tried to play an act that is null !"
                     );
                 }
@@ -96,14 +99,14 @@ public static class ActController {
                     // Check if there is a next scene.
                     if (ActState.Current.CurrentScene != null) {
                         // Play the next scene.
-                        Runtime.Directions.Scene.SceneController.Play(scene: ActState.Current.CurrentScene);
+                        SceneController.Play(scene: ActState.Current.CurrentScene);
                     } else {
                         // Play the next act.
-                        Runtime.Application.ApplicationController.NextAct();
+                        ApplicationController.NextAct();
                     }
                 } else {
                     // Throw an error.
-                    Runtime.Application.ApplicationView.Error(
+                    ApplicationView.Error(
                         message: "Tried to advance to the next scene when there is no act currently playing."
                     );
                 }

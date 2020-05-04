@@ -1,5 +1,10 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
+using System;
+using Henshin.Runtime.Directions.Act;
+using JetBrains.Annotations;
+using UnityEngine;
+
 /* Wrap the class within the local namespace. */
 namespace Henshin.Runtime.Application {
 
@@ -7,23 +12,23 @@ namespace Henshin.Runtime.Application {
 /// State class used to represent the application.
 /// Stores all the relevant information into a single area.
 /// </summary>
-[UnityEngine.CreateAssetMenuAttribute(fileName = "APP_State", menuName = "Henshin State", order = 0)]
-public class ApplicationState: UnityEngine.ScriptableObject, UnityEngine.ISerializationCallbackReceiver {
+[CreateAssetMenu(fileName = "APP_State", menuName = "Henshin State", order = 0)]
+public class ApplicationState: ScriptableObject, ISerializationCallbackReceiver {
     // ---  Attributes ---
         // -- Serialized Attributes --
             // - Parameters -
             /// <summary>
             /// Serializable list of all the acts in the application.
             /// </summary>
-            [UnityEngine.SerializeField] 
-            public Directions.Act.ActState[] ActList;
+            [SerializeField] 
+            public ActState[] ActList;
             
 #if UNITY_EDITOR
             /// <summary>
             /// Flag set if this is a debug application state.
             /// Used only within the editor.
             /// </summary>
-            [UnityEngine.SerializeField]
+            [SerializeField]
             public bool IsDebugState;
 #endif
             
@@ -31,18 +36,18 @@ public class ApplicationState: UnityEngine.ScriptableObject, UnityEngine.ISerial
             /// <summary>
             /// Color used when the camera is cleared.
             /// </summary>
-            public UnityEngine.Color ClearColor;
+            public Color ClearColor;
             
             /// <summary>
             /// Icon displayed on the error scene.
             /// </summary>
-            public UnityEngine.Sprite ErrorIcon; 
+            public Sprite ErrorIcon; 
         // -- Public Attributes --
             // - Runtime Parameters -
             /// <summary>
             /// Index of the act that is currently playing.
             /// </summary>
-            [System.NonSerializedAttribute]
+            [NonSerialized]
             public int CurrentActIndex;
         
             // - Static References -
@@ -55,8 +60,8 @@ public class ApplicationState: UnityEngine.ScriptableObject, UnityEngine.ISerial
             /// <summary>
             /// Returns a reference to the act that is currently being played.
             /// </summary>
-            [JetBrains.Annotations.CanBeNullAttribute]
-            public Runtime.Directions.Act.ActState CurrentAct {
+            [CanBeNull]
+            public ActState CurrentAct {
                 get {
                     // Check if the act index value is valid.
                     if (this.CurrentActIndex >= 0 && this.CurrentActIndex < this.ActList.Length) {

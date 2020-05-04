@@ -1,7 +1,11 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
+using System;
 using System.Linq;
-using ActionController = Henshin.Runtime.Actions.ActionController;
+using Henshin.Runtime.Actions;
+using Henshin.Runtime.Application;
+using Henshin.Runtime.Directions.Act;
+using UnityEngine;
 
 /* Wrap the class within the local namespace. */
 namespace Henshin.Runtime.Directions.Scene {
@@ -26,9 +30,9 @@ public static class SceneController {
             /// </summary>
             /// <param name="owner">The owner of this scene.</param>
             /// <param name="scene">The raw scene object.</param>
-            public static void Serialize(Runtime.Directions.Act.ActState owner, SceneState scene) {
+            public static void Serialize(ActState owner, SceneState scene) {
                 // Serialize all the transformations.
-                foreach (Runtime.Actions.ActionState actionState in scene.ActionList) {
+                foreach (ActionState actionState in scene.ActionList) {
                     ActionController.Serialize(owner: scene, action: actionState);
                 }
             }
@@ -39,13 +43,13 @@ public static class SceneController {
             /// </summary>
             /// <param name="owner">The owner of this scene.</param>
             /// <param name="scene">The serializes scene object.</param>
-            public static void Deserialize(Runtime.Directions.Act.ActState owner, SceneState scene) {
+            public static void Deserialize(ActState owner, SceneState scene) {
                 // Set the owner of the scene.
                 scene.Owner = owner;
-                scene.Index = System.Array.IndexOf(array: owner.SceneList, value: scene);
+                scene.Index = Array.IndexOf(array: owner.SceneList, value: scene);
                 
                 // Deserialize all the transformations.
-                foreach (Runtime.Actions.ActionState actionState in scene.ActionList) {
+                foreach (ActionState actionState in scene.ActionList) {
                     ActionController.Deserialize(owner: scene, action: actionState);
                 }
                 
@@ -80,19 +84,17 @@ public static class SceneController {
                         ActionController.Apply(state: scene.RootAction);
                     } else {
                         // Log an error.
-                        UnityEngine.Debug.LogError(
+                        Debug.LogError(
                             message:  "There is no root action on this scene !\n" +
                                      $"Act/Scene Identifier: \"{scene.Owner.Identifier}/{scene.Identifier}\""
                         );
                         
                         // Play the next scene.
-                        Runtime.Directions.Act.ActController.NextScene();
+                        ActController.NextScene();
                     }
                 } else {
                     // Throw an error.
-                    Runtime.Application.ApplicationView.Error(
-                        message: "Tried to play a scene that is null !"
-                    );
+                    ApplicationView.Error(message: "Tried to play a scene that is null !");
                 }
             }
         // -- Protected Methods --

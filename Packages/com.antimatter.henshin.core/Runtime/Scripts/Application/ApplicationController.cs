@@ -1,6 +1,10 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 using System.Linq;
+using Henshin.Runtime.Directions.Act;
+using Henshin.Runtime.Directions.Scene;
+using UnityEngine;
+using UnityEngine.Events;
 
 /* Wrap the class within the local namespace. */
 namespace Henshin.Runtime.Application {
@@ -8,13 +12,13 @@ namespace Henshin.Runtime.Application {
 /// <summary>
 /// Class used for the <see cref="ApplicationController"/>'s Tick delegates.
 /// </summary>
-public class TickEvent: UnityEngine.Events.UnityEvent<float> {}
+public class TickEvent: UnityEvent<float> {}
 
 /// <summary>
 /// Controller class used to alter the state of the application.
 /// </summary>
-[UnityEngine.AddComponentMenu(menuName: "Henshin/Application Controller"), UnityEngine.DisallowMultipleComponent]
-public class ApplicationController: UnityEngine.MonoBehaviour {
+[AddComponentMenu(menuName: "Henshin/Application Controller"), DisallowMultipleComponent]
+public class ApplicationController: MonoBehaviour {
     // ---  Attributes ---
         // -- Public Attributes --
             /// <summary>
@@ -40,12 +44,12 @@ public class ApplicationController: UnityEngine.MonoBehaviour {
             /// Method called upon the start of the runtime application.
             /// Loads the current application state and runs it.
             /// </summary>
-            [UnityEngine.RuntimeInitializeOnLoadMethodAttribute]
+            [RuntimeInitializeOnLoadMethodAttribute]
             private static void _Initialize() {
 #if UNITY_EDITOR
                 // Seek the debug application state.
-                Application.ApplicationState.Own = UnityEngine.Resources
-                    .LoadAll<Application.ApplicationState>(path: "")
+                ApplicationState.Own = Resources
+                    .LoadAll<ApplicationState>(path: "")
                     .FirstOrDefault(predicate: state => state.IsDebugState);
 #else
                 // Seek the non-debug application state.
@@ -58,11 +62,11 @@ public class ApplicationController: UnityEngine.MonoBehaviour {
                     ApplicationView.Error(message: "Could not find an application to load !");
                 } else {
                     // Initialize the view.
-                    Application.ApplicationView.Initialize();
+                    ApplicationView.Initialize();
                 
 #if UNITY_EDITOR
                     // Search for a debugged scene.
-                    Runtime.Directions.Scene.SceneState debugged = ApplicationState.Own.ActList
+                    SceneState debugged = ApplicationState.Own.ActList
                         .SelectMany(selector: act => act.SceneList)
                         .Where(predicate: scene => scene != null)
                         .FirstOrDefault(predicate: scene => scene.IsDebugScene);
@@ -70,7 +74,7 @@ public class ApplicationController: UnityEngine.MonoBehaviour {
                     // If a debug scene was found.
                     if (debugged != null) {
                         // Play that scene.
-                        Runtime.Directions.Scene.SceneController.Play(scene: debugged);
+                        SceneController.Play(scene: debugged);
                         
                         // Stop the method.
                         return;
@@ -79,7 +83,7 @@ public class ApplicationController: UnityEngine.MonoBehaviour {
                     // Check if the act list is set.
                     if (ApplicationState.Own.CurrentAct != null) {
                         // Play the first act.
-                        Runtime.Directions.Act.ActController.Play(act: ApplicationState.Own.CurrentAct);
+                        ActController.Play(act: ApplicationState.Own.CurrentAct);
                     } else {
                         // Throw an error.
                         ApplicationView.Error(message: "The application has no act to play !");
@@ -99,14 +103,14 @@ public class ApplicationController: UnityEngine.MonoBehaviour {
             /// </summary>
             private void Update() {
                 // CAll the ON_TICK events.
-                ApplicationController.OnTick.Invoke(arg0: UnityEngine.Time.deltaTime);
+                ApplicationController.OnTick.Invoke(arg0: Time.deltaTime);
                 
                 // Copy the ON_NEXT_TICK event.
                 TickEvent nextTickCopy = ApplicationController.OnNextTick;
                 // Clear the ON_NEXT_TICK delegate.
                 ApplicationController.OnNextTick = new TickEvent();
                 // Call the ON_NEXT_TICK copy.
-                nextTickCopy.Invoke(arg0: UnityEngine.Time.deltaTime);
+                nextTickCopy.Invoke(arg0: Time.deltaTime);
             }
 
         // -- Public Methods --
@@ -118,8 +122,8 @@ public class ApplicationController: UnityEngine.MonoBehaviour {
             /// <param name="state">The state object to serialize.</param>
             public static void Serialize(ApplicationState state) {
                 // Serialize all the acts.
-                foreach (Runtime.Directions.Act.ActState actState in state.ActList) {
-                    Runtime.Directions.Act.ActController.Serialize(owner: state, act: actState);
+                foreach (ActState actState in state.ActList) {
+                    ActController.Serialize(owner: state, act: actState);
                 }
             }
             
@@ -130,8 +134,8 @@ public class ApplicationController: UnityEngine.MonoBehaviour {
             /// <param name="state">The state object to deserialize.</param>
             public static void Deserialize(ApplicationState state) {
                 // Deserialize all the acts.
-                foreach (Runtime.Directions.Act.ActState actState in state.ActList) {
-                    Runtime.Directions.Act.ActController.Deserialize(owner: state, act: actState);
+                foreach (ActState actState in state.ActList) {
+                    ActController.Deserialize(owner: state, act: actState);
                 }
             }
             
@@ -142,7 +146,7 @@ public class ApplicationController: UnityEngine.MonoBehaviour {
             /// </summary>
             /// <param name="frames">The number of frames to wait.</param>
             /// <param name="action">The action to call once the frames have passed.</param>
-            public static void WaitForFrames(uint frames, UnityEngine.Events.UnityAction action) {
+            public static void WaitForFrames(uint frames, UnityAction action) {
                 // Start the wait coroutine.
                 ApplicationController._msApplicationInstance.StartCoroutine(
                     // Call the instance's method.
@@ -163,7 +167,7 @@ public class ApplicationController: UnityEngine.MonoBehaviour {
                     // Check if the act is valid.
                     if (ApplicationState.Own.CurrentAct != null) {
                         // Play the specified act.
-                        Runtime.Directions.Act.ActController.Play(act: ApplicationState.Own.CurrentAct);
+                        ActController.Play(act: ApplicationState.Own.CurrentAct);
                     } else {
                         // STUB: Throw an error.
                         ApplicationView.Error(message: "Reached the end of the game !");
@@ -181,10 +185,10 @@ public class ApplicationController: UnityEngine.MonoBehaviour {
             /// </summary>
             /// <param name="frames">The number of frames to wait.</param>
             /// <param name="action">The action to call once the frames have passed.</param>
-            private System.Collections.IEnumerator _WaitForFrames(uint frames, UnityEngine.Events.UnityAction action) {
+            private System.Collections.IEnumerator _WaitForFrames(uint frames, UnityAction action) {
                 // Wait for the specified number of frames.
                 for (uint i = 0; i < frames; i++) {
-                    yield return new UnityEngine.WaitForFixedUpdate();
+                    yield return new WaitForFixedUpdate();
                 }
                 
                 // Invoke the action.

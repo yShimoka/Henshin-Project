@@ -1,9 +1,10 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
-
+using System;
+using Henshin.Runtime.Directions.Scene;
+using UnityEditor;
 
 /* Wrap the class within the local namespace. */
-
 namespace Henshin.Runtime.Actions.Scene {
 
 /// <summary>
@@ -17,7 +18,7 @@ public class EndAction: ActionController {
             /// <summary>
             /// State class used to represent a <see cref="StartAction"/>.
             /// </summary>
-            [System.SerializableAttribute]
+            [Serializable]
             public class EndState: ActionState { }
     // --- /SubObjects ---
     
@@ -38,9 +39,12 @@ public class EndAction: ActionController {
             protected override void Apply() {
 #if UNITY_EDITOR
                 // Check if the current scene is a debug scene.
-                if (Runtime.Directions.Scene.SceneState.Current.IsDebugScene) {
+                if (SceneState.Current.IsDebugScene) {
+                    // Clear the debug flag.
+                    SceneState.Current.IsDebugScene = false;
+                    
                     // Stop execution of play mode.
-                    UnityEditor.EditorApplication.ExitPlaymode();
+                    EditorApplication.ExitPlaymode();
                     
                     // End the method.
                     return;
@@ -48,7 +52,7 @@ public class EndAction: ActionController {
 #endif
 
                 // Call the act's NextScene method.
-                Runtime.Directions.Act.ActController.NextScene();
+                Directions.Act.ActController.NextScene();
             }
     
             // - Serialization Events -
