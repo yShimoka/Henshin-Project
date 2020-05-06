@@ -73,7 +73,7 @@ public static class InspectorView {
                     );
                     if (inspector.IsActorListVisible) {
                         // Start a new scrollable area.
-                        GUILayout.BeginScrollView(
+                        inspector.ActorListPosition = GUILayout.BeginScrollView(
                             scrollPosition: inspector.ActorListPosition,
                             alwaysShowHorizontal: false,
                             alwaysShowVertical: true

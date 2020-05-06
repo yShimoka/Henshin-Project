@@ -15,7 +15,28 @@ MonoBehaviour:
   OwnerHash: 1271501458
   GraphList:
   - SceneIndex: 0
-    NodeList: []
-    Position: {x: 0, y: 0}
-    Ratio: 1
-    ScrollPosition: {x: 0, y: 0}
+    NodeList:
+    - ActionIndex: 0
+      Position: {x: -92, y: -8}
+      ChildrenIndexList: 04000000
+    - ActionIndex: 1
+      Position: {x: -4, y: -8}
+      ChildrenIndexList: 
+    - ActionIndex: 2
+      Position: {x: -48, y: -8}
+      ChildrenIndexList: 07000000
+    - ActionIndex: 3
+      Position: {x: -12, y: -8}
+      ChildrenIndexList: 01000000
+    - ActionIndex: 4
+      Position: {x: -84, y: -8}
+      ChildrenIndexList: 03000000
+    - ActionIndex: 5
+      Position: {x: -24, y: -8}
+      ChildrenIndexList: 04000000
+    - ActionIndex: 6
+      Position: {x: -39, y: -8}
+      ChildrenIndexList: 06000000
+    Position: {x: 768, y: 281.9817}
+    Ratio: -2
+    ScrollPosition: {x: 0, y: 0.71142465}

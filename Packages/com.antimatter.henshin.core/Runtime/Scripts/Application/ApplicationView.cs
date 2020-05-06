@@ -21,30 +21,48 @@ public static class ApplicationView {
             /// </summary>
             public static class SortingLayers {
                 /// <summary>
+                /// List of all the layer names. 
+                /// </summary>
+                public static string[] LayerNames = {
+                    "Background", "Middleground", "Foreground", "GUI"
+                };
+                
+                /// <summary>
+                /// List of all the layer ids.
+                /// In the same order as <see cref="LayerNames"/>.
+                /// </summary>
+                public static int[] LayerIDs = {
+                    SortingLayer.NameToID(name: SortingLayers.LayerNames[0]),
+                    SortingLayer.NameToID(name: SortingLayers.LayerNames[1]),
+                    SortingLayer.NameToID(name: SortingLayers.LayerNames[2]),
+                    SortingLayer.NameToID(name: SortingLayers.LayerNames[3])
+                };
+                
+                /// <summary>
                 /// ID of the background layer.
                 /// </summary>
                 // ReSharper disable once InconsistentNaming
                 // ReSharper disable once MemberHidesStaticFromOuterClass
-                public static readonly int Background = SortingLayer.NameToID(name: "Background");
+                public static readonly int Background = SortingLayers.LayerIDs[0];
                 
                 /// <summary>
                 /// ID of the middleground layer.
                 /// </summary>
                 // ReSharper disable once InconsistentNaming
-                public static readonly int Middleground = SortingLayer.NameToID(name: "Middleground");
+                public static readonly int Middleground = SortingLayers.LayerIDs[1];
                 
                 /// <summary>
                 /// ID of the foreground layer.
                 /// </summary>
                 // ReSharper disable once InconsistentNaming
-                public static readonly int Foreground = SortingLayer.NameToID(name: "Foreground");
+                public static readonly int Foreground = SortingLayers.LayerIDs[2];
                 
                 /// <summary>
                 /// ID of the GUI layer.
                 /// </summary>
                 // ReSharper disable once InconsistentNaming
                 // ReSharper disable once MemberHidesStaticFromOuterClass
-                public static readonly int GUI = SortingLayer.NameToID(name: "Foreground");
+                public static readonly int GUI = SortingLayers.LayerIDs[3];
             }
         // -- Private Classes --
             /// <summary>

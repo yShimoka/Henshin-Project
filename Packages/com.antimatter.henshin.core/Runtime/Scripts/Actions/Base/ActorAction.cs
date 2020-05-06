@@ -17,7 +17,6 @@ public abstract class ActorAction: ActionController {
             /// State of the actor action class.
             /// Holds the index of the edited actor.
             /// </summary>
-            [Serializable]
             public class ActorState: ActionState {
                 // ---  Attributes ---
                     // -- Serialized Attributes --

@@ -589,6 +589,55 @@ public static class GraphAreaController {
                         owner: graphArea, position: GraphAreaController._msLastMousePosition
                     )
                 );
+                menu.AddItem(
+                    content: new GUIContent{ text = "Create Node/Layer"}, 
+                    on: false, 
+                    func: () => NodeController.CreateNode<LayerAction>(
+                        owner: graphArea, position: GraphAreaController._msLastMousePosition
+                    )
+                );
+                menu.AddItem(
+                    content: new GUIContent{ text = "Create Node/Flip"}, 
+                    on: false, 
+                    func: () => NodeController.CreateNode<FlipAction>(
+                        owner: graphArea, position: GraphAreaController._msLastMousePosition
+                    )
+                );
+                menu.AddItem(
+                    content: new GUIContent{ text = "Create Node/Pose"}, 
+                    on: false, 
+                    func: () => NodeController.CreateNode<PoseAction>(
+                        owner: graphArea, position: GraphAreaController._msLastMousePosition
+                    )
+                );
+                menu.AddItem(
+                    content: new GUIContent{ text = "Create Node/MoveTo"}, 
+                    on: false, 
+                    func: () => NodeController.CreateNode<MoveToAction>(
+                        owner: graphArea, position: GraphAreaController._msLastMousePosition
+                    )
+                );
+                menu.AddItem(
+                    content: new GUIContent{ text = "Create Node/Rotate"}, 
+                    on: false, 
+                    func: () => NodeController.CreateNode<RotateAction>(
+                        owner: graphArea, position: GraphAreaController._msLastMousePosition
+                    )
+                );
+                menu.AddItem(
+                    content: new GUIContent{ text = "Create Node/Scale"}, 
+                    on: false, 
+                    func: () => NodeController.CreateNode<ScaleAction>(
+                        owner: graphArea, position: GraphAreaController._msLastMousePosition
+                    )
+                );
+                menu.AddItem(
+                    content: new GUIContent{ text = "Create Node/Colour"}, 
+                    on: false, 
+                    func: () => NodeController.CreateNode<ColourAction>(
+                        owner: graphArea, position: GraphAreaController._msLastMousePosition
+                    )
+                );
                 
                 // Show the menu.
                 menu.ShowAsContext();

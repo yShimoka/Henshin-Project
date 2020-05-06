@@ -33,7 +33,8 @@ public abstract class TimedAction: ActionController {
             /// <summary>
             /// Accessor to the casted base class state.
             /// </summary>
-            public new TimedState State => (TimedState)base.State; 
+            public new TimedState State => (TimedState)base.State;
+             
         // -- Private Attributes --
             /// <summary>
             /// Timer that is incremented on each <see cref="_Update"/> call.
@@ -54,6 +55,15 @@ public abstract class TimedAction: ActionController {
                 
                 // Reset the tick method.
                 this._mTimer = 0;
+            }
+            
+            /// <inheritdoc cref="ActionController.Finish"/>
+            protected override void Finish() {
+                // Remove the tick method.
+                ApplicationController.OnTick.RemoveListener(call: this._Update);
+                
+                // Call the base method.
+                base.Finish();
             }
 
             /// <summary>

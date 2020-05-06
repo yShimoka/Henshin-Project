@@ -119,8 +119,8 @@ public static class ActorView {
                 // Check if the actor is set.
                 if (actor.Instance != null) {
                     // Update the position of the actor.
-                    actor.Instance.transform.position = 
-                        ApplicationView.WorldCamera.ViewportToWorldPoint(position: position);
+                    actor.Instance.transform.position =
+                        ((Vector2) ApplicationView.WorldCamera.ViewportToWorldPoint(position: (position + Vector2.one) / 2));
                 } else {
                     // Throw an error.
                     ApplicationView.Error(
@@ -267,9 +267,9 @@ public static class ActorView {
                 // Check if the actor is set.
                 if (actor.Instance != null) {
                     // Return the position of the actor.
-                    return ApplicationView.WorldCamera.WorldToViewportPoint(
+                    return (Vector2)ApplicationView.WorldCamera.WorldToViewportPoint(
                         position: actor.Instance.transform.position
-                    );
+                    ) * 2 - Vector2.one;
                 } else {
                     // Throw an error.
                     ApplicationView.Error(

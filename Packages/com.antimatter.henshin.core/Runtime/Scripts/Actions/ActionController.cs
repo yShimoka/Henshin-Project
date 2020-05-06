@@ -161,7 +161,7 @@ public abstract class ActionController {
                 // Loop through the children indices.
                 foreach (int childIndex in action.ChildrenIndexList) {
                     // Ensure that the index is valid.
-                    if (childIndex < 0 || childIndex > owner.ActionList.Count) {
+                    if (childIndex < 0 || childIndex >= owner.ActionList.Count) {
                         // Log an error.
                         Debug.LogError(
                             message: "Action Deserialization: Found an action with an invalid child index\n"
@@ -291,7 +291,7 @@ public abstract class ActionController {
             /// Marks the action as being finished.
             /// Applies all the children actions.
             /// </summary>
-            protected void Finish() {
+            protected virtual void Finish() {
                 // Check if there are children in the list.
                 if (this.State.ChildrenList.Count == 0) {
                     // Log a warning.
@@ -334,12 +334,18 @@ public abstract class ActionController {
                 // Increment the counter.
                 this._mCurrentSerializedObject++;
                 
-                // Convert the data to the specified data type.
-                return (TDataType)Convert.ChangeType(
-                    value: serialized, 
-                    conversionType: typeof(TDataType), 
-                    provider: CultureInfo.InvariantCulture
-                );
+                // Check if the data type is an enumerator.
+                if (typeof(TDataType).IsEnum) {
+                    // Convert to the target enum.
+                    return (TDataType)Enum.Parse(enumType: typeof(TDataType), value: serialized);
+                } else {
+                    // Convert the data to the specified data type.
+                    return (TDataType)Convert.ChangeType(
+                        value: serialized, 
+                        conversionType: typeof(TDataType), 
+                        provider: CultureInfo.InvariantCulture
+                    );
+                }
             }
             
             /// <summary>

@@ -304,6 +304,41 @@ public static class NodeController {
                     on: false, 
                     func: () => NodeController._ConvertNode<VisibleAction>(node: node)
                 );
+                NodeController._msDeleteMenu.AddItem(
+                    content: new GUIContent{ text = "Convert/Layer" }, 
+                    on: false, 
+                    func: () => NodeController._ConvertNode<LayerAction>(node: node)
+                );
+                NodeController._msDeleteMenu.AddItem(
+                    content: new GUIContent{ text = "Convert/Flip" }, 
+                    on: false, 
+                    func: () => NodeController._ConvertNode<FlipAction>(node: node)
+                );
+                NodeController._msDeleteMenu.AddItem(
+                    content: new GUIContent{ text = "Convert/Pose" }, 
+                    on: false, 
+                    func: () => NodeController._ConvertNode<PoseAction>(node: node)
+                );
+                NodeController._msDeleteMenu.AddItem(
+                    content: new GUIContent{ text = "Convert/MoveTo" }, 
+                    on: false, 
+                    func: () => NodeController._ConvertNode<MoveToAction>(node: node)
+                );
+                NodeController._msDeleteMenu.AddItem(
+                    content: new GUIContent{ text = "Convert/Rotate" }, 
+                    on: false, 
+                    func: () => NodeController._ConvertNode<RotateAction>(node: node)
+                );
+                NodeController._msDeleteMenu.AddItem(
+                    content: new GUIContent{ text = "Convert/Scale" }, 
+                    on: false, 
+                    func: () => NodeController._ConvertNode<ScaleAction>(node: node)
+                );
+                NodeController._msDeleteMenu.AddItem(
+                    content: new GUIContent{ text = "Convert/Colour" }, 
+                    on: false, 
+                    func: () => NodeController._ConvertNode<ColourAction>(node: node)
+                );
                 NodeController._msDeleteMenu.AddSeparator(path: "Convert/");
                 NodeController._msDeleteMenu.AddSeparator(path: "Convert/- Gameplay Actions");
                 

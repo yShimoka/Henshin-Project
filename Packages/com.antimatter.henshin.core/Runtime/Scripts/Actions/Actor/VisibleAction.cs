@@ -20,10 +20,9 @@ public class VisibleAction: ActorAction {
             /// State of the actor action class.
             /// Holds the index of the edited actor.
             /// </summary>
-            [Serializable]
             public class VisibleState: ActorState {
                 // ---  Attributes ---
-                    // -- Serialized Attributes --
+                    // -- Public Attributes --
                         /// <summary>
                         /// Flag used to determine if the actor should be rendered or hidden.
                         /// </summary>
@@ -69,6 +68,9 @@ public class VisibleAction: ActorAction {
             
             /// <inheritdoc cref="ActionController.LoadParameters"/>
             protected override void LoadParameters() {
+                // Call the base method.
+                base.LoadParameters();
+            
                 // Load both flags.
                 this.State.SetVisible = this.NextSerializedData<bool>();
                 this.State.AllActors = this.NextSerializedData<bool>();
@@ -76,6 +78,9 @@ public class VisibleAction: ActorAction {
             
             /// <inheritdoc cref="ActionController.SaveParameters"/>
             protected override void SaveParameters() {
+                // Call the base method.
+                base.SaveParameters();
+                
                 // Save both flags.
                 this.AddSerializedData(data: this.State.SetVisible);
                 this.AddSerializedData(data: this.State.AllActors);
