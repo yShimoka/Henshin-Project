@@ -1,11 +1,11 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
-/* Wrap the class within the local namespace. */
-
 using System.Linq;
+using Henshin.Editor.SceneEditor.GraphArea;
 using Henshin.Editor.Skin;
 using UnityEngine;
 
+/* Wrap the class within the local namespace. */
 namespace Henshin.Editor.SceneEditor.Header {
 
 /// <summary>
@@ -81,36 +81,59 @@ public static class HeaderView {
                 GUILayout.BeginVertical();
                 GUILayout.FlexibleSpace();
                 
+                // Check if any value has changed.
+                bool needsUpdate = false;
+                
                 // Draw the application state selector.
-                header.EditedApplicationIndex = UnityEditor.EditorGUILayout.Popup(
+                int appIdx = UnityEditor.EditorGUILayout.Popup(
                     selectedIndex: header.EditedApplicationIndex,
                     displayedOptions: HeaderState.EditableApplications
                         .Select(selector: app => app.name)
                         .ToArray(),
                         GUILayout.ExpandWidth(expand: false)
                 );
+                if (appIdx != header.EditedApplicationIndex) {
+                    needsUpdate = true;
+                    header.EditedApplicationIndex = appIdx;
+                }
                 
                 // Check if the application object is valid.
                 if (header.EditedApplication != null) {
                     // Draw the act state selector.
-                    header.EditedActIndex = UnityEditor.EditorGUILayout.Popup(
+                    int actIdx = UnityEditor.EditorGUILayout.Popup(
                         selectedIndex: header.EditedActIndex,
                         displayedOptions: header.EditedApplication.ActList
                             .Select(selector: act => act.Identifier)
                             .ToArray(),
                         GUILayout.ExpandWidth(expand: false)
                     );
+                    if (actIdx != header.EditedActIndex) {
+                        needsUpdate = true;
+                        header.EditedActIndex = actIdx;
+                    }
                 }
                 
                 // Check if the act object is valid.
                 if (header.EditedAct != null) {
                     // Draw the scene state selector.
-                    header.EditedSceneIndex = UnityEditor.EditorGUILayout.Popup(
+                    int scnIdx = UnityEditor.EditorGUILayout.Popup(
                         selectedIndex: header.EditedSceneIndex,
                         displayedOptions: header.EditedAct.SceneList
                             .Select(selector: scene => scene.Identifier)
                             .ToArray(),
                         GUILayout.ExpandWidth(expand: false)
+                    );
+                    if (scnIdx != header.EditedSceneIndex) {
+                        needsUpdate = true;
+                        header.EditedSceneIndex = scnIdx;
+                    }
+                }
+                
+                // If any change was applied.
+                if (needsUpdate) {
+                    // Set the owner's graph area reference.
+                    header.Owner.Instance.UpdateGraphArea(
+                        graphArea: GraphAreaController.FindGraphArea(sceneState: header.EditedScene)
                     );
                 }
                 
@@ -135,6 +158,9 @@ public static class HeaderView {
                 )) {
                     // Force-reserialize the project's assets.
                     UnityEditor.AssetDatabase.ForceReserializeAssets();
+                    
+                    // Re-initialize the window.
+                    header.Owner.IsInitialized = false;
                 }
                 // End the save button area.
                 GUILayout.FlexibleSpace(); GUILayout.EndVertical(); 
@@ -151,11 +177,30 @@ public static class HeaderView {
                     // Force-reserialize the project's assets.
                     UnityEditor.AssetDatabase.ForceReserializeAssets();
                     
+                    // Re-initialize the window.
+                    header.Owner.IsInitialized = false;
+                    
                     // Set the flag for the current scene.
                     header.EditedScene.IsDebugScene = true;
                     
                     // Enter play mode.
                     UnityEditor.EditorApplication.EnterPlaymode();
+                }
+                // End the save button area.
+                GUILayout.FlexibleSpace(); GUILayout.EndVertical(); 
+                
+                // Draw a separator.
+                HeaderView._DrawSeparator();
+                
+                // Start a new button area.
+                GUILayout.BeginVertical(); GUILayout.FlexibleSpace();
+                // Draw the center button.
+                if (GUILayout.Button(
+                    content: SkinState.Contents.SceneEditorCenter,
+                    style: SkinState.Styles.SceneHeaderButton
+                )) {
+                    // Center the current graph area.
+                    if (header.Owner.GraphArea != null) GraphAreaController.Center(graphArea: header.Owner.GraphArea);
                 }
                 // End the save button area.
                 GUILayout.FlexibleSpace(); GUILayout.EndVertical(); 

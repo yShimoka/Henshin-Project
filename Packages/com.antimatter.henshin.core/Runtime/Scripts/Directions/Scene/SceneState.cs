@@ -1,8 +1,11 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 using System;
+using System.Collections.Generic;
+using System.Security.Policy;
 using Henshin.Runtime.Actions;
 using Henshin.Runtime.Actor;
+using Henshin.Runtime.Application;
 using Henshin.Runtime.Directions.Act;
 using UnityEngine;
 
@@ -26,7 +29,7 @@ public class SceneState {
             /// <summary>
             /// The list of all the actors of the scene.
             /// </summary>
-            public ActorState[] ActorList;
+            public List<ActorState> ActorList = new List<ActorState>();
             
             // TODO: Add the gameplay manager class.
             // public GameplayState Gameplay;
@@ -35,7 +38,7 @@ public class SceneState {
             /// List of all the actions in the scene.
             /// This list is not ordered and should not be used as is.
             /// </summary>
-            public ActionState[] ActionList;
+            public List<ActionState> ActionList = new List<ActionState>();
             
 #if UNITY_EDITOR
             /// <summary>

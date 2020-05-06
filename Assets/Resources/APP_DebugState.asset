@@ -13,16 +13,21 @@ MonoBehaviour:
   m_Name: APP_DebugState
   m_EditorClassIdentifier: 
   ActList:
-  - SceneList:
+  - Hash: 1271501458
+    SceneList:
     - Background: {fileID: 0}
-      ActorList:
-      - Identifier: Neku
-        Prefab: {fileID: 8948660713939356513, guid: fe69b606a464349b08ef514cf9e1986d,
-          type: 3}
-        PoseList:
-        - {fileID: 21300000, guid: 8a31dd2e1cbed49c6ace09c8b92b9d50, type: 3}
-        - {fileID: 21300000, guid: 93bb385c23bbc438eb520c3082d74de9, type: 3}
-      ActionList: []
+      ActorList: []
+      ActionList:
+      - ChildrenIndexList: 02000000
+        Parameters: []
+        ActionControllerName: Henshin.Runtime.Actions.Scene.StartAction
+      - ChildrenIndexList: 
+        Parameters: []
+        ActionControllerName: Henshin.Runtime.Actions.Scene.EndAction
+      - ChildrenIndexList: 01000000
+        Parameters:
+        - 0
+        ActionControllerName: Henshin.Runtime.Actions.Scene.DelayAction
       IsDebugScene: 0
   IsDebugState: 1
   ClearColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}

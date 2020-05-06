@@ -16,6 +16,13 @@ namespace Henshin.Runtime.Directions.Act {
 public class ActState {
     // ---  Attributes ---
         // -- Serialized Attributes --
+            // - Unique Identifier -
+            /// <summary>
+            /// Random hash assigned to the act.
+            /// This is used in equality comparisons.
+            /// </summary>
+            public int Hash;
+            
             // - Parameters -
             /// <summary>
             /// List of all the scenes in the current act.
@@ -54,7 +61,8 @@ public class ActState {
             /// </summary>
             [NonSerialized]
             public static ActState Current;
-            
+
+
             // - Helper Properties -
             /// <summary>
             /// Helper accessor to the current scene object.
@@ -74,5 +82,38 @@ public class ActState {
             }
             
     // --- /Attributes ---
+    
+    // ---  Methods ---
+        // -- Constructor --
+            /// <summary>
+            /// Class constructor.
+            /// Assigns the value of the <see cref="Hash"/> field.
+            /// </summary>
+            public ActState() { this.Hash = ApplicationController.Random.Next(); }
+            
+        // -- Comparison --
+            /// <summary>
+            /// Checks if two <see cref="ActState"/> objects are the same.
+            /// Compare both of their <see cref="Hash"/> values together.
+            /// </summary>
+            /// <param name="obj">The object to compare with.</param>
+            /// <returns>True if both objects are <see cref="ActState"/>s with the same <see cref="Hash"/></returns>
+            public override bool Equals(object obj) {
+                // Check if the object is an act state.
+                if (!(obj is ActState other)) return false;
+                
+                // Compare both of their hashes.
+                return this.Hash == other.Hash;
+            }
+
+            /// <summary>
+            /// Returns the hash of this object.
+            /// </summary>
+            /// <returns>The value of the <see cref="Hash"/> attribute.</returns>
+            public override int GetHashCode() {
+                // ReSharper disable once NonReadonlyMemberInGetHashCode
+                return this.Hash;
+            }
+    // --- /Methods ---
 }
 }

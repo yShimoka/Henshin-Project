@@ -2,9 +2,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Henshin.Runtime.Directions.Scene;
+using JetBrains.Annotations;
 using UnityEngine;
 
 /* Wrap the class within the local namespace. */
@@ -43,6 +45,40 @@ public abstract class ActionController {
                         }
                 // --- /Methods ---
             }
+            
+            /// <summary>
+            /// Class used to determine the category of the <see cref="ActionState"/> class.
+            /// Refers to the 
+            /// </summary>
+            public class ActionControllerCategoryAttribute: Attribute {
+                // ---  Attributes ---
+                    // -- Public Attributes --
+                        /// <summary>
+                        /// Category of the state object.
+                        /// </summary>
+                        public readonly EActionCategory Category;
+                // --- /Attributes ---
+                
+                // ---  Methods ---
+                    // -- Public Methods --
+                        /// <summary>
+                        /// Class constructor.
+                        /// Creates a new instance of the <see cref="ActionControllerCategoryAttribute"/>.
+                        /// </summary>
+                        /// <param name="category">The category of the action.</param>
+                        public ActionControllerCategoryAttribute(EActionCategory category) {
+                            this.Category = category;
+                        }
+                // --- /Methods ---
+            }
+            
+        // -- Public Enums --
+            /// <summary>
+            /// List of all the categories of actions.
+            /// </summary>
+            public enum EActionCategory {
+                Start, End, Scene, Actor, Gameplay
+            }
     // --- /SubObjects --
     
     // ---  Attributes ---
@@ -63,14 +99,20 @@ public abstract class ActionController {
             /// <summary>
             /// Dictionary of all the constructor objects for the specified action types.
             /// This is used to avoid having to search through the entire assembly
-            /// every time the <see cref="_CreateActionController"/> method is called.
+            /// every time the <see cref="CreateController"/> method is called.
             /// </summary>
-            private static readonly Dictionary<string, ConstructorInfo> _msSTATE_CONSTRUCTORS = 
-                new Dictionary<string, ConstructorInfo>();
+            private static readonly Dictionary<string, Tuple<ConstructorInfo, ConstructorInfo>> _msSTATE_CONSTRUCTORS = 
+                new Dictionary<string, Tuple<ConstructorInfo, ConstructorInfo>>();
+                
+            // - Indices -
+            /// <summary>
+            /// Index of the object that is currently being deserialized.
+            /// Used by <see cref="NextSerializedData{TDataType}"/>.
+            /// </summary>
+            private int _mCurrentSerializedObject = 0;
     // --- /Attributes ---
     
     // ---  Methods ---
-        // -- Unity Events --
         // -- Public Methods --
             // - Serialization Events -
             /// <summary>
@@ -79,31 +121,16 @@ public abstract class ActionController {
             /// </summary>
             /// <param name="owner">The owner of this action.</param>
             /// <param name="action">The action object to serialize.</param>
-            public static void Serialize(SceneState owner, ActionState action) {
-                // Serialize the list of children.
-                action.ChildrenIndexList = new int[action.ChildrenList.Count];
-                for (int index = 0; index < action.ChildrenList.Count; index++) {
-                    ActionState child = action.ChildrenList[index: index];
-                    
-                    // Get the index of the child.
-                    int childIndex = Array.IndexOf(array: owner.ActionList, value: child);
-
-                    // Ensure that the index is valid.
-                    if (childIndex < 0 || childIndex > owner.ActionList.Length) {
-                        // Log an error.
-                        UnityEngine.Debug.LogError(message: $"There is an action that has an invalid child : {child}");
-                    }
-
-                    // Store the index in the list.
-                    action.ChildrenIndexList[index] = childIndex;
-                }
-                
+            public static ActionState Serialize(SceneState owner, ActionState action) {
                 // Clear the list of parameters.
                 action.Parameters = new List<string>();
                 // Serialize the parameters of the action.
-                ActionController
-                    ._CreateActionController(controller: action.ActionControllerName, state: action)
-                    ._SaveParameters();
+                ActionController controller = ActionController
+                    .CreateController(controller: action.ActionControllerName, state: action);
+                controller.SaveParameters();
+                
+                // Return the new state object.
+                return controller.State;
             }
             
             /// <summary>
@@ -112,23 +139,38 @@ public abstract class ActionController {
             /// </summary>
             /// <param name="owner">The owner of this action.</param>
             /// <param name="action">The action object to deserialize.</param>
-            public static void Deserialize(SceneState owner, ActionState action) {
+            public static ActionState Deserialize(SceneState owner, ActionState action) {
+                // Deserialize the parameters of the controller.
+                ActionController controller = ActionController
+                    .CreateController(controller: action.ActionControllerName, state: action);
+                controller.LoadParameters();
+                // Load the state of the new controller.
+                action = controller.State;
+                    
+                // Return the new state.
+                return action;
+            }
+            
+            /// <summary>
+            /// Loads all the children references.
+            /// </summary>
+            public static void LoadChildren(SceneState owner, ActionState action) {
                 // Recreate the child list.
                 action.ChildrenList = new List<ActionState>();
                 
                 // Loop through the children indices.
                 foreach (int childIndex in action.ChildrenIndexList) {
                     // Ensure that the index is valid.
-                    if (childIndex < 0 || childIndex > owner.ActionList.Length) {
+                    if (childIndex < 0 || childIndex > owner.ActionList.Count) {
                         // Log an error.
-                        Application.ApplicationView.Error(
-                            message: "Action Deserialization: Found an action with an invalid child index",
-                            details: $"Child index was #{childIndex}, the owner's action list " +
-                                     $"is {owner.ActionList.Length} items long."
+                        Debug.LogError(
+                            message: "Action Deserialization: Found an action with an invalid child index\n"
+                                   + $"Child index was #{childIndex}, the owner's action list " +
+                                     $"is {owner.ActionList.Count} items long."
                         );
                     } else {
                         // Get the child at the specified index.
-                        ActionState child = owner.ActionList[childIndex];
+                        ActionState child = owner.ActionList[index: childIndex];
                         
                         // Add the child to the list of children.
                         action.ChildrenList.Add(item: child);
@@ -137,11 +179,6 @@ public abstract class ActionController {
                         child.ParentCount++;
                     }
                 }
-                
-                // Deserialize the parameters of the controller.
-                ActionController
-                    ._CreateActionController(controller: action.ActionControllerName, state: action)
-                    ._LoadParameters();
             }
             
             // - Controller Manipulation -
@@ -159,10 +196,11 @@ public abstract class ActionController {
                     // Check if the counter is greater than the number of parents.
                     if (state.ParentFinishedCounter >= state.ParentCount) {
                         // Create the state's controller.
-                        ActionController controller = ActionController._CreateActionController(
+                        ActionController controller = ActionController.CreateController(
                             controller: state.ActionControllerName, 
                             state: state
                         );
+                        controller.LoadParameters();
                         
                         // Wait 1 frame to ensure that the chain does not overflow the stack.
                         Application.ApplicationController.OnNextTick.AddListener(
@@ -193,7 +231,7 @@ public abstract class ActionController {
                     // Ensure that the state class is valid.
                     if (stateClass == state.GetType()) {
                         // Call the controller constructor.
-                        return ActionController._CreateActionController(
+                        return ActionController.CreateController(
                             controller: state.ActionControllerName, 
                             state: state
                         ) as TControllerType;
@@ -205,28 +243,40 @@ public abstract class ActionController {
                         );
                     }
                 } else {
-                    // Check if the state was created correctly.
-                    if (stateClass
-                        ?.GetConstructor(types: new Type[] {})
-                        ?.Invoke(parameters: new object[] {}) 
-                        is ActionState newState
-                    ) {
-                        // Set the state's controller name.
-                        newState.ActionControllerName = typeof(TControllerType).FullName;
-                        
-                        // Call the controller constructor.
-                        return ActionController._CreateActionController(
-                            controller: newState.ActionControllerName,
-                            state: newState
-                        ) as TControllerType;
-                    } else {
-                        // Throw an error.
-                        throw new InvalidOperationException(
-                            message: $"Could not create the ActionController instance of {typeof(TControllerType).Name},"
-                                   + $"The state class \"{stateClass?.Name}\" could not be instantiated."
-                        );
-                    }
+                    // Call the controller constructor.
+                    return ActionController.CreateController(
+                        controller: typeof(TControllerType).FullName
+                    ) as TControllerType;
                 }
+            }
+            
+            // - Helper Methods -
+            /// <summary>
+            /// Returns the <see cref="EActionCategory"/> of the specified <see cref="ActionState"/>.
+            /// </summary>
+            /// <param name="action">The action to get the category of.</param>
+            /// <returns>The category of the specified action's controller.</returns>
+            public static EActionCategory GetCategory([NotNull]ActionState action) {
+                // Check if the action's controller type is set.
+                if (action.ControllerType == null) {
+                    
+                }
+                
+                // Find the attribute on the controller type.
+                ActionControllerCategoryAttribute attribute = action.ControllerType
+                    .GetCustomAttributes(attributeType: typeof(ActionControllerCategoryAttribute), inherit: false)
+                    .Cast<ActionControllerCategoryAttribute>()
+                    .ElementAtOrDefault(index: 0);
+                
+                // If no element was found.
+                if (attribute == null) {
+                    throw new InvalidOperationException(
+                        message: $"The action controller {action.ActionControllerName} does not have a category."
+                    );
+                }
+                
+                // Return the attribute.
+                return attribute.Category;
             }
             
         // -- Protected Methods --
@@ -257,16 +307,52 @@ public abstract class ActionController {
             
             // - Serialization -
             /// <summary>
+            /// Adds the specified data to the serialized array.
+            /// </summary>
+            /// <param name="data">The data to add to the array.</param>
+            /// <typeparam name="TDataType">The type of the data object.</typeparam>
+            protected void AddSerializedData<TDataType>(TDataType data) {
+                // Convert the data to a string object.
+                string serialized = Convert.ToString(value: data, provider: CultureInfo.InvariantCulture);
+                
+                // Store the data in the store.
+                this.State.Parameters.Add(item: serialized);
+            }
+            
+            /// <summary>
+            /// Returns the next element in the serialized list.
+            /// </summary>
+            /// <typeparam name="TDataType">The expected type of the data.</typeparam>
+            protected TDataType NextSerializedData<TDataType>() {
+                // Check if the index is valid.
+                if (this._mCurrentSerializedObject < 0 || this._mCurrentSerializedObject >= this.State.Parameters.Count) {
+                    throw new IndexOutOfRangeException(message: $"There is no parameter at index {this._mCurrentSerializedObject}");
+                }
+                // Get the current data from the serialized list.
+                string serialized = this.State.Parameters[index: this._mCurrentSerializedObject];
+                
+                // Increment the counter.
+                this._mCurrentSerializedObject++;
+                
+                // Convert the data to the specified data type.
+                return (TDataType)Convert.ChangeType(
+                    value: serialized, 
+                    conversionType: typeof(TDataType), 
+                    provider: CultureInfo.InvariantCulture
+                );
+            }
+            
+            /// <summary>
             /// Method called right before serialization.
             /// Stores the parameters into the <see cref="ActionState.Parameters"/> array.
             /// </summary>
-            protected abstract void _SaveParameters();
+            protected abstract void SaveParameters();
             
             /// <summary>
             /// Method called right after construction.
             /// Loads the parameters specified in the <see cref="ActionState.Parameters"/> array.
             /// </summary>
-            protected abstract void _LoadParameters();
+            protected abstract void LoadParameters();
             
         // -- Private Methods --
             /// <summary>
@@ -275,16 +361,35 @@ public abstract class ActionController {
             /// <param name="controller">The name of the controller for the specified action.</param>
             /// <param name="state">Optional state object to inject in the controller.</param>
             /// <returns>The created <see cref="ActionController"/> instance.</returns>
-            private static ActionController _CreateActionController(string controller, ActionState state = null) {
+            public static ActionController CreateController(string controller, ActionState state = null) {
                 // Search in the dictionary first.
                 if (ActionController._msSTATE_CONSTRUCTORS.ContainsKey(key: controller)) {
-                    // Invoke the constructor.
-                    ActionController action = ActionController._msSTATE_CONSTRUCTORS[key: controller]
+                    // Invoke the controller constructor.
+                    ActionController action = ActionController._msSTATE_CONSTRUCTORS[key: controller].Item1
                         .Invoke(parameters: new object[] {})
                         as ActionController;
                     
-                    // Set the state of the action.
-                    if (action != null) action.State = state;
+                    // Check if the state's type is already valid.
+                    if (state != null && state.GetType() == ActionController._msSTATE_CONSTRUCTORS[key: controller].Item2.DeclaringType) {
+                        // Store the state.
+                        action.State = state;
+                    } else {
+                        // Invoke the state constructor.
+                        action.State = ActionController._msSTATE_CONSTRUCTORS[key: controller].Item2
+                            .Invoke(parameters: new object[] {})
+                            as ActionState;
+                            
+                        // Check if a state was specified.
+                        if (state != null) {
+                            action.State.Parameters = state.Parameters;
+                            action.State.ChildrenList = state.ChildrenList;
+                            
+                            // Create the children list array.
+                            action.State.ChildrenIndexList = state.ChildrenIndexList;
+                        }
+                        action.State.ActionControllerName = controller;
+                        action.State.ControllerType = action.GetType();
+                    }
 
                     // Return the action.
                     return action;
@@ -317,21 +422,50 @@ public abstract class ActionController {
                     );
                 } else {
                     // Search for the constructor.
-                    System.Reflection.ConstructorInfo constructor = actionType.GetConstructor(
+                    ConstructorInfo controllerConstructor = actionType.GetConstructor(
                         types: new Type[]{}
                     );
                     // Check if the controller could be instantiated.
-                    if (!(constructor?.Invoke(parameters: new object[] {}) is ActionController controllerInstance)) {
+                    if (!(controllerConstructor?.Invoke(parameters: new object[] {}) is ActionController controllerInstance)) {
                         // Throw an error.
                         throw new InvalidOperationException(
                             message: $"Could not find an constructor for the action controller {actionType.Name}"
                         );
                     } else {
-                        // Store the constructor in the dictionary.
-                        ActionController._msSTATE_CONSTRUCTORS.Add(key: controller, value: constructor);
+                        // Find the state constructor.
+                        ConstructorInfo stateConstructor = actionType
+                            .GetCustomAttributes(attributeType: typeof(ActionControllerTypeAttribute), inherit: false)
+                            .Cast<ActionControllerTypeAttribute>()
+                            .ElementAtOrDefault(index: 0)
+                            ?.StateType
+                            .GetConstructor(types: new Type[] {});
+                        
+                        // Check if the state constructor was found.
+                        if (stateConstructor == null) throw new InvalidOperationException(
+                            message: $"Could not find a state for the controller type {controller}"
+                        );
+                        
+                        // Store the constructors in the dictionary.
+                        ActionController._msSTATE_CONSTRUCTORS.Add(
+                            key: controller, 
+                            value: new Tuple<ConstructorInfo, ConstructorInfo>(
+                                item1: controllerConstructor,
+                                item2: stateConstructor
+                            )
+                        );
                         
                         // Store the state of the controller.
-                        controllerInstance.State = state;
+                        controllerInstance.State = stateConstructor.Invoke(parameters: new object[] {}) as ActionState;
+                        
+                        // If a state was specified.
+                        if (state != null) {
+                            // Copy the state info.
+                            controllerInstance.State.ChildrenIndexList = state.ChildrenIndexList;
+                            controllerInstance.State.Parameters = state.Parameters;
+                            controllerInstance.State.ChildrenList = state.ChildrenList;
+                        }
+                        controllerInstance.State.ControllerType = actionType;
+                        controllerInstance.State.ActionControllerName = controller;
                         
                         // Return the controller instance.
                         return controllerInstance;

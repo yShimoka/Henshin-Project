@@ -11,7 +11,7 @@ namespace Henshin.Runtime.Actions.Scene {
 /// Controller class used to manipulate <see cref="StartAction.State"/> objects.
 /// This action marks the beginning of the specified action.
 /// </summary>
-[ActionControllerType(stateType: typeof(EndState))]
+[ActionControllerType(stateType: typeof(EndState)), ActionControllerCategory(category: EActionCategory.End)]
 public class EndAction: ActionController {
     // ---  SubObjects ---
         // -- Public Classes --
@@ -56,11 +56,11 @@ public class EndAction: ActionController {
             }
     
             // - Serialization Events -
-            /// <inheritdoc cref="ActionController._SaveParameters"/>
-            protected override void _SaveParameters() { }
+            /// <inheritdoc cref="ActionController.SaveParameters"/>
+            protected override void SaveParameters() { }
 
-            /// <inheritdoc cref="ActionController._LoadParameters"/>
-            protected override void _LoadParameters() { }
+            /// <inheritdoc cref="ActionController.LoadParameters"/>
+            protected override void LoadParameters() { }
         // -- Private Methods --
     // --- /Methods ---
 }

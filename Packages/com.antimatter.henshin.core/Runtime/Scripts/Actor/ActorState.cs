@@ -29,7 +29,7 @@ public class ActorState {
             /// <summary>
             /// List of all the poses that the actor can take.
             /// </summary>
-            public List<Sprite> PoseList = new List<Sprite>();
+            public PoseStore PoseStore;
             
         // -- Public Attributes --
             /// <summary>

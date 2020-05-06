@@ -53,6 +53,9 @@ public static class ActorView {
                 
                 // Set the name of the actor's game object.
                 actor.Instance.name = actor.Identifier;
+                
+                // Disable the actor.
+                actor.Instance.SetActive(value: false);
             }
             
             // - Setters -
@@ -63,10 +66,10 @@ public static class ActorView {
             /// <param name="poseIndex">The index of the new pose in the actor's <see cref="ActorState.PoseList"/>.</param>
             public static void SetPose([NotNull] ActorState actor, int poseIndex) {
                 // Check if the value of the index is valid.
-                if (poseIndex >= 0 && poseIndex < actor.PoseList.Count) {
+                if (poseIndex >= 0 && poseIndex < actor.PoseStore.PoseList.Count) {
                     // Update the pose of the actor.
                     if (actor.SpriteRenderer != null) {
-                        actor.SpriteRenderer.sprite = actor.PoseList[index: poseIndex];
+                        actor.SpriteRenderer.sprite = actor.PoseStore.PoseList[index: poseIndex];
                     } else {
                         // Throw an error.
                         ApplicationView.Error(
@@ -77,7 +80,7 @@ public static class ActorView {
                     // Throw an error.
                     ApplicationView.Error(
                         message: $"Tried to load an invalid pose #{poseIndex} for actor \"{actor.Identifier}\"",
-                        details: $"Actor's pose list is only {actor.PoseList.Count} items long."
+                        details: $"Actor's pose list is only {actor.PoseStore.PoseList.Count} items long."
                     );
                 }
             }

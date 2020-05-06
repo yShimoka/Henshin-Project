@@ -1,13 +1,21 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 /* Wrap the class within the local namespace. */
+
+using System;
+using Henshin.Runtime.Application;
+using Henshin.Runtime.Directions.Act;
+using Henshin.Runtime.Directions.Scene;
+using JetBrains.Annotations;
+using UnityEngine;
+
 namespace Henshin.Editor.SceneEditor.Header {
 
 /// <summary>
 /// State class used to represent the header of a <see cref="SceneEditorController"/> window.
 /// Stores all the necessary parameters within itself.
 /// </summary>
-[System.SerializableAttribute]
+[Serializable]
 public class HeaderState {
     // ---  Attributes ---
         // -- Serialized Attributes --
@@ -31,14 +39,14 @@ public class HeaderState {
             /// <summary>
             /// Reference to the owner of this header instance.
             /// </summary>
-            [System.NonSerializedAttribute]
+            [NonSerialized]
             public SceneEditorState Owner;
             
             /// <summary>
             /// Reference to the instance of the application that is being edited.
             /// </summary>
-            [JetBrains.Annotations.CanBeNullAttribute]
-            public Runtime.Application.ApplicationState EditedApplication
+            [CanBeNull]
+            public ApplicationState EditedApplication
             {
                 get {
                     // Check if the index's value is correct.
@@ -53,8 +61,8 @@ public class HeaderState {
             /// <summary>
             /// Reference to the instance of the act that is being edited.
             /// </summary>
-            [JetBrains.Annotations.CanBeNullAttribute]
-            public Runtime.Directions.Act.ActState EditedAct
+            [CanBeNull]
+            public ActState EditedAct
             {
                 get {
                     // Check if the application is correct.
@@ -73,8 +81,8 @@ public class HeaderState {
             /// <summary>
             /// Reference to the instance of the scene that is being edited.
             /// </summary>
-            [JetBrains.Annotations.CanBeNullAttribute]
-            public Runtime.Directions.Scene.SceneState EditedScene
+            [CanBeNull]
+            public SceneState EditedScene
             {
                 get {
                     // Check if the application is correct.
@@ -95,20 +103,20 @@ public class HeaderState {
             /// Stores a list of all the application objects that can be edited.
             /// Updated on reserialization of the project.
             /// </summary>
-            public static Runtime.Application.ApplicationState[] EditableApplications;
+            public static ApplicationState[] EditableApplications;
             
             // - Rects -
             /// <summary>
             /// Stores the rect of the header.
             /// </summary>
-            [System.NonSerializedAttribute]
-            public UnityEngine.Rect Rect = new UnityEngine.Rect();
+            [NonSerialized]
+            public Rect Rect = new Rect();
             
             /// <summary>
             /// Rect set to the size that is allowed for the content of the header.
             /// </summary>
-            [System.NonSerializedAttribute]
-            public UnityEngine.Rect ContentRect = new UnityEngine.Rect();
+            [NonSerialized]
+            public Rect ContentRect = new Rect();
     // --- /Attributes ---
 }
 }

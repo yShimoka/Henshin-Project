@@ -12,13 +12,6 @@ namespace Henshin.Runtime.Directions.Act {
 /// Controller class used to manipulate <see cref="ActState"/> objects.
 /// </summary>
 public static class ActController {
-    // ---  Attributes ---
-        // -- Serialized Attributes --
-        // -- Public Attributes --
-        // -- Protected Attributes --
-        // -- Private Attributes --
-    // --- /Attributes ---
-    
     // ---  Methods ---
         // -- Public Methods --
             // - Serialization -
@@ -29,6 +22,12 @@ public static class ActController {
             /// <param name="owner">The owner of the serialized act.</param>
             /// <param name="act">The raw act object.</param>
             public static void Serialize(ApplicationState owner, ActState act) {
+                // If the act's hash is 0.
+                if (act.Hash == 0) {
+                    // Set the hash of the act.
+                    act.Hash = ApplicationController.Random.Next();
+                }
+                
                 // Serialize all the scenes.
                 foreach (SceneState sceneState in act.SceneList) {
                     SceneController.Serialize(owner: act, scene: sceneState);

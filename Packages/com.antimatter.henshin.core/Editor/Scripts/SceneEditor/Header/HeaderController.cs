@@ -3,6 +3,8 @@
 /* Wrap the class within the local namespace. */
 
 using System.Linq;
+using Henshin.Editor.SceneEditor.GraphArea;
+using Henshin.Runtime.Application;
 
 namespace Henshin.Editor.SceneEditor.Header {
 
@@ -26,6 +28,9 @@ public static class HeaderController {
                 
                 // Reload the application states.
                 HeaderController.ReloadApplicationStates();
+                
+                // Set the owner's graph area reference.
+                owner.UpdateGraphArea(graphArea: GraphAreaController.FindGraphArea(sceneState: header.EditedScene));
             }
             
             /// <summary>
@@ -33,17 +38,17 @@ public static class HeaderController {
             /// Updates the <see cref="HeaderState.EditableApplications"/> list.
             /// </summary>
             public static void ReloadApplicationStates() {
-                // Find all the application objects in the project.
-                string[] appGuids = UnityEditor.AssetDatabase.FindAssets(
-                    filter: $"t:{nameof(Runtime.Application.ApplicationState)}",
-                    searchInFolders: new []{ "Assets/Resources" }
-                );
-                
                 // Load all the application objects.
-                HeaderState.EditableApplications = appGuids
+                HeaderState.EditableApplications =  UnityEditor.AssetDatabase.FindAssets(
+                    filter: $"t:{nameof(ApplicationState)}",
+                    searchInFolders: new []{ "Assets/Resources" }
+                )
                     .Select(selector: UnityEditor.AssetDatabase.GUIDToAssetPath)
-                    .Select(selector: UnityEditor.AssetDatabase.LoadAssetAtPath<Runtime.Application.ApplicationState>)
+                    .Select(selector: UnityEditor.AssetDatabase.LoadAssetAtPath<ApplicationState>)
                     .ToArray();
+                
+                // Load the graph stores.
+                GraphAreaController.ReloadStores();
             }
             
             // - Runtime Events -

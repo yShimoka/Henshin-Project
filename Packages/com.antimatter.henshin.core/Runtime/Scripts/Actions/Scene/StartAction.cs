@@ -9,7 +9,7 @@ namespace Henshin.Runtime.Actions.Scene {
 /// Controller class used to manipulate <see cref="StartAction.State"/> objects.
 /// This action marks the beginning of the specified action.
 /// </summary>
-[ActionControllerType(stateType: typeof(StartState))]
+[ActionControllerType(stateType: typeof(StartState)), ActionControllerCategory(category: EActionCategory.Start)]
 public class StartAction: ActionController {
     // ---  SubObjects ---
         // -- Public Classes --
@@ -36,11 +36,11 @@ public class StartAction: ActionController {
             protected override void Apply() { this.Finish(); }
     
             // - Serialization Events -
-            /// <inheritdoc cref="ActionController._SaveParameters"/>
-            protected override void _SaveParameters() { this.State.Parameters.Add(item: "Test"); }
+            /// <inheritdoc cref="ActionController.SaveParameters"/>
+            protected override void SaveParameters() { }
 
-            /// <inheritdoc cref="ActionController._LoadParameters"/>
-            protected override void _LoadParameters() { }
+            /// <inheritdoc cref="ActionController.LoadParameters"/>
+            protected override void LoadParameters() { }
         // -- Private Methods --
     // --- /Methods ---
 }

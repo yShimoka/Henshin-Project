@@ -1,6 +1,7 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Henshin.Runtime.Actions;
 using Henshin.Runtime.Application;
@@ -32,9 +33,11 @@ public static class SceneController {
             /// <param name="scene">The raw scene object.</param>
             public static void Serialize(ActState owner, SceneState scene) {
                 // Serialize all the transformations.
-                foreach (ActionState actionState in scene.ActionList) {
-                    ActionController.Serialize(owner: scene, action: actionState);
+                List<ActionState> copy = scene.ActionList;
+                for (int index = 0; index < copy.Count; index++) {
+                    copy[index: index] = ActionController.Serialize(owner: scene, action: scene.ActionList[index: index]);
                 }
+                scene.ActionList = copy;
             }
             
             /// <summary>
@@ -48,13 +51,27 @@ public static class SceneController {
                 scene.Owner = owner;
                 scene.Index = Array.IndexOf(array: owner.SceneList, value: scene);
                 
-                // Deserialize all the transformations.
-                foreach (ActionState actionState in scene.ActionList) {
-                    ActionController.Deserialize(owner: scene, action: actionState);
+                // Recreate the action states.
+                for (int index = 0; index < scene.ActionList.Count; index++) {
+                    scene.ActionList[index: index] = ActionController
+                        .CreateController(
+                            controller: scene.ActionList[index: index].ActionControllerName, 
+                            state: scene.ActionList[index: index])
+                        .State;
                 }
-                
+
+                // Deserialize all the transformations.
+                for (int index = 0; index < scene.ActionList.Count; index++) {
+                    // Deserialize the state.
+                    scene.ActionList[index: index] = ActionController.Deserialize(owner: scene, action: scene.ActionList[index: index]);
+                }
+                // Load all the transformation's children.
+                foreach (ActionState actionState in scene.ActionList) {
+                    ActionController.LoadChildren(owner: scene, action: actionState);
+                }
+
                 // Check if the action list is not empty.
-                if (scene.ActionList.Length > 0) {
+                if (scene.ActionList.Count > 0) {
                     // Search for the Start action.
                     scene.RootAction = scene.ActionList
                         .FirstOrDefault(predicate: action =>

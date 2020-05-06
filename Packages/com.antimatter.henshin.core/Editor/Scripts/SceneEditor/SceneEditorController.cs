@@ -1,6 +1,13 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 /* Wrap the class within the local namespace. */
+
+using Henshin.Editor.SceneEditor.GraphArea;
+using Henshin.Editor.SceneEditor.Header;
+using Henshin.Editor.SceneEditor.Inspector;
+using JetBrains.Annotations;
+using UnityEngine;
+
 namespace Henshin.Editor.SceneEditor {
 
 /// <summary>
@@ -29,7 +36,7 @@ public class SceneEditorController: UnityEditor.EditorWindow {
                 );
                 
                 // Set the title of the editor window.
-                window.titleContent = new UnityEngine.GUIContent(
+                window.titleContent = new GUIContent(
                     src: Skin.SkinState.Contents.SceneEditorTitle
                 );
                 
@@ -41,9 +48,6 @@ public class SceneEditorController: UnityEditor.EditorWindow {
             /// Event called when the window gets created.
             /// </summary>
             private void OnEnable() {
-                // Initialize the window.
-                this._Initialize();
-                
                 // Add the window to the list of all windows.
                 SceneEditorState.WindowList.Add(item: this);
                 
@@ -66,11 +70,20 @@ public class SceneEditorController: UnityEditor.EditorWindow {
             /// Event called every time the window should be drawn.
             /// </summary>
             private void OnGUI() {
+                // If the window is not initialized.
+                if (!this.State.IsInitialized) {
+                    // Initialize the window.
+                    this._Initialize();
+                }
+                
                 // Prepare the controller.
                 this._Prepare();
                 
                 // Call the view's Render method.
                 SceneEditorView.Render(state: this.State);
+            
+                // Call the event handlers.
+                this._HandleEvents();
             }
 
             /// <summary>
@@ -78,10 +91,26 @@ public class SceneEditorController: UnityEditor.EditorWindow {
             /// </summary>
             private void OnProjectChange() {
                 // Reload the application states.
-                Header.HeaderController.ReloadApplicationStates();
+                HeaderController.ReloadApplicationStates();
             }
-
-    // -- Public Methods --
+            
+        // -- Public Methods --
+            /// <summary>
+            /// Updates the reference to the graph area.
+            /// </summary>
+            public void UpdateGraphArea([CanBeNull]GraphAreaState graphArea) {
+                // Store the reference to the graph area.
+                this.State.GraphArea = graphArea;
+                
+                // Check if the graph area is set.
+                if (graphArea != null) {
+                    // Set the graph area's window reference.
+                    this.State.GraphArea.Owner = this;
+                    // Initialize the graph area object.
+                    GraphAreaController.Initialize(graphArea: this.State.GraphArea);
+                }
+            }
+            
         // -- Private Methods --
             // - Events -
             /// <summary>
@@ -90,11 +119,12 @@ public class SceneEditorController: UnityEditor.EditorWindow {
             /// </summary>
             private void _Initialize() {
                 // Initialize the header object.
-                Header.HeaderController.Initialize(header: this.State.Header, owner: this);
+                HeaderController.Initialize(header: this.State.Header, owner: this);
                 // Initialize the inspector object.
-                //SceneEditor.Inspector.InspectorController.Initialize(inspector: this.State.Inspector, owner: this);
-                // Initialize the graph area object.
-                //SceneEditor.GraphArea.GraphAreaController.Initialize(graphArea: this.State.GraphArea, owner: this);
+                InspectorController.Initialize(inspector: this.State.Inspector, owner: this);
+                
+                // Set the flag.
+                this.State.IsInitialized = true;
             }
             
             /// <summary>
@@ -111,12 +141,26 @@ public class SceneEditorController: UnityEditor.EditorWindow {
                 );
                 
                 // Call the prepare method on the header.
-                Header.HeaderController.Prepare(header: this.State.Header);
+                HeaderController.Prepare(header: this.State.Header);
                 // Call the prepare method on the inspector.
-                //Henshin.Editor.SceneEditor.Inspector.InspectorController.Prepare(inspector: this.State.Inspector);
+                InspectorController.Prepare(inspector: this.State.Inspector);
                 // Call the prepare method on the graph area.
-                //Henshin.Editor.SceneEditor.GraphArea.GraphAreaController.Prepare(graphArea: this.State.GraphArea);
+                GraphAreaController.Prepare(graphArea: this.State.GraphArea, owner: this);
             }
+            
+            /// <summary>
+            /// Prepares the scene editor.
+            /// Calls the HandleEvent method on all the components of the window.
+            /// </summary>
+            private void _HandleEvents() {
+                // Call the handle events method on the header.
+                HeaderController.HandleEvents(header: this.State.Header);
+                // Call the handle events method on the inspector.
+                InspectorController.HandleEvents(inspector: this.State.Inspector);
+                // Call the handle events method on the graph area.
+                GraphAreaController.HandleEvents(graphArea: this.State.GraphArea);
+            }
+            
             // - Helpers -
             /// <summary>
             /// Refreshes the indices of all the windows.

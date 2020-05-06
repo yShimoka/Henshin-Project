@@ -1,20 +1,25 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 /* Wrap the class within the local namespace. */
+
+using System;
+using Henshin.Editor.Misc;
+using UnityEngine;
+
 namespace Henshin.Editor.Skin {
 
 /// <summary>
 /// Class used to store all the skin parameters of the editor classes.
 /// This allows the existence of a single asset that stores all the required skin objects.
 /// </summary>
-public class SkinState: UnityEngine.ScriptableObject {
+public class SkinState: ScriptableObject {
     // ---  SubObjects ---
         // -- Public Structs --
             /// <summary>
             /// This structure holds all the textures required for the editor.
             /// It also holds simple <see cref="UnityEngine.Color"/>s for all the simple texture elements.
             /// </summary>
-            [System.SerializableAttribute]
+            [Serializable]
             public struct TextureStruct {
                 // ---  Attributes ---
                     // -- Serialized Attributes --
@@ -22,101 +27,178 @@ public class SkinState: UnityEngine.ScriptableObject {
                         /// <summary>
                         /// Texture used for the delete buttons of the application.
                         /// </summary>
-                        [UnityEngine.HeaderAttribute(header: "Debug Textures", order = 10)]
-                        public UnityEngine.Texture2D Delete;
+                        [Header(header: "Debug Textures", order = 10)]
+                        public Texture2D Delete;
                         
                         /// <summary>
                         /// Texture used for the body of all the nodes.
                         /// </summary>
-                        [UnityEngine.HeaderAttribute(header: "Node Textures", order = 1)]
-                        public UnityEngine.Texture2D NodeBody;
+                        [Header(header: "Node Textures", order = 1)]
+                        public Texture2D NodeBody;
+                        
+                        /// <summary>
+                        /// Texture used for the sockets that are filled.
+                        /// </summary>
+                        public Texture2D FilledSocket;
+                        
+                        /// <summary>
+                        /// Texture used for the sockets that are empty.
+                        /// </summary>
+                        public Texture2D EmptySocket;
+                        
+                        /// <summary>
+                        /// Texture used for the header of the scene nodes.
+                        /// </summary>
+                        public Texture2D SceneNodeHeader;
                         
                         /// <summary>
                         /// Texture used for the header of the actor nodes.
                         /// </summary>
-                        public UnityEngine.Texture2D ActorNodeHeader;
+                        public Texture2D ActorNodeHeader;
                         
                         /// <summary>
                         /// Texture used for the header of the gameplay nodes.
                         /// </summary>
-                        public UnityEngine.Texture2D GameplayNodeHeader;
+                        public Texture2D GameplayNodeHeader;
                         
                         /// <summary>
                         /// Texture used for the header of the start nodes.
                         /// </summary>
-                        public UnityEngine.Texture2D StartNodeHeader;
+                        public Texture2D StartNodeHeader;
                         
                         /// <summary>
                         /// Texture used for the header of the end nodes.
                         /// </summary>
-                        public UnityEngine.Texture2D EndNodeHeader;
+                        public Texture2D EndNodeHeader;
                         
                         /// <summary>
                         /// Color used behind the contents of the scene header.
                         /// </summary>
-                        [UnityEngine.HeaderAttribute(header: "Scene Editor Textures", order = 0)] 
-                        [UnityEngine.TooltipAttribute(tooltip: "Color behind the header's background.")]
-                        public UnityEngine.Color SceneHeaderColor;
+                        [Header(header: "Scene Header Textures", order = 0)] 
+                        [Tooltip(tooltip: "Color behind the header's background.")]
+                        public Color SceneHeaderColor;
                         
                         /// <summary>
                         /// Color used for the scene header's separator.
                         /// </summary>
-                        [UnityEngine.TooltipAttribute(tooltip: "Color of the header's separator.")]
-                        public UnityEngine.Color SceneHeaderSeparatorColor;
+                        [Tooltip(tooltip: "Color of the header's separator.")]
+                        public Color SceneHeaderSeparatorColor;
                         
                         /// <summary>
                         /// Color used for the background of the scene header.
                         /// </summary>
-                        [UnityEngine.TooltipAttribute(tooltip: "Color of the header's background.")]
-                        public UnityEngine.Color SceneHeaderBackgroundColor;
+                        [Tooltip(tooltip: "Color of the header's background.")]
+                        public Color SceneHeaderBackgroundColor;
                         
                         /// <summary>
                         /// Color used for the border of the scene header.
                         /// </summary>
-                        [UnityEngine.TooltipAttribute(tooltip: "Color of the header's background border.")]
-                        public UnityEngine.Color SceneHeaderBackgroundBorderColor;
+                        [Tooltip(tooltip: "Color of the header's background border.")]
+                        public Color SceneHeaderBackgroundBorderColor;
                         
                         /// <summary>
                         /// Size of the scene header's border.
                         /// </summary>
-                        [UnityEngine.TooltipAttribute(tooltip: "Size of the header's background border.")]
+                        [Tooltip(tooltip: "Size of the header's background border.")]
                         public int SceneHeaderBackgroundBorderSize;
+                        
+                        /// <summary>
+                        /// Texture used as background for the inspector's titles.
+                        /// </summary>
+                        [Header(header: "Scene Inspector Textures", order = 1)]
+                        [Tooltip(tooltip: "Color used for the background of the inspector header.")]
+                        public Color SceneInspectorTitleBackgroundColor;
+                        
+                        /// <summary>
+                        /// Texture used as background for the inspector's titles.
+                        /// </summary>
+                        [Tooltip(tooltip: "Color used for the background of the inspector's subtitle.")]
+                        public Color SceneInspectorSubtitleBackgroundColor;
                         
                         /// <summary>
                         /// Size of the scene header's border radius.
                         /// </summary>
-                        [UnityEngine.TooltipAttribute(tooltip: "Radius of the header's background corners.")]
+                        [Header(header: "Scene Graph Textures", order = 2)]
+                        [Tooltip(tooltip: "Radius of the header's background corners.")]
                         public int SceneHeaderBackgroundBorderRadius;
                         
+                        /// <summary>
+                        /// The color of the background of the GraphArea.
+                        /// </summary>
+                        [Tooltip(tooltip: "Color of the background in the graph view.")]
+                        public Color SceneGraphBackgroundColor;
+                        
+                        /// <summary>
+                        /// The color of the separators of the GraphArea.
+                        /// </summary>
+                        [Tooltip(tooltip: "Color of the separators in the graph view.")]
+                        public Color SceneGraphSeparatorColor;
+                        
+                        /// <summary>
+                        /// The color of the scrollbars of the GraphArea.
+                        /// </summary>
+                        [Tooltip(tooltip: "Color of the scene graph view's scrollbar.")]
+                        public Color SceneGraphScrollbarColor;
+                        
+                        /// <summary>
+                        /// The color of the scrollbars background of the GraphArea.
+                        /// </summary>
+                        [Tooltip(tooltip: "Color of the scene graph view scrollbars background.")]
+                        public Color SceneGraphScrollbarBackgroundColor;
+                        
                         // - Simple Textures -
-                        [UnityEngine.HeaderAttribute(header: "Simple Colored Textures", order = 9)]
-                        public UnityEngine.Color DebugBoxBackgroundColor;
+                        [Header(header: "Simple Colored Textures", order = 9)]
+                        public Color DebugBoxBackgroundColor;
                     
                     // -- Public Attributes --
                         // - Generated Textures -
                         /// <summary>
                         /// Simple texture used for the background of the debug boxes.
                         /// </summary>
-                        [System.NonSerializedAttribute]
-                        public UnityEngine.Texture2D DebugBoxBackground;
+                        [NonSerialized]
+                        public Texture2D DebugBoxBackground;
                         
                         /// <summary>
                         /// Texture used behind the contents of the scene header.
                         /// </summary>
-                        [System.NonSerializedAttribute]
-                        public UnityEngine.Texture2D SceneHeaderContents;
+                        [NonSerialized]
+                        public Texture2D SceneHeaderContents;
                         
                         /// <summary>
                         /// Texture used for the background of the scene header.
                         /// </summary>
-                        [System.NonSerializedAttribute]
-                        public UnityEngine.Texture2D SceneHeaderBackground;
+                        [NonSerialized]
+                        public Texture2D SceneHeaderBackground;
                         
                         /// <summary>
                         /// Texture used for the header separator.
                         /// </summary>
-                        [System.NonSerializedAttribute]
-                        public UnityEngine.Texture2D SceneHeaderSeparator;
+                        [NonSerialized]
+                        public Texture2D SceneHeaderSeparator;
+                        
+                        /// <summary>
+                        /// Texture used for the inspector titles.
+                        /// </summary>
+                        [NonSerialized]
+                        public Texture2D SceneInspectorTitleBackground;
+                        
+                        /// <summary>
+                        /// Texture used for the inspector sub titles.
+                        /// </summary>
+                        [NonSerialized]
+                        public Texture2D SceneInspectorSubtitleBackground;
+                        
+                        /// <summary>
+                        /// Texture used for the graph view's scrollbars.
+                        /// </summary>
+                        [NonSerialized]
+                        public Texture2D SceneGraphScrollbar;
+                        
+                        /// <summary>
+                        /// Texture used for the graph view scrollbar's background.
+                        /// </summary>
+                        [NonSerialized]
+                        public Texture2D SceneGraphScrollbarBackground;
                 // --- /Attributes ---
                 
                 // ---  Methods ---
@@ -126,12 +208,12 @@ public class SkinState: UnityEngine.ScriptableObject {
                         /// </summary>
                         public void CreateTextures() {
                             // Create the scene content background.
-                            this.SceneHeaderContents = Misc.TextureGenerator.CreateSimple(
+                            this.SceneHeaderContents = TextureGenerator.CreateSimple(
                                 name: nameof(this.SceneHeaderContents),
                                 colour: this.SceneHeaderColor
                             );
                             // Create the scene header background.
-                            this.SceneHeaderBackground = Misc.TextureGenerator.CreateBordered(
+                            this.SceneHeaderBackground = TextureGenerator.CreateBordered(
                                 name: nameof(this.SceneHeaderBackground),
                                 innerColour: this.SceneHeaderBackgroundColor,
                                 borderSize: this.SceneHeaderBackgroundBorderSize,
@@ -139,15 +221,40 @@ public class SkinState: UnityEngine.ScriptableObject {
                                 borderRadius: this.SceneHeaderBackgroundBorderRadius
                             );
                             // Create the scene header separator.
-                            this.SceneHeaderSeparator = Misc.TextureGenerator.CreateSimple(
+                            this.SceneHeaderSeparator = TextureGenerator.CreateSimple(
                                 name: nameof(this.SceneHeaderSeparator),
                                 colour: this.SceneHeaderSeparatorColor
                             );
                             
+                            this.SceneInspectorTitleBackground = TextureGenerator.CreateSimple(
+                                name: nameof(this.SceneInspectorTitleBackground),
+                                colour: this.SceneInspectorTitleBackgroundColor
+                            );
+                            this.SceneInspectorSubtitleBackground = TextureGenerator.CreateSimple(
+                                name: nameof(this.SceneInspectorSubtitleBackground),
+                                colour: this.SceneInspectorSubtitleBackgroundColor
+                            );
+                            
+                            // Create the scene graph view scrollbar
+                            this.SceneGraphScrollbar = TextureGenerator.CreateBordered(
+                                name: nameof(this.SceneGraphScrollbar),
+                                innerColour: SkinState.Textures.SceneGraphScrollbarColor,
+                                borderSize: 0,
+                                borderColour: Color.black,
+                                borderRadius: SkinState.Styles.SceneGraphScrollbar.border.left
+                            );
+                            // Create the scene graph view scrollbar background/
+                            this.SceneGraphScrollbarBackground = TextureGenerator.CreateSimple(
+                                name: nameof(this.SceneGraphScrollbarBackground),
+                                colour: SkinState.Textures.SceneGraphScrollbarBackgroundColor
+                            );
+                            
                             // Create the generic background texture.
-                            this.DebugBoxBackground = Misc.TextureGenerator.CreateSimple(
+                            this.DebugBoxBackground = TextureGenerator.CreateBordered(
                                 name: nameof(this.DebugBoxBackground), 
-                                colour: this.DebugBoxBackgroundColor
+                                innerColour: this.DebugBoxBackgroundColor,
+                                borderSize: 2,
+                                borderColour: Color.green
                             );
                         }
                 // --- /Methods ---
@@ -156,7 +263,7 @@ public class SkinState: UnityEngine.ScriptableObject {
             /// <summary>
             /// This structure holds all the <see cref="UnityEngine.GUIContent"/> objects required for the editor.
             /// </summary>
-            [System.SerializableAttribute]
+            [Serializable]
             public struct ContentStruct {
                 // ---  Attributes ---
                     // -- Serialized Attributes --
@@ -164,37 +271,47 @@ public class SkinState: UnityEngine.ScriptableObject {
                         /// <summary>
                         /// Contents displayed in the scene editor's save button.
                         /// </summary>
-                        [UnityEngine.HeaderAttribute(header: "Scene Editor", order = 0)]
-                        public UnityEngine.GUIContent SceneEditorSave;
+                        [Header(header: "Scene Editor", order = 0)]
+                        public GUIContent SceneEditorSave;
                         
                         /// <summary>
                         /// Contents displayed in the scene editor's play button.
                         /// </summary>
-                        public UnityEngine.GUIContent SceneEditorPlay;
+                        public GUIContent SceneEditorPlay;
                         
                         /// <summary>
-                        /// Contents displayed in the scene editor's header separator.
+                        /// Contents displayed in the scene editor's center button.
                         /// </summary>
-                        public UnityEngine.GUIContent SceneEditorSeparator;
+                        public GUIContent SceneEditorCenter;
+                        
+                        /// <summary>
+                        /// Contents displayed in the scene inspector's scene section title.
+                        /// </summary>
+                        public GUIContent SceneInspectorSceneSectionTitle;
+                        
+                        /// <summary>
+                        /// Contents displayed in the scene inspector's action section title.
+                        /// </summary>
+                        public GUIContent SceneInspectorActionSectionTitle;
                         
                         /// <summary>
                         /// Contents displayed in the skin editor's refresh button.
                         /// </summary>
-                        [UnityEngine.HeaderAttribute(header: "Skin Editor", order = 9)]
-                        public UnityEngine.GUIContent SkinEditorRefresh;
+                        [Header(header: "Skin Editor", order = 9)]
+                        public GUIContent SkinEditorRefresh;
                         
                         /// <summary>
                         /// Content used for the title of the scene editor window.
                         /// </summary>
-                        [UnityEngine.HeaderAttribute(header: "Miscelaneous", order = 10)]
-                        public UnityEngine.GUIContent SceneEditorTitle;
+                        [Header(header: "Miscelaneous", order = 10)]
+                        public GUIContent SceneEditorTitle;
                 // --- /Attributes ---
             }
             
             /// <summary>
             /// This structure holds all the <see cref="UnityEngine.GUIStyle"/> objects required for the editor.
             /// </summary>
-            [System.SerializableAttribute]
+            [Serializable]
             public struct StyleStruct {
                 // ---  Attributes ---
                     // -- Serialized Attributes --
@@ -202,36 +319,114 @@ public class SkinState: UnityEngine.ScriptableObject {
                         /// <summary>
                         /// Style applied to the header of the scene editor.
                         /// </summary>
-                        [UnityEngine.HeaderAttribute(header: "Scene Editor", order = 0)]
-                        public UnityEngine.GUIStyle SceneHeaderContents;
+                        [Header(header: "Scene Editor", order = 0)]
+                        public GUIStyle SceneHeaderContents;
                         
                         /// <summary>
                         /// Style applied to the scene editor header's background
                         /// </summary>
-                        public UnityEngine.GUIStyle SceneHeaderBackground;
+                        public GUIStyle SceneHeaderBackground;
                         
                         /// <summary>
                         /// Style applied to the scene header's separator.
                         /// </summary>
-                        public UnityEngine.GUIStyle SceneHeaderSeparator;
+                        public GUIStyle SceneHeaderSeparator;
                         
                         /// <summary>
                         /// Style applied to the scene editor header's buttons.
                         /// </summary>
-                        public UnityEngine.GUIStyle SceneHeaderButton;
+                        public GUIStyle SceneHeaderButton;
+                        
+                        /// <summary>
+                        /// Style applied to the titles of the scene inspector.
+                        /// </summary>
+                        [Header(header: "Scene Inspector", order = 1)]
+                        public GUIStyle SceneInspectorTitle;
+                        
+                        /// <summary>
+                        /// Style applied to the subtitles of the scene inspector.
+                        /// </summary>
+                        public GUIStyle SceneInspectorSubtitle;
+                        
+                        /// <summary>
+                        /// Style applied to the scrollbars of the graph area.
+                        /// </summary>
+                        [Header(header: "Scene Graph", order = 2)]
+                        public GUIStyle SceneGraphScrollbar;
+                        
+                        /// <summary>
+                        /// Style applied to the background of the scrollbars of the graph area.
+                        /// </summary>
+                        public GUIStyle SceneGraphScrollbarBackground;
+                        
+                        /// <summary>
+                        /// Style applied to the node's header.
+                        /// </summary>
+                        [Header(header: "Graph Nodes", order = 1)]
+                        public GUIStyle NodeHeader;
+                        
+                        /// <summary>
+                        /// Style applied to the node's header text.
+                        /// </summary>
+                        public GUIStyle NodeHeaderText;
+                        
+                        /// <summary>
+                        /// Style applied to the node's body.
+                        /// </summary>
+                        public GUIStyle NodeBody;
+                        
+                        /// <summary>
+                        /// Style applied to the node's filled sockets.
+                        /// </summary>
+                        public GUIStyle FilledSocket;
+                        
+                        /// <summary>
+                        /// Style applied to the node's empty sockets.
+                        /// </summary>
+                        public GUIStyle EmptySocket;
+                        
+                        /// <summary>
+                        /// Style applied to the node's actor header.
+                        /// </summary>
+                        [NonSerialized]
+                        public GUIStyle ActorNodeHeader;
+                        
+                        /// <summary>
+                        /// Style applied to the node's gameplay header.
+                        /// </summary>
+                        [NonSerialized]
+                        public GUIStyle GameplayNodeHeader;
+                        
+                        /// <summary>
+                        /// Style applied to the node's scene header.
+                        /// </summary>
+                        [NonSerialized]
+                        public GUIStyle SceneNodeHeader;
+                        
+                        /// <summary>
+                        /// Style applied to the node's start header.
+                        /// </summary>
+                        [NonSerialized]
+                        public GUIStyle StartNodeHeader;
+                        
+                        /// <summary>
+                        /// Style applied to the node's end header.
+                        /// </summary>
+                        [NonSerialized]
+                        public GUIStyle EndNodeHeader;
                         
                         /// <summary>
                         /// Style used for the skin editor's refresh button.
                         /// </summary>
-                        [UnityEngine.HeaderAttribute(header: "Skin Editor", order = 9)]
-                        public UnityEngine.GUIStyle SkinEditorRefresh;
+                        [Header(header: "Skin Editor", order = 9)]
+                        public GUIStyle SkinEditorRefresh;
                         
                         /// <summary>
                         /// Style applied to the debug boxes.
                         /// This is used to test the rects of the editor.
                         /// </summary>
-                        [UnityEngine.HeaderAttribute(header: "Debug", order = 10)]
-                        public UnityEngine.GUIStyle DebugBox;
+                        [Header(header: "Debug", order = 10)]
+                        public GUIStyle DebugBox;
                 // --- /Attributes ---
                 
                 // ---  Methods ---
@@ -244,9 +439,40 @@ public class SkinState: UnityEngine.ScriptableObject {
                             // Apply the scene header's texture and radius.
                             {
                                 int b = SkinState.Textures.SceneHeaderBackgroundBorderRadius + SkinState.Textures.SceneHeaderBackgroundBorderSize;
-                                this.SceneHeaderBackground.border = new UnityEngine.RectOffset{ left = b, top = b, right = b, bottom = b};
+                                this.SceneHeaderBackground.border = new RectOffset{ left = b, top = b, right = b, bottom = b};
                                 this.SceneHeaderBackground.normal.background = SkinState.Textures.SceneHeaderBackground;
                                 this.SceneHeaderContents.normal.background = SkinState.Textures.SceneHeaderContents;
+                                this.SceneHeaderSeparator.normal.background = SkinState.Textures.SceneHeaderSeparator;
+                                this.SceneGraphScrollbar.normal.background = SkinState.Textures.SceneGraphScrollbar;
+                                this.SceneGraphScrollbarBackground.normal.background = SkinState.Textures.SceneGraphScrollbarBackground;
+                            }
+
+                            // Apply the styling of the inspector.
+                            {
+                                this.SceneInspectorTitle.normal.background = SkinState.Textures.SceneInspectorTitleBackground;
+                                this.SceneInspectorSubtitle.normal.background = SkinState.Textures.SceneInspectorSubtitleBackground;
+                            }
+                            
+                            // Apply the styling to the nodes.
+                            {
+                                this.GameplayNodeHeader = new GUIStyle(other: this.NodeHeader) {
+                                    normal = { background = SkinState.Textures.GameplayNodeHeader }
+                                };
+                                this.SceneNodeHeader = new GUIStyle(other: this.NodeHeader) {
+                                    normal = { background = SkinState.Textures.SceneNodeHeader }
+                                };
+                                this.ActorNodeHeader = new GUIStyle(other: this.NodeHeader) {
+                                    normal = { background = SkinState.Textures.ActorNodeHeader }
+                                };
+                                this.StartNodeHeader = new GUIStyle(other: this.NodeHeader) {
+                                    normal = { background = SkinState.Textures.StartNodeHeader }
+                                };
+                                this.EndNodeHeader = new GUIStyle(other: this.NodeHeader) {
+                                    normal = { background = SkinState.Textures.EndNodeHeader }
+                                };
+                                this.NodeBody.normal.background = SkinState.Textures.NodeBody;
+                                this.FilledSocket.normal.background = SkinState.Textures.FilledSocket;
+                                this.EmptySocket.normal.background = SkinState.Textures.EmptySocket;
                             }
                             
                             // Apply the debug box's background image.
@@ -258,7 +484,7 @@ public class SkinState: UnityEngine.ScriptableObject {
             /// <summary>
             /// This structure defines all the ratios of the elements of the editor.
             /// </summary>
-            [System.SerializableAttribute]
+            [Serializable]
             public struct RatioStruct {
                 // ---  Attributes ---
                     // -- Serialized Attributes --
@@ -266,18 +492,18 @@ public class SkinState: UnityEngine.ScriptableObject {
                         /// <summary>
                         /// Ratio of the SceneEditor's header relative to the entire window.
                         /// </summary>
-                        [UnityEngine.HeaderAttribute(header: "Scene Editor Components", order = 0)]
-                        public UnityEngine.Rect SceneEditorHeaderRatio;
+                        [Header(header: "Scene Editor Components", order = 0)]
+                        public Rect SceneEditorHeaderRatio;
                         
                         /// <summary>
                         /// Ratio of the SceneEditor's inspector relative to the entire window.
                         /// </summary>
-                        public UnityEngine.Rect SceneEditorInspectorRatio;
+                        public Rect SceneEditorInspectorRatio;
                         
                         /// <summary>
                         /// Ratio of the SceneEditor's graph area relative to the entire window.
                         /// </summary>
-                        public UnityEngine.Rect SceneEditorGraphAreaRatio;
+                        public Rect SceneEditorGraphAreaRatio;
                 // --- /Attributes ---
                 
                 // ---  Methods ---
@@ -290,12 +516,12 @@ public class SkinState: UnityEngine.ScriptableObject {
                         /// <param name="ratio">The rect representing the ration to apply.</param>
                         /// <param name="to">The rect in which the ratio will be applied.</param>
                         public static void ApplyRatio(
-                            UnityEngine.Rect from, UnityEngine.Rect ratio, ref UnityEngine.Rect to
+                            Rect from, Rect ratio, ref Rect to
                         ) {
                             // Apply the changes to the output rect.
                             to.Set(
-                                x:      from.x * ratio.x,
-                                y:      from.y * ratio.y,
+                                x:      from.width * ratio.x,
+                                y:      from.height * ratio.y,
                                 width:  from.width  * ratio.width,
                                 height: from.height * ratio.height
                             );
@@ -381,7 +607,6 @@ public class SkinState: UnityEngine.ScriptableObject {
             /// </summary>
             public static StyleStruct Styles => SkinState.Instance.StyleObject;
             
-            
             /// <summary>
             /// Ratio object accessor.
             /// </summary>
@@ -440,7 +665,7 @@ public class SkinState: UnityEngine.ScriptableObject {
                             assetPath: UnityEditor.AssetDatabase.GUIDToAssetPath(guid: skinAsset[0])
                         );
                     } else {
-                        UnityEngine.Debug.LogWarning(message: "Creating a new editor skin instance.");
+                        Debug.LogWarning(message: "Creating a new editor skin instance.");
                         // Instantiate a new skin.
                         skin = UnityEngine.ScriptableObject.CreateInstance<SkinState>();
                         skin.name = "DATA_EDITOR_Skin";
@@ -459,9 +684,17 @@ public class SkinState: UnityEngine.ScriptableObject {
                     SkinState._msInstance = skin;
                         
                     // Initialize the skin.
-                    skin._Initialize();
+                    try {
+                        skin._Initialize();
+                    } catch (NullReferenceException) {
+                        // Reserialize all the assets.
+                        UnityEditor.AssetDatabase.ForceReserializeAssets();
+                        
+                        // Reinitialize the skin.
+                        skin._Initialize();
+                    }
                 } else {
-                    throw new System.InvalidOperationException(message: "Could not find the editor's assembly definition.");
+                    throw new InvalidOperationException(message: "Could not find the editor's assembly definition.");
                 }
             }
             

@@ -13,7 +13,7 @@ namespace Henshin.Runtime.Actions {
 /// Base class used for all the action states.
 /// This class is used by the <see cref="Directions.Scene.SceneState"/> to list all the actions of the scene.
 /// </summary>
-[SerializableAttribute]
+[Serializable]
 public class ActionState {
     // ---  Attributes ---
         // -- Serialized Attributes --
@@ -22,13 +22,13 @@ public class ActionState {
             /// List of all of this <see cref="ActionState"/>'s children indices.
             /// Used for serialization only. 
             /// </summary>
-            public int[] ChildrenIndexList;
+            public List<int> ChildrenIndexList = new List<int>();
             
             /// <summary>
             /// List of all the parameters for this action state.
             /// This list is used by the <see cref="Runtime.Actions.ActionController"/> overrides to handle action-specific parameters.
             /// </summary>
-            public List<string> Parameters;
+            public List<string> Parameters = new List<string>();
             
             /// <summary>
             /// Name of the <see cref="Runtime.Actions.ActionController"/>'s class.
@@ -57,6 +57,11 @@ public class ActionState {
             [NonSerialized]
             public int ParentFinishedCounter;
             
+            /// <summary>
+            /// The type of the controller.
+            /// </summary>
+            [NonSerialized]
+            public Type ControllerType;
     // --- /Attributes ---
 }
 }

@@ -1,5 +1,13 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
+using System;
+using System.Collections.Generic;
+using Henshin.Editor.SceneEditor.GraphArea;
+using Henshin.Editor.SceneEditor.Header;
+using Henshin.Editor.SceneEditor.Inspector;
+using JetBrains.Annotations;
+using UnityEngine;
+
 /* Wrap the class within the local namespace. */
 namespace Henshin.Editor.SceneEditor {
 
@@ -7,7 +15,7 @@ namespace Henshin.Editor.SceneEditor {
 /// State class holding the info about the specified scene editor window.
 /// 
 /// </summary>
-[System.SerializableAttribute]
+[SerializableAttribute]
 public class SceneEditorState {
     // ---  Attributes ---
         // -- Serialized Attributes --
@@ -22,7 +30,7 @@ public class SceneEditorState {
             /// <summary>
             /// Reference to the window's header state.
             /// </summary>
-            public Header.HeaderState Header = new Header.HeaderState();
+            public HeaderState Header = new HeaderState();
             
         // -- Public Attributes --
             // - References -
@@ -31,21 +39,39 @@ public class SceneEditorState {
             /// </summary>
             public SceneEditorController Instance => SceneEditorState.WindowList[index: this.Index];
             
+            /// <summary>
+            /// Reference to the window's GraphArea object.
+            /// </summary>
+            [NonSerialized, CanBeNull]
+            public GraphAreaState GraphArea;
+            
+            /// <summary>
+            /// Reference to the window's InspectorState object.
+            /// </summary>
+            [NonSerialized]
+            public InspectorState Inspector = new InspectorState();
+            
+            // - Flags -
+            /// <summary>
+            /// Flag set if the window is initialized.
+            /// </summary>
+            [NonSerialized]
+            public bool IsInitialized = false;
+            
             // - Rect -
             /// <summary>
             /// Rect used to represent the entire window's area.
             /// This is used in the view classes to render in their proper areas.
             /// </summary>
-            [System.NonSerializedAttribute]
-            public UnityEngine.Rect WindowRect = new UnityEngine.Rect();
+            [NonSerialized]
+            public Rect WindowRect = new Rect();
             
             // - Static References -
             /// <summary>
             /// List of all the window that are currently opened in the editor.
             /// This list is updated every time a window is opened or closed.
             /// </summary>
-            public static System.Collections.Generic.List<SceneEditorController> WindowList =
-                new System.Collections.Generic.List<SceneEditorController>();
+            public static List<SceneEditorController> WindowList = new List<SceneEditorController>();
         // -- Private Attributes --
     // --- /Attributes ---
 }

@@ -271,7 +271,7 @@ public static class ApplicationView {
                 );
                 
                 // Set the image up.
-                ApplicationView.Background.preserveAspect = true;
+                ApplicationView.Background.preserveAspect = false;
                 
                 // Set the parameters of the background's rect.
                 RectTransform bgRect = ApplicationView.Background.GetComponent<RectTransform>();

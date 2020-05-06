@@ -31,11 +31,22 @@ public class ApplicationController: MonoBehaviour {
             /// The delegate gets cleared after each frame. 
             /// </summary>
             public static TickEvent OnNextTick = new TickEvent();
+            
+            /// <summary>
+            /// Application-wide random number generator.
+            /// </summary>
+            public static System.Random Random => ApplicationController._msRANDOM_GENERATOR;
+            
         // -- Private Attributes --
             /// <summary>
             /// Reference to the instance that exists in the scene.
             /// </summary>
             private static ApplicationController _msApplicationInstance;
+            
+            /// <summary>
+            /// Random number generator shared accross the application.
+            /// </summary>
+            private static readonly System.Random _msRANDOM_GENERATOR = new System.Random(); 
     // --- /Attributes ---
     
     // ---  Methods ---
