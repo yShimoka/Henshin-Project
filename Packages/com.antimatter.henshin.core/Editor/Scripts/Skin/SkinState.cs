@@ -290,6 +290,11 @@ public class SkinState: ScriptableObject {
                         public GUIContent SceneInspectorSceneSectionTitle;
                         
                         /// <summary>
+                        /// Contents displayed in the scene inspector's scene delete button.
+                        /// </summary>
+                        public GUIContent SceneHeaderDelete;
+                        
+                        /// <summary>
                         /// Contents displayed in the scene inspector's action section title.
                         /// </summary>
                         public GUIContent SceneInspectorActionSectionTitle;
@@ -319,7 +324,7 @@ public class SkinState: ScriptableObject {
                         /// <summary>
                         /// Style applied to the header of the scene editor.
                         /// </summary>
-                        [Header(header: "Scene Editor", order = 0)]
+                        [Header(header: "Scene Header", order = 0)]
                         public GUIStyle SceneHeaderContents;
                         
                         /// <summary>
@@ -414,6 +419,12 @@ public class SkinState: ScriptableObject {
                         /// </summary>
                         [NonSerialized]
                         public GUIStyle EndNodeHeader;
+                        
+                        /// <summary>
+                        /// Style applied to the small delete buttons
+                        /// </summary>
+                        [Header(header: "Misc", order = 8)]
+                        public GUIStyle DeleteMini;
                         
                         /// <summary>
                         /// Style used for the skin editor's refresh button.

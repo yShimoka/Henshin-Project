@@ -13,4 +13,20 @@ MonoBehaviour:
   m_Name: DATA_POSE_Neku
   m_EditorClassIdentifier: 
   PoseList:
-  - {fileID: 21300000, guid: 70f43f7e316dd4bfaa4fc133f3a235d3, type: 3}
+  - {fileID: 21300000, guid: c07e02eb049ef402ab03a96220d55286, type: 3}
+  - {fileID: 21300000, guid: 1f564c7e33f89482e9d1940567d9595d, type: 3}
+  - {fileID: 21300000, guid: 3908cf178be384946b606677ca5feb8a, type: 3}
+  - {fileID: 21300000, guid: c6895b733ee2c405090752533ecdf10d, type: 3}
+  - {fileID: 21300000, guid: 18421d49a72eb4d62946a3ca006d361c, type: 3}
+  - {fileID: 21300000, guid: ba84343cf369d4178b466be934b408ef, type: 3}
+  - {fileID: 21300000, guid: b2c637f0638ba4786a5fafe44226cd10, type: 3}
+  - {fileID: 21300000, guid: d9077ebb231594ef8b8a180aa19206d1, type: 3}
+  - {fileID: 21300000, guid: adc85f3fe4f4e41beb2ccae398c74215, type: 3}
+  - {fileID: 21300000, guid: cac024606ec584112a05208597a1d20d, type: 3}
+  - {fileID: 21300000, guid: ec0ea5cda51bc4ed3a0ca13644c2e7fe, type: 3}
+  - {fileID: 21300000, guid: 2c8695827082048be82766d571881a4f, type: 3}
+  - {fileID: 21300000, guid: af0695bbb91174803838f0d30f2a5db7, type: 3}
+  - {fileID: 21300000, guid: 39734096c173c40ec82822affe221701, type: 3}
+  - {fileID: 21300000, guid: 375472f60882d4634ad569fed3673dd4, type: 3}
+  - {fileID: 21300000, guid: 415e474b23a334805bb28161fac64dc9, type: 3}
+  - {fileID: 21300000, guid: e0a8d94f43fea453bbaad9219a0bf73b, type: 3}

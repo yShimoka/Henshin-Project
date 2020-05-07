@@ -10,6 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9cd64b4247a64e469f68dfdd5ada5281, type: 3}
-  m_Name: DATA_POSE_Shiki
+  m_Name: DATA_POSE_Joshua
   m_EditorClassIdentifier: 
-  PoseList: []
+  PoseList:
+  - {fileID: 21300000, guid: ecad99320e56846a4a2acc6265409fa2, type: 3}
+  - {fileID: 21300000, guid: ecad99320e56846a4a2acc6265409fa2, type: 3}
+  - {fileID: 21300000, guid: 2ac2f7e0653624cb5b11a78aeb68daf2, type: 3}
+  - {fileID: 21300000, guid: fa04c5c3780e34f37b648fed9c8a940a, type: 3}
+  - {fileID: 21300000, guid: 613a6bc38fb8f4056b52219aa916d5b9, type: 3}
+  - {fileID: 21300000, guid: a9ff6426d44f74b10a9c16e3f6398800, type: 3}
+  - {fileID: 21300000, guid: 60670956568a34a5489da93a7f76357b, type: 3}
+  - {fileID: 21300000, guid: fc40e1e69b0654816ad772d651f365c9, type: 3}
+  - {fileID: 21300000, guid: 294f89897cff94c3a9c0302d45987fee, type: 3}
+  - {fileID: 21300000, guid: 817f921291e164de9a9fa5e4f66e7dc6, type: 3}
+  - {fileID: 21300000, guid: 3fe1367c65c854b47a07bdf73147ff85, type: 3}
+  - {fileID: 21300000, guid: a212b7e643e7246aa94b868bf82b9fd6, type: 3}
+  - {fileID: 21300000, guid: 7ec04b9460e344191b369b6e3648e0d6, type: 3}
+  - {fileID: 21300000, guid: 33e6afc09cd954e7cbdcddeead05e32d, type: 3}
+  - {fileID: 21300000, guid: 913bb8b1031be48c89e9a0d963a984c2, type: 3}

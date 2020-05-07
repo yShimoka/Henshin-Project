@@ -22,6 +22,17 @@ public class RotateAction: TimedActorAction {
                         /// Target of the rotation.
                         /// </summary>
                         public float Target;
+                        
+                        /// <summary>
+                        /// If the rotation should be relative.
+                        /// </summary>
+                        public bool Relative;
+                        
+                        /// <summary>
+                        /// If the rotation should be clockwise.
+                        /// Used only for absolute rotations.
+                        /// </summary>
+                        public bool Clockwise;
                 // --- /Attributes ---
             }
     // --- /SubObjects ---
@@ -37,6 +48,11 @@ public class RotateAction: TimedActorAction {
             /// Stores the original rotation of the actor.
             /// </summary>
             public float Original;
+            
+            /// <summary>
+            /// Stores the offset that should be applied to the actor.
+            /// </summary>
+            public float Offset;
     // --- /Attributes ---
     
     // ---  Methods ---
@@ -48,16 +64,28 @@ public class RotateAction: TimedActorAction {
                 
                 // Get the current rotation of the actor.
                 this.Original = ActorView.GetAngle(actor: this.Actor);
+                
+                // Get the actor offset.
+                if (this.State.Relative) {
+                    this.Offset = this.State.Target;
+                } else {
+                    // Get the value of the rotation.
+                    this.Offset = this.Original - this.State.Target;
+                    
+                    // Check the rotation mode.
+                    if (this.Offset < 0 && this.State.Clockwise) {
+                        this.Offset = 360 + this.Offset;
+                    } else if (this.Offset > 0 && !this.State.Clockwise) {
+                        this.Offset = 360 - this.Offset;
+                    }
+                    
+                }
             }
             
             /// <inheritdoc cref="TimedActorAction.Update"/>
             protected override void Update(float normalizedTime) {
-                // Get the interpolated location.
-                ActorView.SetAngle(actor: this.Actor, angle: Mathf.Lerp(
-                    a: this.Original,
-                    b: this.State.Target,
-                    t: normalizedTime
-                ));
+                // Rotate the actor.
+                ActorView.SetAngle(actor: this.Actor, angle: this.Original + this.Offset * normalizedTime);
             }
             
             /// <inheritdoc cref="TimedActorAction.LoadParameters"/>
@@ -67,6 +95,8 @@ public class RotateAction: TimedActorAction {
                 
                 // Load the target.
                 this.State.Target = this.NextSerializedData<float>();
+                this.State.Relative = this.NextSerializedData<bool>();
+                this.State.Clockwise = this.NextSerializedData<bool>();
             }
             
             /// <inheritdoc cref="TimedActorAction.SaveParameters"/>
@@ -76,6 +106,8 @@ public class RotateAction: TimedActorAction {
                 
                 // Save the target.
                 this.AddSerializedData(data: this.State.Target);
+                this.AddSerializedData(data: this.State.Relative);
+                this.AddSerializedData(data: this.State.Clockwise);
             }
     // --- /Methods ---
 }

@@ -1,6 +1,7 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using Henshin.Runtime.Directions.Act;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -21,7 +22,7 @@ public class ApplicationState: ScriptableObject, ISerializationCallbackReceiver 
             /// Serializable list of all the acts in the application.
             /// </summary>
             [SerializeField] 
-            public ActState[] ActList;
+            public List<ActState> ActList = new List<ActState>();
             
 #if UNITY_EDITOR
             /// <summary>
@@ -64,9 +65,9 @@ public class ApplicationState: ScriptableObject, ISerializationCallbackReceiver 
             public ActState CurrentAct {
                 get {
                     // Check if the act index value is valid.
-                    if (this.CurrentActIndex >= 0 && this.CurrentActIndex < this.ActList.Length) {
+                    if (this.CurrentActIndex >= 0 && this.CurrentActIndex < this.ActList.Count) {
                         // Return the act reference.
-                        return this.ActList[this.CurrentActIndex];
+                        return this.ActList[index: this.CurrentActIndex];
                     } else {
                         // Return a null.
                         return null;

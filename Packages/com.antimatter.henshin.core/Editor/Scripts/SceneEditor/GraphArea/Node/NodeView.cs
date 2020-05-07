@@ -2,8 +2,11 @@
 
 using System;
 using Henshin.Editor.SceneEditor.GraphArea.Socket;
+using Henshin.Editor.SceneEditor.Inspector.Editor.Actor;
 using Henshin.Editor.Skin;
 using Henshin.Runtime.Actions;
+using Henshin.Runtime.Actions.Actor;
+using Henshin.Runtime.Actions.Base;
 using Henshin.Runtime.Actions.Scene;
 using UnityEditor;
 using UnityEngine;
@@ -36,11 +39,37 @@ public static class NodeView {
                     style: SkinState.Styles.NodeBody
                 );
                 
-                // Draw the node's name.
+                // Prepare the title.
                 SkinState.Styles.NodeHeaderText.fontSize = Mathf.FloorToInt(f: 12 * node.Owner.Scale);
+                string title = node.Action?.ControllerType.Name.Replace(oldValue: "Action", newValue: "");
+                
+                // If the node is an actor node.
+                if (node.Action != null) {
+                    // Find the actor's index.
+                    int actorIndex;
+                    switch (node.Action) {
+                    case VisibleAction.VisibleState visible:
+                        actorIndex = visible.AllActors ? -1 : visible.ActorIndex;
+                        break;
+                    case TimedActorAction.TimedActorState timed:
+                        actorIndex = timed.ActorIndex;
+                        break;
+                    case ActorAction.ActorState actor:
+                        actorIndex = actor.ActorIndex;
+                        break;
+                    default:
+                        actorIndex = -1;
+                        break;
+                    }
+                    
+                    // Add it to the title.
+                    title += actorIndex >= 0 ? $" - {node.Owner.Scene.ActorList[index: actorIndex].Identifier}" : null;
+                }
+                
+                // Draw the node's name.
                 GUI.Label(
                     position: node.HeaderRect,
-                    text: node.Action?.ControllerType.Name.Replace(oldValue: "Action", newValue: ""),
+                    text: title,
                     style: SkinState.Styles.NodeHeaderText
                 );
                 

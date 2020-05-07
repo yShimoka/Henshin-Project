@@ -56,6 +56,10 @@ MonoBehaviour:
       m_Text: Scene Inspector
       m_Image: {fileID: 0}
       m_Tooltip: 
+    SceneHeaderDelete:
+      m_Text: 
+      m_Image: {fileID: 0}
+      m_Tooltip: 
     SceneInspectorActionSectionTitle:
       m_Text: Action Inspector
       m_Image: {fileID: 0}
@@ -733,7 +737,7 @@ MonoBehaviour:
         m_Top: 0
         m_Bottom: 0
       m_Font: {fileID: 0}
-      m_FontSize: 12
+      m_FontSize: 16
       m_FontStyle: 1
       m_Alignment: 7
       m_WordWrap: 0
@@ -945,6 +949,79 @@ MonoBehaviour:
       m_FixedWidth: 0
       m_FixedHeight: 0
       m_StretchWidth: 1
+      m_StretchHeight: 0
+    DeleteMini:
+      m_Name: 
+      m_Normal:
+        m_Background: {fileID: 10910, guid: 0000000000000000f000000000000000, type: 0}
+        m_ScaledBackgrounds:
+        - {fileID: -7880894930752635503, guid: 0000000000000000d000000000000000, type: 0}
+        m_TextColor: {r: 0.007843138, g: 0.007843138, b: 0.007843138, a: 1}
+      m_Hover:
+        m_Background: {fileID: 0}
+        m_ScaledBackgrounds: []
+        m_TextColor: {r: 0.007843138, g: 0.007843138, b: 0.007843138, a: 1}
+      m_Active:
+        m_Background: {fileID: 10906, guid: 0000000000000000f000000000000000, type: 0}
+        m_ScaledBackgrounds:
+        - {fileID: 3938767805292685015, guid: 0000000000000000d000000000000000, type: 0}
+        m_TextColor: {r: 0.007843138, g: 0.007843138, b: 0.007843138, a: 1}
+      m_Focused:
+        m_Background: {fileID: 0}
+        m_ScaledBackgrounds:
+        - {fileID: -3493559629167172052, guid: 0000000000000000d000000000000000, type: 0}
+        m_TextColor: {r: 0.007843138, g: 0.007843138, b: 0.007843138, a: 1}
+      m_OnNormal:
+        m_Background: {fileID: 0}
+        m_ScaledBackgrounds:
+        - {fileID: 8661060100133785790, guid: 0000000000000000d000000000000000, type: 0}
+        m_TextColor: {r: 0.007843138, g: 0.007843138, b: 0.007843138, a: 1}
+      m_OnHover:
+        m_Background: {fileID: 0}
+        m_ScaledBackgrounds: []
+        m_TextColor: {r: 0.007843138, g: 0.007843138, b: 0.007843138, a: 1}
+      m_OnActive:
+        m_Background: {fileID: 0}
+        m_ScaledBackgrounds:
+        - {fileID: 8878537229563829057, guid: 0000000000000000d000000000000000, type: 0}
+        m_TextColor: {r: 0.007843138, g: 0.007843138, b: 0.007843138, a: 1}
+      m_OnFocused:
+        m_Background: {fileID: 0}
+        m_ScaledBackgrounds:
+        - {fileID: -8452110749383601975, guid: 0000000000000000d000000000000000, type: 0}
+        m_TextColor: {r: 0.007843138, g: 0.007843138, b: 0.007843138, a: 1}
+      m_Border:
+        m_Left: 2
+        m_Right: 2
+        m_Top: 2
+        m_Bottom: 2
+      m_Margin:
+        m_Left: 2
+        m_Right: 2
+        m_Top: 2
+        m_Bottom: 2
+      m_Padding:
+        m_Left: 2
+        m_Right: 2
+        m_Top: 2
+        m_Bottom: 2
+      m_Overflow:
+        m_Left: 0
+        m_Right: 0
+        m_Top: 0
+        m_Bottom: 1
+      m_Font: {fileID: 0}
+      m_FontSize: 12
+      m_FontStyle: 0
+      m_Alignment: 4
+      m_WordWrap: 0
+      m_RichText: 0
+      m_TextClipping: 1
+      m_ImagePosition: 0
+      m_ContentOffset: {x: 0, y: 0}
+      m_FixedWidth: 18
+      m_FixedHeight: 18
+      m_StretchWidth: 0
       m_StretchHeight: 0
     SkinEditorRefresh:
       m_Name: StyleNotFoundError

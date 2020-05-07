@@ -31,7 +31,7 @@ public class GraphAreaStore: ScriptableObject {
             /// List of all the stores found in the project.
             /// Each store refers to an <see cref="ActState"/>.
             /// </summary>
-            public static GraphAreaStore[] StoreList;
+            public static List<GraphAreaStore> StoreList;
             
             /// <summary>
             /// Reference to the <see cref="ActState"/> that owns this store.

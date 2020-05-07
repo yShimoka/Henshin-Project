@@ -132,8 +132,8 @@ public static class SocketController {
             /// <param name="socketState">The socket to show the menu for.</param>
             private static void _DeleteBindMenu(SocketState socketState) {
                 // Create the menu instance.
-                GenericMenu menu = new GenericMenu();
-                
+                GenericMenu menu = new GenericMenu {allowDuplicateNames = true};
+
                 // Add the separator.
                 menu.AddSeparator(path: "Delete link to: ");
                 // Check the type of the socket.

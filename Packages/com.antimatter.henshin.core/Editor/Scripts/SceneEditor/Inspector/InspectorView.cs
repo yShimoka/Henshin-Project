@@ -2,6 +2,8 @@
 
 /* Wrap the class within the local namespace. */
 
+using System.Collections.Generic;
+using Henshin.Editor.SceneEditor.GraphArea;
 using Henshin.Editor.SceneEditor.Inspector.Editor;
 using Henshin.Editor.Skin;
 using Henshin.Runtime.Actor;
@@ -58,6 +60,47 @@ public static class InspectorView {
                     // Draw the scene's name.
                     GUILayout.Label(text: current.Identifier, style: SkinState.Styles.SceneInspectorSubtitle);
                     
+                    // Allow updating the scene's index.
+                    int newIndex = EditorGUILayout.IntField(
+                        label: "Scene index: ",
+                        value: current.Index + 1
+                    ) - 1;
+                    
+                    // Check if the index has changed.
+                    if (newIndex != current.Index) {
+                        // Get the list of all the act's graphs.
+                        List<GraphAreaState> others = GraphAreaController.FindGraphAreaStore(actState: current.Owner)?.GraphList;
+                        if (others != null) {
+                            // Get the current graph object.
+                            GraphAreaState currentGraph = others[index: current.Index];
+                            
+                            // Insert the current graph at its new location.
+                            others.Remove(item: currentGraph);
+                            others.Insert(index: newIndex, item: currentGraph);
+                            // Loop through the incremented graphs.
+                            for (int index = 0; index < others.Count; index++) {
+                                others[index: index].SceneIndex = index;
+                            }
+                            
+                            // Insert the scene at its new location.
+                            current.Owner.SceneList.Remove(item: current);
+                            current.Owner.SceneList.Insert(index: newIndex, item: current);
+                            // Update all the scene's indices.
+                            for (int i = 0; i < current.Owner.SceneList.Count; i++) {
+                                current.Owner.SceneList[index: i].Index = i;
+                            }
+                            
+                            // Update the current scene's index.
+                            inspector.Owner.Header.EditedSceneIndex = newIndex;
+                        }
+                        
+                        
+                        // Reload the graph area.
+                        inspector.Owner.Instance.UpdateGraphArea(
+                            graphArea: GraphAreaController.FindGraphArea(sceneState: inspector.Owner.Header.EditedScene)
+                        );
+                    }
+                    
                     // Draw the scene's background.
                     current.Background = EditorGUILayout.ObjectField(
                         label: "Background sprite",
@@ -87,14 +130,13 @@ public static class InspectorView {
 
                             // Draw the actor's foldout.
                             bool isShown = EditorGUILayout.Foldout(
-                                content: current.ActorList[index].Identifier,
+                                content: current.ActorList[index: index].Identifier,
                                 foldout: index == inspector.ShownActorIndex
                             );
                             // Draw the delete button.
                             if (GUILayout.Button(
                                 image: SkinState.Textures.Delete, 
-                                style: EditorStyles.miniButton,
-                                GUILayout.Width(width: EditorStyles.miniButton.fixedHeight)
+                                style: SkinState.Styles.DeleteMini
                             )) {
                                 // Remove the actor from the list.
                                 current.ActorList.RemoveAt(index: index);

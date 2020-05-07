@@ -92,7 +92,7 @@ public static class GraphAreaController {
                 }
                 
                 // Store the valid stores.
-                GraphAreaStore.StoreList = validStores.ToArray();
+                GraphAreaStore.StoreList = validStores;
             }
             
             /// <summary>
@@ -309,6 +309,29 @@ public static class GraphAreaController {
                 }
             }
             
+            /// <summary>
+            /// Finds the <see cref="GraphAreaStore"/> that describes the specified <see cref="ActState"/>.
+            /// </summary>
+            /// <param name="actState">The state to get the store of.</param>
+            /// <returns>The found store instance.</returns>
+            [CanBeNull]
+            public static GraphAreaStore FindGraphAreaStore([CanBeNull]ActState actState) {
+                // Check if the state is set.
+                if (actState == null) return null;
+                
+                // Try to find the store.
+                try {
+                    return GraphAreaStore.StoreList
+                        .First(predicate: store => store.Owner.Equals(obj: actState));
+                } catch (InvalidOperationException) {
+                    // Log the error.
+                    Debug.LogWarning(message: $"Could not find a graph store for the act {actState.Identifier}");
+                    
+                    // Return a null.
+                    return null;
+                }
+            }
+            
             // - Seeking Methods -
             /// <summary>
             /// Finds the <see cref="GraphAreaState"/> that is related to the specified <see cref="SceneState"/>.
@@ -322,10 +345,9 @@ public static class GraphAreaController {
                 
                 try {
                     // Find the graph area from the list of stores.
-                    return GraphAreaStore.StoreList
-                        ?.First(predicate: store =>  store.OwnerHash == sceneState.Owner.Hash)
-                        .GraphList
-                        ?.First(predicate: graph => graph.SceneIndex == sceneState.Index);
+                    return GraphAreaController.FindGraphAreaStore(actState: sceneState.Owner)
+                        ?.GraphList
+                        .First(predicate: graph => graph.SceneIndex == sceneState.Index);
                 } catch (InvalidOperationException) {
                     // Log the error.
                     Debug.LogWarning(message: $"Could not find a graph for the scene {sceneState.Identifier}");
@@ -413,6 +435,57 @@ public static class GraphAreaController {
                 GraphAreaController._BindToRenderArea(graphArea: graphArea);
             }
             
+            /// <summary>
+            /// Deletes the graph area that describes the specified scene.
+            /// </summary>
+            public static void DeleteScene([CanBeNull]SceneState scene) {
+                // Check if the scene is set.
+                if (scene == null) return;
+                
+                // Find the store that holds the object.
+                GraphAreaStore ownerStore = GraphAreaStore.StoreList
+                    .FirstOrDefault(predicate: store => store.Owner.Equals(obj: scene.Owner));
+                    
+                // If the store was found.
+                if (ownerStore != null && scene.Owner != null) {
+                    // Delete the scene from its act.
+                    scene.Owner.SceneList.Remove(item: scene);
+                    // Update all the scene indices.
+                    for (int i = 0; i < scene.Owner.SceneList.Count; i++) {
+                        scene.Owner.SceneList[index: i].Index = i;
+                    }
+                    
+                    // Delete the object at the scene's index.
+                    ownerStore.GraphList.RemoveAt(index: scene.Index);
+                    // Update all the graph indices.
+                    for (int i = 0; i < ownerStore.GraphList.Count; i++) {
+                        ownerStore.GraphList[index: i].SceneIndex = i;
+                    }
+                }
+            }
+            
+            /// <summary>
+            /// Deletes the specified act object.
+            /// </summary>
+            public static void DeleteAct([CanBeNull]ActState act) {
+                // Check if the act is set.
+                if (act == null) return;
+                
+                // Find the store that holds the object.
+                GraphAreaStore ownerStore = GraphAreaStore.StoreList
+                    .FirstOrDefault(predicate: store => store.Owner.Equals(obj: act));
+                
+                // Check if the store is valid.
+                if (ownerStore != null && act.Owner != null) {
+                    // Remove the act from the owner.
+                    act.Owner.ActList.Remove(item: act);
+                    
+                    // Delete the graph asset.
+                    GraphAreaStore.StoreList.Remove(item: ownerStore);
+                    AssetDatabase.DeleteAsset(path: AssetDatabase.GetAssetPath(assetObject: ownerStore));
+                }
+            }
+            
         // -- Private Methods --
             /// <summary>
             /// Creates a new <see cref="GraphAreaStore"/> instance.
@@ -469,7 +542,7 @@ public static class GraphAreaController {
                 store.GraphList = new List<GraphAreaState>();
                 
                 // Loop through the scenes of the store's act.
-                for (int sceneIndex = 0; sceneIndex < store.Owner.SceneList.Length; sceneIndex++) {
+                for (int sceneIndex = 0; sceneIndex < store.Owner.SceneList.Count; sceneIndex++) {
                     // Check if there is a GraphArea for the scene.
                     if (storeStates.Find(match: graph => graph.SceneIndex == sceneIndex) is GraphAreaState sceneGraph) {
                         // Add the store the the valid list.

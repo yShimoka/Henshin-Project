@@ -1,8 +1,10 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 using System;
+using System.Collections;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -257,22 +259,22 @@ public static class ApplicationView {
             /// </summary>
             private static void _CreateStage() {
                 // Create the stage root.
-                ApplicationView.Stage = new GameObject(
-                    name: "Stage", 
+                Transform stageRoot = new GameObject(
+                    name: "Stage Root", 
                     components: new []{ typeof(Canvas), typeof(CanvasScaler) }
                 ).transform;
                 // Attach it to the scene root.
-                ApplicationView.Stage.SetParent(p: ApplicationView.Root.transform);
+                stageRoot.SetParent(parent: ApplicationView.Root.transform, worldPositionStays: false);
                 
                 // Set the canvas up.
-                Canvas canvas = ApplicationView.Stage.GetComponent<Canvas>();
+                Canvas canvas = stageRoot.GetComponent<Canvas>();
                 canvas.renderMode = RenderMode.ScreenSpaceCamera;
                 canvas.worldCamera = ApplicationView.WorldCamera;
                 canvas.planeDistance = 10f;
                 canvas.sortingLayerID = SortingLayer.NameToID(name: "Middleground");
                 
                 // Set the canvas scaler up.
-                CanvasScaler scaler = canvas.GetComponent<CanvasScaler>();
+                CanvasScaler scaler = stageRoot.GetComponent<CanvasScaler>();
                 scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
                 scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Shrink;
                 scaler.referenceResolution = new Vector2(x: 1920, y: 1080);
@@ -284,7 +286,7 @@ public static class ApplicationView {
                 ).GetComponent<Image>();
                 // Attach it to the stage.
                 ApplicationView.Background.transform.SetParent(
-                    parent: ApplicationView.Stage.transform,
+                    parent: stageRoot,
                     worldPositionStays: false
                 );
                 
@@ -303,6 +305,10 @@ public static class ApplicationView {
                 Canvas bgCanvas = ApplicationView.Background.GetComponent<Canvas>();
                 bgCanvas.overrideSorting = true;
                 bgCanvas.sortingLayerID = SortingLayer.NameToID(name: "Background");
+                
+                // Add the actor stage background.
+                ApplicationView.Stage = new GameObject(name: "Stage").transform;
+                ApplicationView.Stage.SetParent(parent: stageRoot, worldPositionStays: false);
             }
             
             /// <summary>

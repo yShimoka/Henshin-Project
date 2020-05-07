@@ -48,7 +48,7 @@ public static class ActController {
                 
                 // Set the public attributes.
                 act.Owner = owner;
-                act.Index = Array.IndexOf(array: owner.ActList, value: act);
+                act.Index = owner.ActList.IndexOf(item: act);
             }
             
             // - Play Controller -

@@ -12,31 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 569fa08922f343b69f84c6bdc584be32, type: 3}
   m_Name: Act - 1_Store
   m_EditorClassIdentifier: 
-  OwnerHash: 1271501458
+  OwnerHash: 902270825
   GraphList:
   - SceneIndex: 0
     NodeList:
     - ActionIndex: 0
-      Position: {x: -92, y: -8}
-      ChildrenIndexList: 04000000
-    - ActionIndex: 1
-      Position: {x: -4, y: -8}
+      Position: {x: -4, y: -4}
       ChildrenIndexList: 
-    - ActionIndex: 2
-      Position: {x: -48, y: -8}
-      ChildrenIndexList: 07000000
-    - ActionIndex: 3
-      Position: {x: -12, y: -8}
-      ChildrenIndexList: 01000000
-    - ActionIndex: 4
-      Position: {x: -84, y: -8}
-      ChildrenIndexList: 03000000
-    - ActionIndex: 5
-      Position: {x: -24, y: -8}
-      ChildrenIndexList: 04000000
-    - ActionIndex: 6
-      Position: {x: -39, y: -8}
-      ChildrenIndexList: 06000000
-    Position: {x: 768, y: 281.9817}
-    Ratio: -2
-    ScrollPosition: {x: 0, y: 0.71142465}
+    Position: {x: 480.80002, y: 311.85}
+    Ratio: 1
+    ScrollPosition: {x: 0.5, y: 0.5}

@@ -1,6 +1,7 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using Henshin.Runtime.Application;
 using Henshin.Runtime.Directions.Scene;
 using JetBrains.Annotations;
@@ -27,7 +28,7 @@ public class ActState {
             /// <summary>
             /// List of all the scenes in the current act.
             /// </summary>
-            public SceneState[] SceneList;
+            public List<SceneState> SceneList = new List<SceneState>();
             
         // -- Public Attributes --
             // - Identifiers -
@@ -71,9 +72,9 @@ public class ActState {
             public SceneState CurrentScene {
                 get {
                     // Check if the scene index is valid.
-                    if (this.CurrentSceneIndex >= 0 && this.CurrentSceneIndex < this.SceneList.Length) {
+                    if (this.CurrentSceneIndex >= 0 && this.CurrentSceneIndex < this.SceneList.Count) {
                         // Return the scene instance.
-                        return this.SceneList[this.CurrentSceneIndex];
+                        return this.SceneList[index: this.CurrentSceneIndex];
                     } else {
                         // Return a null.
                         return null;

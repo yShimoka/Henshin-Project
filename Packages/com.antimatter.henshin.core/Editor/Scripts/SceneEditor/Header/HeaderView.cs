@@ -1,8 +1,12 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
+using System;
 using System.Linq;
 using Henshin.Editor.SceneEditor.GraphArea;
 using Henshin.Editor.Skin;
+using Henshin.Runtime.Directions.Act;
+using Henshin.Runtime.Directions.Scene;
+using UnityEditor;
 using UnityEngine;
 
 /* Wrap the class within the local namespace. */
@@ -85,7 +89,7 @@ public static class HeaderView {
                 bool needsUpdate = false;
                 
                 // Draw the application state selector.
-                int appIdx = UnityEditor.EditorGUILayout.Popup(
+                int appIdx = EditorGUILayout.Popup(
                     selectedIndex: header.EditedApplicationIndex,
                     displayedOptions: HeaderState.EditableApplications
                         .Select(selector: app => app.name)
@@ -99,39 +103,130 @@ public static class HeaderView {
                 
                 // Check if the application object is valid.
                 if (header.EditedApplication != null) {
+                    GUILayout.BeginHorizontal();
+                    
+                    // Prepare the list of identifiers.
+                    string[] actIdentifiers = new string[header.EditedApplication.ActList.Count + 1];
+                    
+                    // Copy the identifiers into the list.
+                    int index = 0;
+                    header.EditedApplication.ActList.ForEach(action: act => {
+                        actIdentifiers[index] = act.Identifier;
+                        index++;
+                    });
+                    
+                    // Add the create option at the end of the list.
+                    actIdentifiers[actIdentifiers.Length - 1] = "Add new ...";
+                    
                     // Draw the act state selector.
-                    int actIdx = UnityEditor.EditorGUILayout.Popup(
+                    int actIdx = EditorGUILayout.Popup(
                         selectedIndex: header.EditedActIndex,
-                        displayedOptions: header.EditedApplication.ActList
-                            .Select(selector: act => act.Identifier)
-                            .ToArray(),
+                        displayedOptions: actIdentifiers,
                         GUILayout.ExpandWidth(expand: false)
                     );
+                    
+                    // Check if the last option was selected.
+                    if (actIdx == actIdentifiers.Length - 1) {
+                        // Add a new act to the list.
+                        header.EditedApplication.ActList.Add(item: new ActState {
+                            Index = actIdx
+                        });
+                        needsUpdate = true;
+                    }
+                     
+                    // If a new act was chosen.
                     if (actIdx != header.EditedActIndex) {
                         needsUpdate = true;
                         header.EditedActIndex = actIdx;
                     }
+                    
+                    // Draw a button used to delete the act.
+                    GUI.enabled = header.EditedApplication.ActList.Count > 1;
+                    if (GUILayout.Button(
+                        image: SkinState.Textures.Delete, 
+                        style: SkinState.Styles.DeleteMini
+                    )) {
+                        // Delete the act.
+                        GraphAreaController.DeleteAct(act: header.EditedAct);
+                        
+                        // Decrement the index.
+                        header.EditedActIndex--;
+                        
+                        // Update the object.
+                        needsUpdate = true;
+                    }
+                    GUI.enabled = true;
+                    
+                    GUILayout.EndHorizontal();
                 }
                 
                 // Check if the act object is valid.
                 if (header.EditedAct != null) {
+                    GUILayout.BeginHorizontal();
+                    
+                    // Prepare the list of identifiers.
+                    string[] sceneIdentifiers = new string[header.EditedAct.SceneList.Count + 1];
+                    
+                    // Copy the identifiers into the list.
+                    int index = 0;
+                    header.EditedAct.SceneList.ForEach(action: scene => {
+                        sceneIdentifiers[index] = scene.Identifier;
+                        index++;
+                    });
+                    
+                    // Add the create option at the end of the list.
+                    sceneIdentifiers[sceneIdentifiers.Length - 1] = "Add new ...";
+                    
                     // Draw the scene state selector.
-                    int scnIdx = UnityEditor.EditorGUILayout.Popup(
+                    int scnIdx = EditorGUILayout.Popup(
                         selectedIndex: header.EditedSceneIndex,
-                        displayedOptions: header.EditedAct.SceneList
-                            .Select(selector: scene => scene.Identifier)
-                            .ToArray(),
+                        displayedOptions: sceneIdentifiers,
                         GUILayout.ExpandWidth(expand: false)
                     );
+                    
+                    // Check if the last option was selected.
+                    if (scnIdx == sceneIdentifiers.Length - 1) {
+                        // Add a new act to the list.
+                        header.EditedAct.SceneList.Add(item: new SceneState {
+                            Index = scnIdx,
+                            Owner = header.EditedAct                            
+                        });
+                        needsUpdate = true;
+                    }
+                    
+                    // If the selected scene has changed.
                     if (scnIdx != header.EditedSceneIndex) {
                         needsUpdate = true;
                         header.EditedSceneIndex = scnIdx;
                     }
+                    
+                    // Draw a button used to delete the scene.
+                    GUI.enabled = header.EditedAct.SceneList.Count > 1;
+                    if (GUILayout.Button(
+                        image: SkinState.Textures.Delete, 
+                        style: SkinState.Styles.DeleteMini
+                    )) {
+                        // Delete the scene.
+                        GraphAreaController.DeleteScene(scene: header.EditedScene);
+                        
+                        // Decrement the index.
+                        header.EditedSceneIndex--;
+                        
+                        // Update the object.
+                        needsUpdate = true;
+                    }
+                    GUI.enabled = true;
+                    
+                    GUILayout.EndHorizontal();
                 }
                 
                 // If any change was applied.
                 if (needsUpdate) {
+                    // Reserialize the assets.
+                    AssetDatabase.ForceReserializeAssets();
+                    
                     // Set the owner's graph area reference.
+                    GraphAreaController.ReloadStores();
                     header.Owner.Instance.UpdateGraphArea(
                         graphArea: GraphAreaController.FindGraphArea(sceneState: header.EditedScene)
                     );

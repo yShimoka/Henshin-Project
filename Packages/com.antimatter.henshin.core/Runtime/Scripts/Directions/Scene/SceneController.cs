@@ -49,7 +49,7 @@ public static class SceneController {
             public static void Deserialize(ActState owner, SceneState scene) {
                 // Set the owner of the scene.
                 scene.Owner = owner;
-                scene.Index = Array.IndexOf(array: owner.SceneList, value: scene);
+                scene.Index = owner.SceneList.IndexOf(item: scene);
                 
                 // Recreate the action states.
                 for (int index = 0; index < scene.ActionList.Count; index++) {
@@ -89,26 +89,26 @@ public static class SceneController {
             public static void Play(SceneState scene) {
                 // Check if the scene is set.
                 if (scene != null) {
+                    // Prepare the view of the scene.
+                    SceneView.Prepare(scene: scene, callback: () => {
+                        // Check if there is a root action set.
+                        if (scene.RootAction != null) {
+                            // Apply it.
+                            ActionController.Apply(state: scene.RootAction);
+                        } else {
+                            // Log an error.
+                            Debug.LogError(
+                                message:  "There is no root action on this scene !\n" +
+                                         $"Act/Scene Identifier: \"{scene.Owner.Identifier}/{scene.Identifier}\""
+                            );
+                            
+                            // Play the next scene.
+                            ActController.NextScene();
+                        }
+                    });
+                    
                     // Store the scene as the current one.
                     SceneState.Current = scene;
-                    
-                    // Prepare the view of the scene.
-                    SceneView.Prepare(scene: scene);
-                    
-                    // Check if there is a root action set.
-                    if (scene.RootAction != null) {
-                        // Apply it.
-                        ActionController.Apply(state: scene.RootAction);
-                    } else {
-                        // Log an error.
-                        Debug.LogError(
-                            message:  "There is no root action on this scene !\n" +
-                                     $"Act/Scene Identifier: \"{scene.Owner.Identifier}/{scene.Identifier}\""
-                        );
-                        
-                        // Play the next scene.
-                        ActController.NextScene();
-                    }
                 } else {
                     // Throw an error.
                     ApplicationView.Error(message: "Tried to play a scene that is null !");

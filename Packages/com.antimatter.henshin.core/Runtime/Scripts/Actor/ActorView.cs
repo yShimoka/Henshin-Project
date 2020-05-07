@@ -4,6 +4,7 @@ using System;
 using Henshin.Runtime.Application;
 using JetBrains.Annotations;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 /* Wrap the class within the local namespace. */
 namespace Henshin.Runtime.Actor {
@@ -21,7 +22,7 @@ public static class ActorView {
             /// <param name="actor">The actor object to instantiate.</param>
             public static void InstantiateActor(ActorState actor) {
                 // Copy the actor's prefab into the scene.
-                actor.Instance = UnityEngine.Object.Instantiate(
+                actor.Instance = Object.Instantiate(
                     original: actor.Prefab,
                     position: Vector3.zero,
                     rotation: Quaternion.identity, 
@@ -56,6 +57,17 @@ public static class ActorView {
                 
                 // Disable the actor.
                 actor.Instance.SetActive(value: false);
+            }
+            
+            /// <summary>
+            /// Clears all the actors from the stage.
+            /// </summary>
+            public static void ClearActors() {
+                // Loop through all the stage children.
+                for (int child = 0; child < ApplicationView.Stage.childCount; child++) {
+                    // Remove the object at the specified location.
+                    Object.Destroy(obj: ApplicationView.Stage.GetChild(index: child).gameObject);
+                }
             }
             
             // - Setters -

@@ -40,8 +40,8 @@ public static class SocketView {
                 Handles.DrawBezier(
                     startPosition: from,
                     endPosition: to,
-                    startTangent: from + Vector2.right * 100 * scale,
-                    endTangent: to + Vector2.left * 100 * scale,
+                    startTangent: from + Vector2.right * 50 * scale,
+                    endTangent: to + Vector2.left * 50 * scale,
                     color: Color.white,
                     texture: Texture2D.whiteTexture, 
                     width: 3 * scale
