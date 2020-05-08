@@ -2,7 +2,6 @@
 
 /* Wrap the class within the local namespace. */
 
-using System;
 using Henshin.Runtime.Actions.Base;
 using Henshin.Runtime.Actor;
 using Henshin.Runtime.Directions.Scene;

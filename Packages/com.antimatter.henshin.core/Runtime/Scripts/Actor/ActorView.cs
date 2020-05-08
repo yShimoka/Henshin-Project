@@ -1,9 +1,9 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
-using System;
 using Henshin.Runtime.Application;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
 /* Wrap the class within the local namespace. */
@@ -31,19 +31,36 @@ public static class ActorView {
                 
                 // Seek the actor's sprite renderer.
                 if (!(
-                    actor.Instance.GetComponent<SpriteRenderer>() 
-                    is SpriteRenderer renderer
+                    actor.Instance.GetComponent<Image>() 
+                    is Image renderer
                 )) {
                     // Throw an error.
                     ApplicationView.Error(
-                        message: $"Actor \"{actor.Identifier}\"'s prefab has no SpriteRenderer Component !"
+                        message: $"Actor \"{actor.Identifier}\"'s prefab has no Image Component !"
+                    );
+                    // Stop the method.
+                    return;
+                }
+                
+                // Seek the actor's canvas.
+                if (!(
+                    actor.Instance.GetComponent<Canvas>() 
+                    is Canvas canvas
+                )) {
+                    // Throw an error.
+                    ApplicationView.Error(
+                        message: $"Actor \"{actor.Identifier}\"'s prefab has no Canvas Component !"
                     );
                     // Stop the method.
                     return;
                 }
                 
                 // Store the reference.
-                actor.SpriteRenderer = renderer;
+                actor.Image = renderer;
+                actor.Canvas = canvas;
+                
+                // Enable sorting layer overide.
+                canvas.overrideSorting = true;
                 
                 // Set its world position.
                 actor.Instance.transform.localPosition = Vector3.zero;
@@ -80,8 +97,11 @@ public static class ActorView {
                 // Check if the value of the index is valid.
                 if (poseIndex >= 0 && poseIndex < actor.PoseStore.PoseList.Count) {
                     // Update the pose of the actor.
-                    if (actor.SpriteRenderer != null) {
-                        actor.SpriteRenderer.sprite = actor.PoseStore.PoseList[index: poseIndex];
+                    if (actor.Image != null) {
+                        // Load the sprite.
+                        actor.Image.sprite = actor.PoseStore.PoseList[index: poseIndex];
+                        // Set the size of the image.
+                        actor.Image.GetComponent<RectTransform>().sizeDelta = actor.Image.sprite.textureRect.size; 
                     } else {
                         // Throw an error.
                         ApplicationView.Error(
@@ -106,8 +126,8 @@ public static class ActorView {
                 // Check if the ID of the layer is valid.
                 if (SortingLayer.IsValid(id: layerId)) {
                     // Update the layer of the actor.
-                    if (actor.SpriteRenderer != null) {
-                        actor.SpriteRenderer.sortingLayerID = layerId;
+                    if (actor.Canvas != null) {
+                        actor.Canvas.sortingLayerID = layerId;
                     } else {
                         // Throw an error.
                         ApplicationView.Error(
@@ -185,9 +205,9 @@ public static class ActorView {
             /// <param name="colour">The new colour of the actor.</param>
             public static void SetColour([NotNull] ActorState actor, Color colour) {
                 // Check if the actor is set.
-                if (actor.SpriteRenderer != null) {
+                if (actor.Image != null) {
                     // Set the colour of the actor.
-                    actor.SpriteRenderer.color = colour;
+                    actor.Image.color = colour;
                 } else {
                     // Throw an error.
                     ApplicationView.Error(
@@ -222,8 +242,14 @@ public static class ActorView {
             public static void SetVerticalFlip([NotNull] ActorState actor, bool flipped) {
                 // Check if the actor is set.
                 if (actor.Instance != null) {
+                    // Get the local scale of the object.
+                    Vector3 localScale = actor.Instance.transform.localScale;
+                    
                     // Set the flipped state of the actor.
-                    actor.SpriteRenderer.flipY = flipped;
+                    localScale.y = Mathf.Abs(f: localScale.y) * (flipped ? -1 : 1);
+                    
+                    // Store the scale back.
+                    actor.Instance.transform.localScale = localScale;
                 } else {
                     // Throw an error.
                     ApplicationView.Error(
@@ -240,8 +266,14 @@ public static class ActorView {
             public static void SetHorizontalFlip([NotNull] ActorState actor, bool flipped) {
                 // Check if the actor is set.
                 if (actor.Instance != null) {
+                    // Get the local scale of the object.
+                    Vector3 localScale = actor.Instance.transform.localScale;
+                    
                     // Set the flipped state of the actor.
-                    actor.SpriteRenderer.flipX = flipped;
+                    localScale.x = Mathf.Abs(f: localScale.x) * (flipped ? -1 : 1);
+                    
+                    // Store the scale back.
+                    actor.Instance.transform.localScale = localScale;
                 } else {
                     // Throw an error.
                     ApplicationView.Error(
@@ -258,9 +290,9 @@ public static class ActorView {
             /// <returns>The id of the layer the actor is currently on.</returns>
             public static int GetLayer([NotNull] ActorState actor) {
                 // Check if the actor is valid.
-                if (actor.SpriteRenderer != null) {
+                if (actor.Image != null) {
                     // Return the layer id.
-                    return actor.SpriteRenderer.sortingLayerID;
+                    return actor.Canvas.sortingLayerID;
                 } else {
                     // Throw an error.
                     ApplicationView.Error(
@@ -336,9 +368,9 @@ public static class ActorView {
             /// <returns>The colour of the actor.</returns>
             public static Color GetColour([NotNull] ActorState actor) {
                 // Check if the actor is set.
-                if (actor.SpriteRenderer != null) {
+                if (actor.Image != null) {
                     // Return the colour of the actor.
-                    return actor.SpriteRenderer.color;
+                    return actor.Image.color;
                 } else {
                     // Throw an error.
                     ApplicationView.Error(
@@ -376,7 +408,7 @@ public static class ActorView {
                 // Check if the actor is set.
                 if (actor.Instance != null) {
                     // Return the flipped state of the actor.
-                    return actor.SpriteRenderer.flipY;
+                    return actor.Instance.transform.localScale.y < 0;
                 } else {
                     // Throw an error.
                     ApplicationView.Error(
@@ -395,7 +427,7 @@ public static class ActorView {
                 // Check if the actor is set.
                 if (actor.Instance != null) {
                     // Return the flipped state of the actor.
-                    return actor.SpriteRenderer.flipX;
+                    return actor.Instance.transform.localScale.x < 0;
                 } else {
                     // Throw an error.
                     ApplicationView.Error(

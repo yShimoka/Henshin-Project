@@ -1,6 +1,5 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
-using System;
 using Henshin.Runtime.Application;
 using Henshin.Runtime.Directions.Scene;
 using UnityEngine;

@@ -1,10 +1,7 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
-using System.Linq;
 using Henshin.Runtime.Actions;
 using Henshin.Runtime.Actions.Actor;
-using Henshin.Runtime.Actions.Base;
-using Henshin.Runtime.Application;
 using UnityEditor;
 
 /* Wrap the class within the local namespace. */

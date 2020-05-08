@@ -2,7 +2,6 @@
 
 using Henshin.Runtime.Actions;
 using Henshin.Runtime.Actions.Base;
-using Henshin.Runtime.Actions.Scene;
 using UnityEditor;
 
 /* Wrap the class within the local namespace. */

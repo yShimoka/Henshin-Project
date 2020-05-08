@@ -42,7 +42,8 @@ public class ApplicationState: ScriptableObject, ISerializationCallbackReceiver 
             /// <summary>
             /// Icon displayed on the error scene.
             /// </summary>
-            public Sprite ErrorIcon; 
+            public Sprite ErrorIcon;
+            
         // -- Public Attributes --
             // - Runtime Parameters -
             /// <summary>

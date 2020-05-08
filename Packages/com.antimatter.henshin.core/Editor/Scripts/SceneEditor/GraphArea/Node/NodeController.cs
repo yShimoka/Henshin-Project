@@ -1,7 +1,6 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Henshin.Editor.SceneEditor.GraphArea.Socket;
 using Henshin.Runtime.Actions;

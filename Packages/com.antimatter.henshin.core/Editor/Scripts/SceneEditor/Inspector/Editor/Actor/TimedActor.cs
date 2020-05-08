@@ -5,7 +5,6 @@ using Henshin.Runtime.Actions;
 using Henshin.Runtime.Actions.Base;
 using Henshin.Runtime.Libraries;
 using UnityEditor;
-using UnityEngine;
 
 /* Wrap the class within the local namespace. */
 namespace Henshin.Editor.SceneEditor.Inspector.Editor.Actor {

@@ -1,10 +1,8 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 using System;
-using System.Collections;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -114,6 +112,17 @@ public static class ApplicationView {
             /// Reference to the <see cref="UnityEngine.Camera"/> that renders the whole application.
             /// </summary>
             public static Camera WorldCamera;
+            
+        // -- Public Constants --
+            /// <summary>
+            /// Reference width, in pixels, of the rendering area.
+            /// </summary>
+            public const int VIEW_WIDTH  = 1920;
+            
+            /// <summary>
+            /// Reference height, in pixels, of the rendering area.
+            /// </summary>
+            public const int VIEW_HEIGHT = 1080;
             
         // -- Private Attributes --
             // - Scene Info -
@@ -277,7 +286,7 @@ public static class ApplicationView {
                 CanvasScaler scaler = stageRoot.GetComponent<CanvasScaler>();
                 scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
                 scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Shrink;
-                scaler.referenceResolution = new Vector2(x: 1920, y: 1080);
+                scaler.referenceResolution = new Vector2(x: ApplicationView.VIEW_WIDTH, y :ApplicationView.VIEW_HEIGHT);
                 
                 // Add the stage background element.
                 ApplicationView.Background = new GameObject(
@@ -334,7 +343,7 @@ public static class ApplicationView {
                 CanvasScaler scaler = canvas.GetComponent<CanvasScaler>();
                 scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
                 scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Shrink;
-                scaler.referenceResolution = new Vector2(x: 1920, y: 1080);
+                scaler.referenceResolution = new Vector2(x: ApplicationView.VIEW_WIDTH, y :ApplicationView.VIEW_HEIGHT);
             }
             
             // - Error Management -

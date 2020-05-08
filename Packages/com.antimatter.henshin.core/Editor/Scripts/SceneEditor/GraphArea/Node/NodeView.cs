@@ -2,13 +2,10 @@
 
 using System;
 using Henshin.Editor.SceneEditor.GraphArea.Socket;
-using Henshin.Editor.SceneEditor.Inspector.Editor.Actor;
 using Henshin.Editor.Skin;
 using Henshin.Runtime.Actions;
 using Henshin.Runtime.Actions.Actor;
 using Henshin.Runtime.Actions.Base;
-using Henshin.Runtime.Actions.Scene;
-using UnityEditor;
 using UnityEngine;
 
 /* Wrap the class within the local namespace. */

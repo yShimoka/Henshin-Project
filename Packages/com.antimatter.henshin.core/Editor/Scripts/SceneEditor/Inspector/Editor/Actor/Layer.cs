@@ -1,9 +1,8 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
-using System.Linq;
+using System;
 using Henshin.Runtime.Actions;
 using Henshin.Runtime.Actions.Actor;
-using Henshin.Runtime.Actions.Base;
 using Henshin.Runtime.Application;
 using UnityEditor;
 
@@ -27,10 +26,17 @@ public class Layer: Base {
                 
                 // Render the layer index popup.
                 int targetLayer = EditorGUILayout.Popup(
-                    selectedIndex: state.LayerIndex,
+                    selectedIndex: Array.IndexOf(array: ApplicationView.SortingLayers.LayerIDs, value: state.LayerIndex),
                     displayedOptions: ApplicationView.SortingLayers.LayerNames,
                     label: "Layer"
                 );
+                
+                // Check if the layer value is valid.
+                if (targetLayer < 0 || targetLayer >= ApplicationView.SortingLayers.LayerIDs.Length) {
+                    targetLayer = 0;
+                }
+                
+                // Store the layer id.
                 state.LayerIndex = ApplicationView.SortingLayers.LayerIDs[targetLayer];
             }
     // --- /Methods ---

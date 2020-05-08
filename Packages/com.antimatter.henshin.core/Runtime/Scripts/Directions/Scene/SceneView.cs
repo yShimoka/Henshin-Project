@@ -1,14 +1,13 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using Henshin.Runtime.Actor;
 using Henshin.Runtime.Application;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 /* Wrap the class within the local namespace. */
 namespace Henshin.Runtime.Directions.Scene {
@@ -89,8 +88,8 @@ public static class SceneView {
                 float timer = reveal ? 0 : SceneView.REVEAL_TIME;
                 
                 // Get all the scene's actors.
-                SpriteRenderer[] actors = scene.ActorList
-                    .Select(selector: actor => actor.SpriteRenderer)
+                Image[] actors = scene.ActorList
+                    .Select(selector: actor => actor.Image)
                     .Where(predicate: renderer => renderer != null)
                     .ToArray();
                 
@@ -103,7 +102,7 @@ public static class SceneView {
                     float normAc = (2   * timer - SceneView.REVEAL_TIME) / SceneView.REVEAL_TIME;
                     
                     // Loop through the scene's actors.
-                    foreach (SpriteRenderer actor in actors) {
+                    foreach (Image actor in actors) {
                         // Get the color of the object.
                         Color actorColor = actor.color;
                         

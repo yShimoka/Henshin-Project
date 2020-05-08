@@ -1,6 +1,8 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 using System;
+using Henshin.Runtime.Application;
+using Henshin.Runtime.Gameplay.Components;
 
 /* Wrap the class within the local namespace. */
 namespace Henshin.Runtime.Actions.Scene {
@@ -33,7 +35,9 @@ public class StartAction: ActionController {
             /// Starts the scene.
             /// Just finishes the action immediately.
             /// </summary>
-            protected override void Apply() { this.Finish(); }
+            protected override void Apply() {
+                this.Finish();
+            }
     
             // - Serialization Events -
             /// <inheritdoc cref="ActionController.SaveParameters"/>

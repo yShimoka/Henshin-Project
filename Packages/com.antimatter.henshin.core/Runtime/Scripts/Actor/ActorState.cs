@@ -1,8 +1,8 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 using System;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /* Wrap the class within the local namespace. */
 namespace Henshin.Runtime.Actor {
@@ -42,7 +42,13 @@ public class ActorState {
             /// Instance of the actor's <see cref="UnityEngine.SpriteRenderer"/> component.
             /// </summary>
             [NonSerialized]
-            public SpriteRenderer SpriteRenderer;
+            public Image Image;
+            
+            /// <summary>
+            /// Instance of the actor's Canvas component.
+            /// </summary>
+            [NonSerialized]
+            public Canvas Canvas;
     // --- /Attributes ---
 }
 }

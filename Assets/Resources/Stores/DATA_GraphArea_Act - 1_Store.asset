@@ -17,8 +17,47 @@ MonoBehaviour:
   - SceneIndex: 0
     NodeList:
     - ActionIndex: 0
-      Position: {x: -4, y: -4}
+      Position: {x: -96, y: 8}
+      ChildrenIndexList: 01000000
+    - ActionIndex: 1
+      Position: {x: -88, y: 8}
+      ChildrenIndexList: 02000000
+    - ActionIndex: 2
+      Position: {x: -80, y: 8}
+      ChildrenIndexList: 0300000004000000
+    - ActionIndex: 3
+      Position: {x: -73, y: 8}
+      ChildrenIndexList: 06000000
+    - ActionIndex: 4
+      Position: {x: -72, y: 1}
+      ChildrenIndexList: 06000000
+    - ActionIndex: 5
+      Position: {x: -56, y: 8}
+      ChildrenIndexList: 08000000
+    - ActionIndex: 6
+      Position: {x: -64, y: 8}
+      ChildrenIndexList: 0500000007000000
+    - ActionIndex: 7
+      Position: {x: -56, y: 1}
+      ChildrenIndexList: 08000000
+    - ActionIndex: 8
+      Position: {x: -48, y: 8}
+      ChildrenIndexList: 09000000
+    - ActionIndex: 9
+      Position: {x: -40, y: 8}
+      ChildrenIndexList: 0a000000
+    - ActionIndex: 10
+      Position: {x: -32, y: 8}
+      ChildrenIndexList: 0b000000
+    - ActionIndex: 11
+      Position: {x: -24, y: 8}
+      ChildrenIndexList: 0c000000
+    - ActionIndex: 12
+      Position: {x: -16, y: 8}
+      ChildrenIndexList: 0d000000
+    - ActionIndex: 13
+      Position: {x: -8, y: 8}
       ChildrenIndexList: 
-    Position: {x: 480.80002, y: 311.85}
-    Ratio: 1
-    ScrollPosition: {x: 0.5, y: 0.5}
+    Position: {x: 695.999, y: 114.846405}
+    Ratio: 0
+    ScrollPosition: {x: 0.42321694, y: 0.71594167}

@@ -1,11 +1,11 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Henshin.Runtime.Actions;
 using Henshin.Runtime.Application;
 using Henshin.Runtime.Directions.Act;
+using Henshin.Runtime.Gameplay.Components;
 using UnityEngine;
 
 /* Wrap the class within the local namespace. */

@@ -2,7 +2,6 @@
 
 /* Wrap the class within the local namespace. */
 
-using System.Linq;
 using Henshin.Editor.SceneEditor.GraphArea.Node;
 using Henshin.Editor.SceneEditor.GraphArea.Socket;
 using Henshin.Editor.Skin;

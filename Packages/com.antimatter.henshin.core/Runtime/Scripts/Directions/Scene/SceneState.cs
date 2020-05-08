@@ -2,10 +2,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Security.Policy;
 using Henshin.Runtime.Actions;
 using Henshin.Runtime.Actor;
-using Henshin.Runtime.Application;
 using Henshin.Runtime.Directions.Act;
 using UnityEngine;
 

@@ -5,9 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Henshin.Runtime.Actions;
 using Henshin.Runtime.Actions.Actor;
-using Henshin.Runtime.Actions.Base;
 using Henshin.Runtime.Actor;
-using Henshin.Runtime.Application;
 using UnityEditor;
 using UnityEngine;
 

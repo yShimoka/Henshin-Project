@@ -1,7 +1,6 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 using Henshin.Editor.Skin;
-using Henshin.Runtime.Actions.Scene;
 using UnityEditor;
 using UnityEngine;
 
