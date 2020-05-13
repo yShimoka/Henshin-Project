@@ -44,6 +44,16 @@ public class ApplicationState: ScriptableObject, ISerializationCallbackReceiver 
             /// </summary>
             public Sprite ErrorIcon;
             
+            /// <summary>
+            /// Prefab used to configure the event system object of the scene.
+            /// </summary>
+            public GameObject EventSystemPrefab;
+            
+            /// <summary>
+            /// Prefab instance used for all the 
+            /// </summary>
+            public GameObject DraggablePrefab;
+            
         // -- Public Attributes --
             // - Runtime Parameters -
             /// <summary>

@@ -5,7 +5,6 @@ using System.Linq;
 using Henshin.Runtime.Actions;
 using Henshin.Runtime.Application;
 using Henshin.Runtime.Directions.Act;
-using Henshin.Runtime.Gameplay.Components;
 using UnityEngine;
 
 /* Wrap the class within the local namespace. */

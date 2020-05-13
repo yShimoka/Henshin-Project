@@ -20,24 +20,11 @@ public class NodeState {
     // ---  Attributes ---
         // -- Serialized Attributes --
             // - References -
-            /// <summary>
-            /// Reference to the targeted action's index in the
-            /// <see cref="Owner"/>'s <see cref="SceneState.ActionList"/>.
-            /// </summary>
-            public int ActionIndex;
-            
-            /// <summary>
+    /// <summary>
             /// Position of the node in the graph.
             /// This value is in graph space, relative to its center.
             /// </summary>
             public Vector2 Position;
-            
-            // - Tree Behaviour -
-            /// <summary>
-            /// List of all the indices that are targeted by this <see cref="NodeState"/>.
-            /// Aka. all of its children.
-            /// </summary>
-            public List<int> ChildrenIndexList = new List<int>();
             
         // -- Public Attributes --
             // - References -
@@ -46,6 +33,12 @@ public class NodeState {
             /// </summary>
             [NonSerialized]
             public GraphAreaState Owner;
+            
+            /// <summary>
+            /// Index of the node in its parent's node list.
+            /// </summary>
+            [NonSerialized]
+            public int Index;
             
             /// <summary>
             /// List of all the parents of this node.
@@ -58,12 +51,6 @@ public class NodeState {
             /// </summary>
             [NonSerialized]
             public List<NodeState> ChildrenList = new List<NodeState>();
-            
-            /// <summary>
-            /// Index of the node it its owner's <see cref="GraphAreaState.NodeList"/>.
-            /// </summary>
-            [NonSerialized]
-            public int NodeIndex;
             
             /// <summary>
             /// Reference to the input socket of this node.
@@ -113,16 +100,16 @@ public class NodeState {
                 get {
                     // If the owner is unset.
                     if (this.Owner == null) {
-                        Debug.Log(message: $"The node at #{this.NodeIndex} has no owner !");
+                        Debug.Log(message: $"The node at #{this.Index} has no owner !");
                         return null;
                     }
                     
                     // Check the index.
-                    if (this.ActionIndex >= 0 && this.ActionIndex < this.Owner.Scene.ActionList.Count) {
-                        return this.Owner.Scene.ActionList[index: this.ActionIndex];
+                    if (this.Index >= 0 && this.Index < this.Owner.Scene.ActionList.Count) {
+                        return this.Owner.Scene.ActionList[index: this.Index];
                     } else {
                         // Return a null reference.
-                        Debug.Log(message: $"Could not access the action with index {this.ActionIndex}");
+                        Debug.Log(message: $"Could not access the action with index {this.Index}");
                         return null;
                     }
                 }

@@ -84,6 +84,9 @@ public class ApplicationController: MonoBehaviour {
                         
                     // If a debug scene was found.
                     if (debugged != null) {
+                        // Load its act.
+                        ActState.Current = debugged.Owner;
+                        
                         // Play that scene.
                         SceneController.Play(scene: debugged);
                         

@@ -4,6 +4,7 @@ using System;
 using Henshin.Runtime.Application;
 using UnityEngine;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 /* Wrap the class within the local namespace. */
 namespace Henshin.Runtime.Gameplay.Components {
@@ -13,7 +14,7 @@ namespace Henshin.Runtime.Gameplay.Components {
 /// The TextBox should be applied to an actor of the scene
 /// and implements basic text manipulation routines.
 /// </summary>
-[AddComponentMenu(menuName: "Henshin/Gameplay/Text Box")]
+[AddComponentMenu(menuName: "Henshin/Gameplay/Text Box", order: 10)]
 public class TextBoxComponent: MonoBehaviour {
     // ---  SubObjects ---
         // -- Private Classes --
@@ -53,10 +54,17 @@ public class TextBoxComponent: MonoBehaviour {
     
     // ---  Attributes ---
         // -- Serialized Attributes --
+            // - References -
             /// <summary>
             /// The font that will be used in this text box.
             /// </summary>
             public Font Font;
+            
+            /// <summary>
+            /// Prefab object used when instantiating a drop target.
+            /// </summary>
+            public GameObject DropTargetPrefab;
+            
         // -- Private Attributes --
             // - References -
             /// <summary>
@@ -64,12 +72,7 @@ public class TextBoxComponent: MonoBehaviour {
             /// </summary>
             private RectTransform _mRectTransform;
             
-            // - Computed Values -
-            /// <summary>
-            /// Space taken by a single white character.
-            /// </summary>
-            private float _mBlankSpace = float.NaN;
-            
+            // - Computed Values - 
             /// <summary>
             /// Instance of the generator used to compute the size of the text.
             /// </summary>
@@ -92,10 +95,15 @@ public class TextBoxComponent: MonoBehaviour {
             /// <summary>
             /// Called right after instantiation in the scene.
             /// </summary>
-            private void OnEnable() {
+            private void Awake() {
                 // Get the rect transform component.
                 this._mRectTransform = this.GetComponent<RectTransform>();
-                
+            }
+            
+            /// <summary>
+            /// Called right after the object gets enabled in the scene.
+            /// </summary>
+            private void OnEnable() {
                 // Update the generation parameters.
                 this._mSettings.font = this.Font;
                 
@@ -104,10 +112,8 @@ public class TextBoxComponent: MonoBehaviour {
                 
                 // Update the container of this component.
                 RectTransform parent = this.transform.parent.GetComponent<RectTransform>();
-                parent.anchorMin = Vector2.zero;
-                parent.anchorMax = Vector2.right;
-                parent.pivot = Vector2.right / 2f;
                 parent.sizeDelta = new Vector2(x: ApplicationView.VIEW_WIDTH - 100, y: 300);
+                parent.anchoredPosition = Vector2.down * ApplicationView.VIEW_HEIGHT;
             }
 
         // -- Public Methods --
@@ -139,14 +145,14 @@ public class TextBoxComponent: MonoBehaviour {
                         charIndex: this._mGenerator.lines[index: 1].startCharIdx, 
                         height: Mathf.CeilToInt(
                             f: this._mGenerator.GetPreferredHeight(str: "I", settings: this._mSettings)
-                        )
+                        ) + 1
                     );
                 }
                 
                 // Return the width of the first line.
                 return new Vector2(
-                    x: this._mGenerator.GetPreferredWidth(str: text, settings: this._mSettings),
-                    y: this._mGenerator.GetPreferredHeight(str: text, settings: this._mSettings)
+                    x: this._mGenerator.GetPreferredWidth(str: text, settings: this._mSettings) + 1,
+                    y: this._mGenerator.GetPreferredHeight(str: text, settings: this._mSettings) + 1
                 );
             }
             
@@ -155,6 +161,11 @@ public class TextBoxComponent: MonoBehaviour {
             /// </summary>
             /// <param name="text">The text to load in the component.</param>
             public void ParseText(string text) {
+                // Clear any children components.
+                while (this.transform.childCount > 0) {
+                    Object.DestroyImmediate(obj: this.transform.GetChild(index: 0).gameObject);
+                }
+                
                 // Check if the font is set.
                 if (this.Font == null) {
                     // Throw an exception.
@@ -169,13 +180,18 @@ public class TextBoxComponent: MonoBehaviour {
                 // Prepare the position store.
                 Vector2 position = Vector2.zero;
                 
+                // Flag set if the next line should be skipped.
+                bool skipNextLine = false;
+                
                 // Get the size of the render area.
                 int renderAreaWidth = Mathf.FloorToInt(f: this._mRectTransform.rect.width);
                 
                 // Loop until the copy is empty.
-                while (copy.Length > 0) {
+                while (copy.Length > 0 && copy[index: 0] != '}') {
                     // Flag set to check if the text should be hidden. 
                     bool isHidden = false;
+                    // Set to the value of the segment that is expected below the current word.
+                    string below = null;
                     
                     // Seek a '{' character in the copy string.
                     int paramStartIndex;
@@ -207,30 +223,77 @@ public class TextBoxComponent: MonoBehaviour {
                         paramStartIndex = copy.Length;
                     }
                     
-                    // Get the next clear text section.
-                    string clear = copy.Substring(startIndex: 0, length: paramStartIndex);
+                    // Get the next text section.
+                    string section = copy.Substring(startIndex: 0, length: paramStartIndex);
+                    
+                    // If the word is expected to be hidden.
+                    if (isHidden) {
+                        // Check if there is a semi colon in the clear section.
+                        int semiColonIndex = section.IndexOf(value: ':');
+                        if (semiColonIndex != -1) {
+                            // Get the word that is expected below the current word.
+                            below = section.Substring(
+                                startIndex: semiColonIndex == section.Length ? section.Length : semiColonIndex + 1, 
+                                length: section.Length - semiColonIndex - 1
+                            );
+                            
+                            // Get the word that is supposed to appear in clear.
+                            section = section.Substring(startIndex: 0, length: semiColonIndex > 0 ? semiColonIndex : 0);
+                            
+                            // Clear the hidden flag.
+                            isHidden = false;
+                        }
+                    }
                     
                     // Catch any TextTooLongException.
                     try {
                         // Get the size of the clear section.
-                        Vector2 size = this.GetTextSize(text: clear, width: renderAreaWidth - position.x);
+                        Vector2 size = this.GetTextSize(text: section, width: renderAreaWidth - position.x);
                         
                         // If the text is not hidden.
                         if (!isHidden) {
+                            // If there is a text below the word.
+                            if (!string.IsNullOrEmpty(value: below)) {
+                                // Get the size of the word to render below.
+                                Vector2 belowSize = this.GetTextSize(text: below, width: renderAreaWidth - position.x);
+                                
+                                // Draw the expected word below.
+                                this._AddDropTarget(
+                                    text: below, 
+                                    position: new Vector2(x: position.x - belowSize.x / 2 + size.x / 2, y: position.y - size.y), 
+                                    size: belowSize
+                                );
+                                
+                                // Update the text color.
+                                this._mSettings.color = Color.blue;
+                                
+                                // Skip the next line.
+                                skipNextLine = true;
+                            }
+                            
                             // Add a new text section.
-                            this._AddTextSegment(text: clear, position: position, size: size);
+                            this._AddTextSegment(text: section, position: position, size: size);
                         } else {
                             // Draw simple lines.
-                            this._AddTextSegment(
-                                text: new string(c: '_', count: clear.Length), position: position, size: size
+                            this._AddDropTarget(
+                                text: section, position: position, size: size
                             );
                         }
+                        
+                        // Reset the color.
+                        this._mSettings.color = Color.black;
                         
                         // Update the position.
                         position.x += size.x;
                         
                         // Remove the segment from the copy.
-                        copy = copy.Substring(startIndex: clear.Length);
+                        copy = copy.Substring(startIndex: section.Length);
+                        
+                        // If there was a word below.
+                        if (!string.IsNullOrEmpty(value: below)) {
+                            // Remove the segment and the semi colon.
+                            copy = copy.Substring(startIndex: below.Length + 1);
+                        }
                         
                     } catch (TextTooLongException size) {
                         // Get the full line segment.
@@ -246,7 +309,10 @@ public class TextBoxComponent: MonoBehaviour {
                         ));
                         
                         // Update the position.
-                        position.Set(newX: 0, newY: position.y - size.Height);
+                        position.Set(newX: 0, newY: position.y - (skipNextLine ? 2 : 1 ) * size.Height);
+                        
+                        // Reset the skip.
+                        skipNextLine = false;
                     }
                 }
             }
@@ -264,6 +330,7 @@ public class TextBoxComponent: MonoBehaviour {
                     name: "Text Segment",
                     components: new []{ typeof(Text) }
                 ).GetComponent<Text>();
+                segment.gameObject.name = $"{text}";
                 
                 // Get the rect transform reference.
                 RectTransform transform = segment.rectTransform;
@@ -290,6 +357,44 @@ public class TextBoxComponent: MonoBehaviour {
                 
                 // Set the text of the segment.
                 segment.text = text;
+            }
+            
+            /// <summary>
+            /// Adds a new drop target on the screen.
+            /// </summary>
+            /// <param name="text">The identifier text used for the target.</param>
+            /// <param name="position">The top-left position of the target.</param>
+            /// <param name="size">The size of the generated target.</param>
+            private void _AddDropTarget(string text, Vector2 position, Vector2 size) {
+                // Check if the prefab instance is set.
+                if (this.DropTargetPrefab == null) {
+                    // Throw an exception.
+                    throw new MissingReferenceException(message: "Text box has no drop target prefab.");
+                }
+                
+                // Instantiate the prefab.
+                GameObject target = Object.Instantiate(
+                    original: this.DropTargetPrefab,
+                    parent: this.transform,
+                    worldPositionStays: false
+                );
+                target.name = $"{text} - Target";
+                
+                // Try to find the drop target component.
+                if (!(target.GetComponent<DropTargetComponent>() is DropTargetComponent component)) {
+                    // Throw an exception.
+                    throw new MissingComponentException(message: "The drop target has no DropTargetComponent !");
+                }
+                
+                // Get the rect transform reference.
+                RectTransform transform = component.GetComponent<RectTransform>();
+                
+                // Set the parameters of the transform.
+                transform.anchoredPosition = position;
+                transform.sizeDelta = size;
+                
+                // Set the parameters of the component.
+                component.ExpectedIdentifier = text;
             }
     // --- /Methods ---
 }

@@ -12,7 +12,7 @@ namespace Henshin.Runtime.Directions.Scene {
 
 /// <summary>
 /// State class used to represent all the Scenes in the play.
-/// NOTE: These are not analogous to Unity's <see cref="UnityEngine.SceneManagement.Scene"/> objects.
+/// These are not analogous to Unity's <see cref="UnityEngine.SceneManagement.Scene"/> objects.
 /// </summary>
 [Serializable]
 public class SceneState {
@@ -28,9 +28,6 @@ public class SceneState {
             /// The list of all the actors of the scene.
             /// </summary>
             public List<ActorState> ActorList = new List<ActorState>();
-            
-            // TODO: Add the gameplay manager class.
-            // public GameplayState Gameplay;
             
             /// <summary>
             /// List of all the actions in the scene.

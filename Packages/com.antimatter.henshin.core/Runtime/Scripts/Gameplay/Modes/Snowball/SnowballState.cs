@@ -1,30 +1,42 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
+using Henshin.Runtime.Gameplay.Components;
+
 /* Wrap the class within the local namespace. */
-
-using UnityEngine.Events;
-
 namespace Henshin.Runtime.Gameplay.Modes.Snowball {
 
 /// <summary>
-/// Static class used to control the state of the snowballing gameplay.
-/// Used only when the <see cref="GameplayController.SetMode"/> is called
-/// with the <see cref="GameplayState.EGameplayMode.Snowball"/>.
+/// Class used to describe the state of the holes gameplay.
 /// </summary>
 public static class SnowballState {
     // ---  Attributes ---
         // -- Public Attributes --
-            // - Flags -
-            /// <summary>
-            /// Flag set if the state is active.
-            /// </summary>
-            public static bool Active;
-            
             // - References -
             /// <summary>
-            /// Action that is triggered once the current snowball step is over.
+            /// Reference to the text box that holds the original text.
             /// </summary>
-            public static UnityAction Callback;
+            public static TextBoxComponent OriginalComponent;
+            
+            /// <summary>
+            /// Reference to the text box that holds the translated text.
+            /// </summary>
+            public static TextBoxComponent TranslatedComponent;
+            
+            /// <summary>
+            /// Reference to the text box that holds the tool box.
+            /// </summary>
+            public static ToolBoxComponent ToolboxComponent;
+            
+            /// <summary>
+            /// List of all the words that should be filled in the scene.
+            /// </summary>
+            public static DropTargetComponent[] Words;
+            
+            /// <summary>
+            /// Number of <see cref="DraggableComponent"/> that have reached their target.
+            /// </summary>
+            public static int CompletedWords;
+            
             
     // --- /Attributes ---
 }

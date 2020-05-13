@@ -564,7 +564,8 @@ PlayerSettings:
   webGLLinkerTarget: 1
   webGLThreadsSupport: 0
   webGLWasmStreaming: 0
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    1: UNITY_INPUT_SYSTEM_ENABLE_UI
   platformArchitecture: {}
   scriptingBackend:
     Standalone: 1

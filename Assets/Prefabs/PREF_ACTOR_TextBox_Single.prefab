@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5065737231727902374}
   m_Layer: 0
   m_Name: TextBox
-  m_TagString: Untagged
+  m_TagString: TextBox_Original
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -58,6 +58,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Font: {fileID: 12800000, guid: 2a8306b7902e54e91a162d67ab663daa, type: 3}
+  DropTargetPrefab: {fileID: 8948660713939356513, guid: 488b9ec1b11d74427b1b612f9ad93931,
+    type: 3}
 --- !u!1 &8948660713939356513
 GameObject:
   m_ObjectHideFlags: 0
@@ -92,10 +94,10 @@ RectTransform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 25}
-  m_SizeDelta: {x: -50, y: 300}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1870, y: 300}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &7121392385307607094
 CanvasRenderer:
@@ -147,10 +149,10 @@ Canvas:
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
-  m_OverrideSorting: 0
+  m_OverrideSorting: 1
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: 494030201
+  m_SortingOrder: -1
   m_TargetDisplay: 0

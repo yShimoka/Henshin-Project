@@ -5,6 +5,7 @@ using System.Linq;
 using Henshin.Editor.SceneEditor.GraphArea.Socket;
 using Henshin.Runtime.Actions;
 using Henshin.Runtime.Actions.Actor;
+using Henshin.Runtime.Actions.Gameplay;
 using Henshin.Runtime.Actions.Scene;
 using JetBrains.Annotations;
 using UnityEditor;
@@ -39,14 +40,24 @@ public static class NodeController {
                 node.Owner = owner;
                 
                 // Load all the children of the node.
-                foreach (NodeState child in node.ChildrenIndexList
-                    .Select(selector: childIndex => owner.NodeList[index: childIndex])
-                ) {
-                    // Add the child to the node.
-                    node.ChildrenList.Add(item: child);
-                    
-                    // Add the parent to the node.
-                    child.ParentList.Add(item: node);
+                foreach (int childIndex in node.Action.ChildrenIndexList) {
+                    // Check the index of the child.
+                    if (childIndex >= 0 && childIndex < node.Owner.NodeList.Count) {
+                        // Get the child instance.
+                        NodeState child = node.Owner.NodeList[index: childIndex];
+                        
+                        // Add the child to the node.
+                        node.ChildrenList.Add(item: child);
+                        
+                        // Add the parent to the node.
+                        child.ParentList.Add(item: node);
+                    } else {
+                        // Log a warning.
+                        Debug.LogWarning(message: $"Node referred to an invalid child at index #{childIndex}");
+                        
+                        // Remove the index from the list.
+                        node.Action.ChildrenIndexList.Remove(item: childIndex);
+                    }
                 }
                 
                 // Create the node's sockets.
@@ -75,9 +86,8 @@ public static class NodeController {
                 
                 // Create a new node object.
                 NodeState node = new NodeState {
-                    ActionIndex = owner.Scene.ActionList.Count - 1,
+                    Index = owner.NodeList.Count,
                     Position = position,
-                    NodeIndex = owner.NodeList.Count
                 };
                 // Initialize it.
                 NodeController.Initialize(node: node, owner: owner);
@@ -194,7 +204,7 @@ public static class NodeController {
                 if (parent.Action != null && child.Action != null) {
                     // Update the underlying action object.
                     parent.Action.ChildrenList.Add(item: child.Action);
-                    parent.Action.ChildrenIndexList.Add(item: child.ActionIndex);
+                    parent.Action.ChildrenIndexList.Add(item: child.Index);
                 } else {
                     // Throw an exception.
                     throw new InvalidOperationException(message: "Cannot add a child to an invalid node.");
@@ -202,7 +212,6 @@ public static class NodeController {
 
                 // Add the child to the parent's lists.
                 parent.ChildrenList.Add(item: child);
-                parent.ChildrenIndexList.Add(item: child.NodeIndex);
                 
                 // Add the parent to the child's lists.
                 child.ParentList.Add(item: parent);
@@ -218,7 +227,7 @@ public static class NodeController {
                 if (parent.Action != null && child.Action != null) {
                     // Update the underlying action object.
                     parent.Action.ChildrenList.Remove(item: child.Action);
-                    parent.Action.ChildrenIndexList.Remove(item: child.ActionIndex);
+                    parent.Action.ChildrenIndexList.Remove(item: child.Index);
                 } else {
                     // Throw an exception.
                     throw new InvalidOperationException(message: "Cannot remove a child from an invalid node.");
@@ -226,7 +235,6 @@ public static class NodeController {
                 
                 // Remove the child from the parent's lists.
                 parent.ChildrenList.Remove(item: child);
-                parent.ChildrenIndexList.Remove(item: child.NodeIndex);
                 
                 // Remove the parent from the child's list.
                 child.ParentList.Remove(item: parent);
@@ -246,21 +254,31 @@ public static class NodeController {
                     NodeController.RemoveChildNode(parent: node, child: child);
                 }
                 
-                // Decrement the indices of all the next actions.
-                for (int i = node.ActionIndex + 1; i < node.Owner.NodeList.Count; i++) {
-                    // Get a reference to the node.
-                    NodeState other = node.Owner.NodeList[index: i]; 
-                    
-                    // Decrement its indices.
-                    other.ActionIndex--;
-                    other.NodeIndex--;
-                }
-                
                 // Remove the pointed action.
-                node.Owner.Scene.ActionList.RemoveAt(index: node.ActionIndex);
+                node.Owner.Scene.ActionList.RemoveAt(index: node.Index);
                 
                 // Remove the node.
                 node.Owner.NodeList.Remove(item: node);
+                
+                // Decrement the indices of all the next actions.
+                for (int i = node.Index; i < node.Owner.NodeList.Count; i++) {
+                    // Reset its index.
+                    node.Owner.NodeList[index: i].Index = i;
+                }
+                // Readjust the children list of all of the node's parents.
+                for (int i = node.Index; i < node.Owner.NodeList.Count; i++) {
+                    // Loop through the node's parents.
+                    foreach (NodeState parent in node.Owner.NodeList[index: i].ParentList) {
+                        // Update the index of the child.
+                        int index = parent.Action.ChildrenIndexList.IndexOf(item: i + 1);
+                        parent.Action.ChildrenIndexList[index: index] = i;
+                    }
+                }
+                
+                // If the node was being edited.
+                if (node.Owner.Owner.State.Inspector.EditedNode == node) {
+                    node.Owner.Owner.State.Inspector.EditedNode = null;
+                }
             }
             
         // -- Private Methods --
@@ -339,7 +357,21 @@ public static class NodeController {
                     func: () => NodeController._ConvertNode<ColourAction>(node: node)
                 );
                 NodeController._msDeleteMenu.AddSeparator(path: "Convert/");
-                NodeController._msDeleteMenu.AddSeparator(path: "Convert/- Gameplay Actions");
+                NodeController._msDeleteMenu.AddItem(
+                    content: new GUIContent{ text = "Convert/Prepare"}, 
+                    on: false, 
+                    func: () => NodeController._ConvertNode<PrepareAction>(node: node)
+                );
+                NodeController._msDeleteMenu.AddItem(
+                    content: new GUIContent{ text = "Convert/Show GUI"}, 
+                    on: false, 
+                    func: () => NodeController._ConvertNode<GuiVisibleAction>(node: node)
+                );
+                NodeController._msDeleteMenu.AddItem(
+                    content: new GUIContent{ text = "Convert/Play"}, 
+                    on: false, 
+                    func: () => NodeController._ConvertNode<PlayAction>(node: node)
+                );
                 
                 // Add the delete button.
                 NodeController._msDeleteMenu.AddSeparator(path: "");
@@ -363,7 +395,7 @@ public static class NodeController {
                 ActionState newState = ActionController.CreateController<TActionType>().State;
                 
                 // Replace the pointed action.
-                node.Owner.Scene.ActionList[index: node.ActionIndex] = newState;
+                node.Owner.Scene.ActionList[index: node.Index] = newState;
             }
     // --- /Methods ---
 }

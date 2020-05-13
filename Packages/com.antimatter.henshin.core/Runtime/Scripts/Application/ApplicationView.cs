@@ -3,8 +3,10 @@
 using System;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 /* Wrap the class within the local namespace. */
 namespace Henshin.Runtime.Application {
@@ -124,6 +126,11 @@ public static class ApplicationView {
             /// </summary>
             public const int VIEW_HEIGHT = 1080;
             
+            /// <summary>
+            /// Returns a new vector representing the size of the view in pixels. 
+            /// </summary>
+            public static Vector2 ViewSize => new Vector2(x: ApplicationView.VIEW_WIDTH, y: ApplicationView.VIEW_HEIGHT);
+            
         // -- Private Attributes --
             // - Scene Info -
             /// <summary>
@@ -165,6 +172,60 @@ public static class ApplicationView {
                 }
             }
             
+            // - Transformation -
+            /// <summary>
+            /// Transforms the specified point from world to canvas coordinates.
+            /// </summary>
+            /// <param name="point">The point to transform.</param>
+            /// <returns>The transformed point.</returns>
+            public static Vector2 WorldToCanvas(Vector2 point) {
+                // Get the viewport position of the point.
+                Vector2 viewport = ApplicationView.WorldCamera.WorldToViewportPoint(position: point);
+                
+                // Transform the position.
+                return (2 * viewport - Vector2.one) / 2 * ApplicationView.ViewSize;
+            }
+            
+            /// <summary>
+            /// Transforms the specified point from screen to canvas coordinates.
+            /// </summary>
+            /// <param name="point">The point to transform.</param>
+            /// <returns>The transformed point.</returns>
+            public static Vector2 ScreenToCanvas(Vector2 point) {
+                // Get the viewport position of the point.
+                Vector2 viewport = ApplicationView.WorldCamera.ScreenToViewportPoint(position: point);
+                
+                // Transform the position.
+                return (2 * viewport - Vector2.one) / 2 * ApplicationView.ViewSize;
+            }
+            
+            /// <summary>
+            /// Transforms the specified point from canvas to world coordinates.
+            /// </summary>
+            /// <param name="point">The point to transform.</param>
+            /// <returns>The transformed point.</returns>
+            public static Vector2 CanvasToWorld(Vector2 point) {
+                // Get the viewport position of the point.
+                Vector2 viewport = (point / ApplicationView.ViewSize * 2 + Vector2.one) / 2;
+                
+                // Transform the position.
+                return ApplicationView.WorldCamera.ViewportToWorldPoint(position: viewport);
+            }
+            
+            /// <summary>
+            /// Transforms the specified point from canvas to screen coordinates.
+            /// </summary>
+            /// <param name="point">The point to transform.</param>
+            /// <returns>The transformed point.</returns>
+            public static Vector2 CanvasToScreen(Vector2 point) {
+                // Get the viewport position of the point.
+                Vector2 viewport = (point / ApplicationView.ViewSize * 2 + Vector2.one) / 2;
+                
+                // Transform the position.
+                return ApplicationView.WorldCamera.ViewportToScreenPoint(position: viewport);
+            }
+            
+            // - Error Management -
             /// <summary>
             /// Throws an error.
             /// Renders the error to the screen if the game is in runtime mode,
@@ -261,6 +322,14 @@ public static class ApplicationView {
                 
                 // Move the camera backwards by 10 units.
                 ApplicationView.WorldCamera.transform.position = new Vector3(x: 0f, y: 0f, z: -10f);
+                
+                // Create the event handler.
+                GameObject eventSystem = Object.Instantiate(
+                    original: ApplicationState.Own.EventSystemPrefab,
+                    parent: ApplicationView.WorldCamera.transform,
+                    worldPositionStays: false
+                );
+                eventSystem.name = "Event System";
             }
             
             /// <summary>
@@ -270,7 +339,7 @@ public static class ApplicationView {
                 // Create the stage root.
                 Transform stageRoot = new GameObject(
                     name: "Stage Root", 
-                    components: new []{ typeof(Canvas), typeof(CanvasScaler) }
+                    components: new []{ typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster) }
                 ).transform;
                 // Attach it to the scene root.
                 stageRoot.SetParent(parent: ApplicationView.Root.transform, worldPositionStays: false);
@@ -392,7 +461,7 @@ public static class ApplicationView {
                     // Create the error canvas.
                     Canvas canvas = new GameObject(
                         name: "Canvas",
-                        components: new []{ typeof(Canvas), typeof(CanvasScaler) }
+                        components: new []{ typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster) }
                     ).GetComponent<Canvas>();
                     
                     // Set the canvas up.

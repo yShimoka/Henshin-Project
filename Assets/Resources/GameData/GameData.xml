@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- This file holds all the data that is required for the game. -->
+<root>
+    <Act>
+        <Scene>
+            <Gameplay kind="Holes" name="Holes Demo">
+                <Text>
+                    <Original>This is a test text used to demonstrate the Holes gameplay.</Original>
+                    <Translated>Ceci est un {texte} de test utilisé pour montrer le {gameplay} de textes à {trous}.</Translated>
+                    <Option>texte</Option>
+                    <Option>image</Option>
+                    <Option>gameplay</Option>
+                    <Option>trous</Option>
+                    <Option>patate</Option>
+                </Text>
+            </Gameplay>
+            <Gameplay kind="Snowball" name="Snowball Demo">
+                <Text>
+                    <Original>Neku is talking</Original>
+                    <Translated>Neku est en train de {parler}</Translated>
+                    <Option>parler</Option>
+                    <Option>manger</Option>
+                    <Option>pleurer</Option>
+                </Text>
+                <Text>
+                    <Original>Neku is talking to Shiki.</Original>
+                    <Translated>Neku est en train de parler à {Shiki}.</Translated>
+                    <Option>une banane</Option>
+                    <Option>une voiture</Option>
+                    <Option>Shiki</Option>
+                </Text>
+            </Gameplay>
+        </Scene>
+    </Act>
+</root>

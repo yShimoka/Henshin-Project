@@ -9,6 +9,7 @@ using Henshin.Editor.SceneEditor.Header;
 using Henshin.Editor.Skin;
 using Henshin.Runtime.Actions;
 using Henshin.Runtime.Actions.Actor;
+using Henshin.Runtime.Actions.Gameplay;
 using Henshin.Runtime.Actions.Scene;
 using Henshin.Runtime.Directions.Act;
 using Henshin.Runtime.Directions.Scene;
@@ -121,18 +122,18 @@ public static class GraphAreaController {
                     NodeState nodeState = graphArea.NodeList[index: index];
                     
                     // Set its index.
-                    nodeState.NodeIndex = index;
+                    nodeState.Index = index;
                     
                     // Check if the pointed actions is valid.
-                    if (nodeState.ActionIndex >= 0 && nodeState.ActionIndex < sceneActions.Count) {
+                    if (nodeState.Index >= 0 && nodeState.Index < sceneActions.Count) {
                         // Remove the action from the list.
-                        sceneActions[index: nodeState.ActionIndex] = null;
+                        sceneActions[index: nodeState.Index] = null;
 
                         // Initialize the node.
                         NodeController.Initialize(node: nodeState, owner: graphArea);
                     } else {
                         // Log an error.
-                        Debug.LogWarning(message: $"The node #{index} is referring to an invalid action #{nodeState.ActionIndex}");
+                        Debug.LogWarning(message: $"The node #{index} is referring to an invalid action #{nodeState.Index}");
                         
                         // Remove the invalid node.
                         graphArea.NodeList.RemoveAt(index: index);
@@ -708,6 +709,29 @@ public static class GraphAreaController {
                     content: new GUIContent{ text = "Create Node/Colour"}, 
                     on: false, 
                     func: () => NodeController.CreateNode<ColourAction>(
+                        owner: graphArea, position: GraphAreaController._msLastMousePosition
+                    )
+                );
+                menu.AddSeparator(path: "Create Node/");
+                menu.AddSeparator(path: "Create Node/- Gameplay Actions");
+                menu.AddItem(
+                    content: new GUIContent{ text = "Create Node/Prepare"}, 
+                    on: false, 
+                    func: () => NodeController.CreateNode<PrepareAction>(
+                        owner: graphArea, position: GraphAreaController._msLastMousePosition
+                    )
+                );
+                menu.AddItem(
+                    content: new GUIContent{ text = "Create Node/Show GUI"}, 
+                    on: false, 
+                    func: () => NodeController.CreateNode<GuiVisibleAction>(
+                        owner: graphArea, position: GraphAreaController._msLastMousePosition
+                    )
+                );
+                menu.AddItem(
+                    content: new GUIContent{ text = "Create Node/Play"}, 
+                    on: false, 
+                    func: () => NodeController.CreateNode<PlayAction>(
                         owner: graphArea, position: GraphAreaController._msLastMousePosition
                     )
                 );
