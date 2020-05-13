@@ -4,31 +4,55 @@
 <root>
     <Act>
         <Scene>
-            <Gameplay kind="Holes" name="Holes Demo">
+            <Gameplay kind="None" name="Neku">
                 <Text>
-                    <Original>This is a test text used to demonstrate the Holes gameplay.</Original>
-                    <Translated>Ceci est un {texte} de test utilisé pour montrer le {gameplay} de textes à {trous}.</Translated>
-                    <Option>texte</Option>
-                    <Option>image</Option>
-                    <Option>gameplay</Option>
-                    <Option>trous</Option>
-                    <Option>patate</Option>
+                    <Original>This is Neku, he lives in Shibuya.</Original>
+                    <Translated>Voici Neku, il habite à Shibuya.</Translated>
                 </Text>
             </Gameplay>
-            <Gameplay kind="Snowball" name="Snowball Demo">
+            <Gameplay kind="None" name="Shiki">
                 <Text>
-                    <Original>Neku is talking</Original>
-                    <Translated>Neku est en train de {parler}</Translated>
-                    <Option>parler</Option>
-                    <Option>manger</Option>
-                    <Option>pleurer</Option>
+                    <Original>This is Shiki, she is Neku's friend.</Original>
+                    <Translated>Voici Shiki, elle est une amie de Neku.</Translated>
+                </Text>
+            </Gameplay>
+            <Gameplay kind="None" name="Joshua">
+                <Text>
+                    <Original>They like to hang out with Joshua after class.</Original>
+                    <Translated>Ils aiment traîner avec Joshua après les cours.</Translated>
+                </Text>
+            </Gameplay>
+        </Scene>
+        <Scene>
+            <Gameplay kind="None" name="What is up ?">
+                <Text>
+                    <Original>"Huh? What's up Neku ?".</Original>
+                    <Translated>"Hum ? Qu'est ce qu'il se passe Neku ?"</Translated>
+                </Text>
+            </Gameplay>
+            <Gameplay kind="Holes" name="Scared Neku">
+                <Text>
+                    <Original>"Something's wrong, where is everyone ?"</Original>
+                    <Translated>"Quelque chose {cloche}. Où sont passé tous les {gens} ?"</Translated>
+                    <Option>cloche</Option>
+                    <Option>va bien</Option>
+                    <Option>tout le monde</Option>
+                    <Option>gens</Option>
+                </Text>
+            </Gameplay>
+            <Gameplay kind="Snowball" name="Holy Shit !">
+                <Text>
+                    <Original>"Hey you're right !"</Original>
+                    <Translated>"Eh mais tu as {raison} !"</Translated>
+                    <Option>raison</Option>
+                    <Option>tord</Option>
                 </Text>
                 <Text>
-                    <Original>Neku is talking to Shiki.</Original>
-                    <Translated>Neku est en train de parler à {Shiki}.</Translated>
-                    <Option>une banane</Option>
-                    <Option>une voiture</Option>
-                    <Option>Shiki</Option>
+                    <Original>"Hey you're right ! \nWhat the hell is happening ?"</Original>
+                    <Translated>"Eh mais tu as raison ! \nQu'est ce qu'il se {passe} ?"</Translated>
+                    <Option>passe</Option>
+                    <Option>déroule</Option>
+                    <Option>patate</Option>
                 </Text>
             </Gameplay>
         </Scene>

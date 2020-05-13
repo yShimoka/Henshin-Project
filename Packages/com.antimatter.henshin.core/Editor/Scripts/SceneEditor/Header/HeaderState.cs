@@ -69,7 +69,7 @@ public class HeaderState {
                     if (this.EditedApplication != null) {
                         // Check if the index's value is correct.
                         if (this.EditedActIndex >= 0 && this.EditedActIndex < this.EditedApplication.ActList.Count) {
-                            return this.EditedApplication.ActList[this.EditedActIndex];
+                            return this.EditedApplication.ActList[index: this.EditedActIndex];
                         }
                     }
                     
@@ -89,7 +89,7 @@ public class HeaderState {
                     if (this.EditedAct != null) {
                         // Check if the index's value is correct.
                         if (this.EditedSceneIndex >= 0 && this.EditedSceneIndex < this.EditedAct.SceneList.Count) {
-                            return this.EditedAct.SceneList[this.EditedSceneIndex];
+                            return this.EditedAct.SceneList[index: this.EditedSceneIndex];
                         }
                     }
                     

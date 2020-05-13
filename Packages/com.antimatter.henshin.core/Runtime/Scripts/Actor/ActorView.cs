@@ -68,12 +68,11 @@ public static class ActorView {
                 ActorView.SetPose(actor: actor, poseIndex: 0);
                 // Set the layout of the actor.
                 ActorView.SetLayer(actor: actor, layerId: ApplicationView.SortingLayers.Middleground);
+                // Set the actor as transparent.
+                ActorView.SetColour(actor: actor, colour: new Color(r: 1, g: 1, b: 1, a: 0));
                 
                 // Set the name of the actor's game object.
                 actor.Instance.name = actor.Identifier;
-                
-                // Disable the actor.
-                actor.Instance.SetActive(value: false);
             }
             
             /// <summary>
@@ -224,8 +223,19 @@ public static class ActorView {
             public static void SetVisible([NotNull] ActorState actor, bool visible) {
                 // Check if the actor is set.
                 if (actor.Instance != null) {
-                    // Set the visibility of the actor.
-                    actor.Instance.SetActive(value: visible);
+                    // Get the color of the actor.
+                    Color color = actor.Image.color;
+                    
+                    // Set the alpha value of the color.
+                    color = new Color(
+                        r: color.r,
+                        g: color.g,
+                        b: color.b,
+                        a: visible ? 1 : 0
+                    );
+                    
+                    // Set the actor's color.
+                    actor.Image.color = color;
                 } else {
                     // Throw an error.
                     ApplicationView.Error(
@@ -389,7 +399,7 @@ public static class ActorView {
                 // Check if the actor is set.
                 if (actor.Instance != null) {
                     // Return the visibility of the actor.
-                    return actor.Instance.activeInHierarchy;
+                    return actor.Image.color.a > 0.01f;
                 } else {
                     // Throw an error.
                     ApplicationView.Error(

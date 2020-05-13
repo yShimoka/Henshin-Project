@@ -193,6 +193,11 @@ public class XmlController {
                 // REturn the modes.
                 return modes;
             }
+            
+            public static void Invalidate() {
+                // Clear the instance.
+                XmlController._msInstance = null;
+            }
 #endif
             
         // -- Private Methods --

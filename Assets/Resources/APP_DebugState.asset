@@ -15,42 +15,161 @@ MonoBehaviour:
   ActList:
   - Hash: 902270825
     SceneList:
-    - Background: {fileID: 21300000, guid: d30ac18b52dca47dc984dcfb8312f8ff, type: 3}
+    - Background: {fileID: 21300000, guid: 9969740129f4f4c97a6eab9764f90f13, type: 3}
       ActorList:
+      - Identifier: Neku
+        Prefab: {fileID: 8948660713939356513, guid: fe69b606a464349b08ef514cf9e1986d,
+          type: 3}
+        PoseStore: {fileID: 11400000, guid: e009094ca8bb74a94b6b7f5079d757cd, type: 2}
       - Identifier: Text Box
         Prefab: {fileID: 8948660713939356513, guid: bdc61e573f3434aadbda267185f9996a,
           type: 3}
         PoseStore: {fileID: 11400000, guid: 68545720309a842e1a26b312f490c92a, type: 2}
-      - Identifier: Neku
-        Prefab: {fileID: 8948660713939356513, guid: c16601d0244cb4599ac31d8d3099ad0d,
-          type: 3}
-        PoseStore: {fileID: 11400000, guid: e009094ca8bb74a94b6b7f5079d757cd, type: 2}
-      - Identifier: Tool Box
-        Prefab: {fileID: 8948660713939356513, guid: 3f0b1a0d02def47c3b7fe7ff34dd6cfe,
-          type: 3}
-        PoseStore: {fileID: 11400000, guid: 952b4c270afd14549aa1aa0c9b2c1f4c, type: 2}
       - Identifier: Shiki
         Prefab: {fileID: 8948660713939356513, guid: fe69b606a464349b08ef514cf9e1986d,
           type: 3}
         PoseStore: {fileID: 11400000, guid: bbfde82187ff84cde9db93a14ca9349d, type: 2}
+      - Identifier: Joshua
+        Prefab: {fileID: 8948660713939356513, guid: fe69b606a464349b08ef514cf9e1986d,
+          type: 3}
+        PoseStore: {fileID: 11400000, guid: 3036ada4b4b2446f5bf925ca8275166c, type: 2}
       ActionList:
-      - ChildrenIndexList: 01000000
+      - ChildrenIndexList: 01000000020000001400000019000000
         Parameters: []
         ActionControllerName: Henshin.Runtime.Actions.Scene.StartAction
-      - ChildrenIndexList: 02000000030000000e000000
-        Parameters:
-        - Snowball
-        - 1
-        ActionControllerName: Henshin.Runtime.Actions.Gameplay.PrepareAction
       - ChildrenIndexList: 04000000
         Parameters:
         - 0
-        - 1
+        - 16
+        ActionControllerName: Henshin.Runtime.Actions.Actor.PoseAction
+      - ChildrenIndexList: 03000000
+        Parameters:
+        - 2
+        - 17
+        ActionControllerName: Henshin.Runtime.Actions.Actor.PoseAction
+      - ChildrenIndexList: 05000000
+        Parameters:
+        - 2
+        - False
+        - True
+        ActionControllerName: Henshin.Runtime.Actions.Actor.FlipAction
+      - ChildrenIndexList: 05000000
+        Parameters:
+        - 0
+        - False
+        - True
+        ActionControllerName: Henshin.Runtime.Actions.Actor.FlipAction
+      - ChildrenIndexList: 07000000
+        Parameters:
+        - 2
+        - 0
         - Linear
-        - -0.66
+        - 1
+        - 1
+        - 1
+        - 1
+        ActionControllerName: Henshin.Runtime.Actions.Actor.ColourAction
+      - ChildrenIndexList: 08000000
+        Parameters:
+        - TextBox
+        - True
+        - EaseInOutCubic
+        - 1
+        ActionControllerName: Henshin.Runtime.Actions.Gameplay.GuiVisibleAction
+      - ChildrenIndexList: 06000000
+        Parameters:
+        - None
+        - 0
+        ActionControllerName: Henshin.Runtime.Actions.Gameplay.PrepareAction
+      - ChildrenIndexList: 09000000
+        Parameters:
+        - 4
+        ActionControllerName: Henshin.Runtime.Actions.Scene.DelayAction
+      - ChildrenIndexList: 0a000000
+        Parameters:
+        - 1
+        - 0
+        - EaseOutSine
+        - -0.75
         - 0
         ActionControllerName: Henshin.Runtime.Actions.Actor.MoveToAction
-      - ChildrenIndexList: 06000000
+      - ChildrenIndexList: 0b000000
+        Parameters:
+        - 0
+        - 0
+        - Linear
+        - 0.2980392
+        - 0.2980392
+        - 0.2980392
+        - 1
+        ActionControllerName: Henshin.Runtime.Actions.Actor.ColourAction
+      - ChildrenIndexList: 0c000000
+        Parameters:
+        - 1
+        - 2
+        - Linear
+        - 1
+        - 1
+        - 1
+        - 1
+        ActionControllerName: Henshin.Runtime.Actions.Actor.ColourAction
+      - ChildrenIndexList: 0d000000
+        Parameters:
+        - None
+        - 1
+        ActionControllerName: Henshin.Runtime.Actions.Gameplay.PrepareAction
+      - ChildrenIndexList: 0e00000010000000
+        Parameters:
+        - 4
+        ActionControllerName: Henshin.Runtime.Actions.Scene.DelayAction
+      - ChildrenIndexList: 13000000
+        Parameters:
+        - 1
+        - 2
+        - EaseInOutCubic
+        - -0.5
+        - 0
+        ActionControllerName: Henshin.Runtime.Actions.Actor.MoveToAction
+      - ChildrenIndexList: 13000000
+        Parameters:
+        - 0
+        - 15
+        ActionControllerName: Henshin.Runtime.Actions.Actor.PoseAction
+      - ChildrenIndexList: 0f0000001100000012000000
+        Parameters:
+        - 0.5
+        ActionControllerName: Henshin.Runtime.Actions.Scene.DelayAction
+      - ChildrenIndexList: 13000000
+        Parameters:
+        - 2
+        - 16
+        ActionControllerName: Henshin.Runtime.Actions.Actor.PoseAction
+      - ChildrenIndexList: 13000000
+        Parameters:
+        - 0
+        - 0
+        - Linear
+        - 1
+        - 1
+        - 1
+        - 1
+        ActionControllerName: Henshin.Runtime.Actions.Actor.ColourAction
+      - ChildrenIndexList: 16000000
+        Parameters:
+        - 1
+        - 3
+        - Linear
+        - 1
+        - 1
+        - 1
+        - 1
+        ActionControllerName: Henshin.Runtime.Actions.Actor.ColourAction
+      - ChildrenIndexList: 15000000
+        Parameters:
+        - 3
+        - 12
+        ActionControllerName: Henshin.Runtime.Actions.Actor.PoseAction
+      - ChildrenIndexList: 05000000
         Parameters:
         - 0
         - 3
@@ -58,81 +177,49 @@ MonoBehaviour:
         - 0.5
         - 0
         ActionControllerName: Henshin.Runtime.Actions.Actor.MoveToAction
-      - ChildrenIndexList: 05000000
+      - ChildrenIndexList: 17000000
         Parameters:
-        - 1
-        - 15
-        ActionControllerName: Henshin.Runtime.Actions.Actor.PoseAction
-      - ChildrenIndexList: 0a000000
-        Parameters:
-        - 1
-        - False
-        - True
-        ActionControllerName: Henshin.Runtime.Actions.Actor.FlipAction
-      - ChildrenIndexList: 0a000000
-        Parameters:
-        - 3
-        - 17
-        ActionControllerName: Henshin.Runtime.Actions.Actor.PoseAction
-      - ChildrenIndexList: 08000000
-        Parameters:
+        - None
         - 2
-        ActionControllerName: Henshin.Runtime.Actions.Scene.DelayAction
-      - ChildrenIndexList: 09000000
+        ActionControllerName: Henshin.Runtime.Actions.Gameplay.PrepareAction
+      - ChildrenIndexList: 1a0000001b0000001c0000001d000000
         Parameters:
-        - -1
-        - True
-        - EaseInOutCubic
-        - 1
-        ActionControllerName: Henshin.Runtime.Actions.Gameplay.GuiVisibleAction
-      - ChildrenIndexList: 12000000
-        Parameters: []
-        ActionControllerName: Henshin.Runtime.Actions.Gameplay.PlayAction
-      - ChildrenIndexList: 07000000
-        Parameters:
-        - 1
-        - True
-        - False
-        ActionControllerName: Henshin.Runtime.Actions.Actor.VisibleAction
-      - ChildrenIndexList: 0c000000
-        Parameters: []
-        ActionControllerName: Henshin.Runtime.Actions.Gameplay.PlayAction
-      - ChildrenIndexList: 0d000000
-        Parameters:
-        - 2
+        - 5
         ActionControllerName: Henshin.Runtime.Actions.Scene.DelayAction
       - ChildrenIndexList: 
         Parameters: []
         ActionControllerName: Henshin.Runtime.Actions.Scene.EndAction
-      - ChildrenIndexList: 0f000000
+      - ChildrenIndexList: 1e000000
         Parameters:
         - 0
-        - 494030201
-        ActionControllerName: Henshin.Runtime.Actions.Actor.LayerAction
-      - ChildrenIndexList: 05000000
+        - 0
+        - Linear
+        - -0.33
+        - 0
+        ActionControllerName: Henshin.Runtime.Actions.Actor.MoveToAction
+      - ChildrenIndexList: 18000000
         Parameters:
         - 2
-        - 494030201
-        ActionControllerName: Henshin.Runtime.Actions.Actor.LayerAction
-      - ChildrenIndexList: 11000000
-        Parameters:
-        - 3
-        - True
-        - False
-        ActionControllerName: Henshin.Runtime.Actions.Actor.VisibleAction
-      - ChildrenIndexList: 0b000000
-        Parameters:
-        - 2
-        - 3
-        - EaseOutQuad
-        - 1
-        - 1
-        - 1
-        - 1
+        - 0
+        - Linear
+        - 0
+        - 0
+        - 0
+        - 0
         ActionControllerName: Henshin.Runtime.Actions.Actor.ColourAction
-      - ChildrenIndexList: 10000000
+      - ChildrenIndexList: 18000000
         Parameters:
+        - 2
+        - 2
+        - Linear
         - 0
+        - 0
+        - 0
+        - 0
+        ActionControllerName: Henshin.Runtime.Actions.Actor.ColourAction
+      - ChildrenIndexList: 18000000
+        Parameters:
+        - 2
         - 3
         - Linear
         - 0
@@ -140,6 +227,212 @@ MonoBehaviour:
         - 0
         - 0
         ActionControllerName: Henshin.Runtime.Actions.Actor.ColourAction
+      - ChildrenIndexList: 18000000
+        Parameters:
+        - TextBox
+        - False
+        - Linear
+        - 1
+        ActionControllerName: Henshin.Runtime.Actions.Gameplay.GuiVisibleAction
+      - ChildrenIndexList: 05000000
+        Parameters:
+        - 0
+        - 2
+        - Linear
+        - -0.33
+        - 0
+        ActionControllerName: Henshin.Runtime.Actions.Actor.MoveToAction
+      IsDebugScene: 0
+    - Background: {fileID: 21300000, guid: 395d8a383cffe427daf2d89eb9f90b7b, type: 3}
+      ActorList:
+      - Identifier: Neku
+        Prefab: {fileID: 8948660713939356513, guid: fe69b606a464349b08ef514cf9e1986d,
+          type: 3}
+        PoseStore: {fileID: 11400000, guid: e009094ca8bb74a94b6b7f5079d757cd, type: 2}
+      - Identifier: Shiki
+        Prefab: {fileID: 8948660713939356513, guid: fe69b606a464349b08ef514cf9e1986d,
+          type: 3}
+        PoseStore: {fileID: 11400000, guid: bbfde82187ff84cde9db93a14ca9349d, type: 2}
+      - Identifier: Text Box
+        Prefab: {fileID: 8948660713939356513, guid: bdc61e573f3434aadbda267185f9996a,
+          type: 3}
+        PoseStore: {fileID: 11400000, guid: 68545720309a842e1a26b312f490c92a, type: 2}
+      - Identifier: Tool Box
+        Prefab: {fileID: 8948660713939356513, guid: 3f0b1a0d02def47c3b7fe7ff34dd6cfe,
+          type: 3}
+        PoseStore: {fileID: 11400000, guid: 952b4c270afd14549aa1aa0c9b2c1f4c, type: 2}
+      ActionList:
+      - ChildrenIndexList: 010000000600000016000000
+        Parameters: []
+        ActionControllerName: Henshin.Runtime.Actions.Scene.StartAction
+      - ChildrenIndexList: 02000000
+        Parameters:
+        - 0
+        - 0
+        - Linear
+        - -1.5
+        - 0
+        ActionControllerName: Henshin.Runtime.Actions.Actor.MoveToAction
+      - ChildrenIndexList: 07000000
+        Parameters:
+        - 0
+        - 12
+        ActionControllerName: Henshin.Runtime.Actions.Actor.PoseAction
+      - ChildrenIndexList: 04000000
+        Parameters:
+        - 0
+        - True
+        - True
+        ActionControllerName: Henshin.Runtime.Actions.Actor.VisibleAction
+      - ChildrenIndexList: 0a0000000c000000
+        Parameters:
+        - 2
+        ActionControllerName: Henshin.Runtime.Actions.Scene.DelayAction
+      - ChildrenIndexList: 0d000000
+        Parameters:
+        - 1.5
+        - 0
+        - EaseOutQuart
+        - 0
+        - 0
+        ActionControllerName: Henshin.Runtime.Actions.Actor.MoveToAction
+      - ChildrenIndexList: 08000000
+        Parameters:
+        - 0
+        - 1
+        - Linear
+        - -2
+        - 0
+        ActionControllerName: Henshin.Runtime.Actions.Actor.MoveToAction
+      - ChildrenIndexList: 03000000
+        Parameters:
+        - 0
+        - False
+        - True
+        ActionControllerName: Henshin.Runtime.Actions.Actor.FlipAction
+      - ChildrenIndexList: 09000000
+        Parameters:
+        - 1
+        - 4
+        ActionControllerName: Henshin.Runtime.Actions.Actor.PoseAction
+      - ChildrenIndexList: 03000000
+        Parameters:
+        - 1
+        - False
+        - True
+        ActionControllerName: Henshin.Runtime.Actions.Actor.FlipAction
+      - ChildrenIndexList: 0b000000
+        Parameters:
+        - 0.5
+        ActionControllerName: Henshin.Runtime.Actions.Scene.DelayAction
+      - ChildrenIndexList: 0e000000
+        Parameters:
+        - 1.5
+        - 1
+        - EaseOutQuart
+        - -0.5
+        - 0
+        ActionControllerName: Henshin.Runtime.Actions.Actor.MoveToAction
+      - ChildrenIndexList: 05000000
+        Parameters:
+        - 0
+        - -2054962089
+        ActionControllerName: Henshin.Runtime.Actions.Actor.LayerAction
+      - ChildrenIndexList: 0f000000
+        Parameters:
+        - 0
+        - 14
+        ActionControllerName: Henshin.Runtime.Actions.Actor.PoseAction
+      - ChildrenIndexList: 0f000000
+        Parameters:
+        - 1
+        - 17
+        ActionControllerName: Henshin.Runtime.Actions.Actor.PoseAction
+      - ChildrenIndexList: 10000000
+        Parameters:
+        - None
+        - 0
+        ActionControllerName: Henshin.Runtime.Actions.Gameplay.PrepareAction
+      - ChildrenIndexList: 14000000
+        Parameters:
+        - TextBox
+        - True
+        - EaseOutSine
+        - 1
+        ActionControllerName: Henshin.Runtime.Actions.Gameplay.GuiVisibleAction
+      - ChildrenIndexList: 120000001300000015000000
+        Parameters:
+        - 5
+        ActionControllerName: Henshin.Runtime.Actions.Scene.DelayAction
+      - ChildrenIndexList: 17000000
+        Parameters:
+        - Holes
+        - 1
+        ActionControllerName: Henshin.Runtime.Actions.Gameplay.PrepareAction
+      - ChildrenIndexList: 17000000
+        Parameters:
+        - 1
+        - 14
+        ActionControllerName: Henshin.Runtime.Actions.Actor.PoseAction
+      - ChildrenIndexList: 11000000
+        Parameters:
+        - 1
+        - 17
+        ActionControllerName: Henshin.Runtime.Actions.Actor.PoseAction
+      - ChildrenIndexList: 17000000
+        Parameters:
+        - 0
+        - 3
+        ActionControllerName: Henshin.Runtime.Actions.Actor.PoseAction
+      - ChildrenIndexList: 02000000
+        Parameters:
+        - -1
+        - False
+        - Linear
+        - 0
+        ActionControllerName: Henshin.Runtime.Actions.Gameplay.GuiVisibleAction
+      - ChildrenIndexList: 18000000
+        Parameters:
+        - ToolBox
+        - True
+        - EaseInOutQuint
+        - 1
+        ActionControllerName: Henshin.Runtime.Actions.Gameplay.GuiVisibleAction
+      - ChildrenIndexList: 19000000
+        Parameters: []
+        ActionControllerName: Henshin.Runtime.Actions.Gameplay.PlayAction
+      - ChildrenIndexList: 1a000000
+        Parameters:
+        - 1
+        ActionControllerName: Henshin.Runtime.Actions.Scene.DelayAction
+      - ChildrenIndexList: 1b000000
+        Parameters:
+        - Snowball
+        - 2
+        ActionControllerName: Henshin.Runtime.Actions.Gameplay.PrepareAction
+      - ChildrenIndexList: 1c000000
+        Parameters:
+        - 1
+        - 3
+        ActionControllerName: Henshin.Runtime.Actions.Actor.PoseAction
+      - ChildrenIndexList: 1d000000
+        Parameters: []
+        ActionControllerName: Henshin.Runtime.Actions.Gameplay.PlayAction
+      - ChildrenIndexList: 20000000
+        Parameters:
+        - 1
+        - 0
+        ActionControllerName: Henshin.Runtime.Actions.Actor.PoseAction
+      - ChildrenIndexList: 1f000000
+        Parameters:
+        - 4
+        ActionControllerName: Henshin.Runtime.Actions.Scene.DelayAction
+      - ChildrenIndexList: 
+        Parameters: []
+        ActionControllerName: Henshin.Runtime.Actions.Scene.EndAction
+      - ChildrenIndexList: 1e000000
+        Parameters: []
+        ActionControllerName: Henshin.Runtime.Actions.Gameplay.PlayAction
       IsDebugScene: 0
   IsDebugState: 1
   ClearColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}

@@ -6,6 +6,7 @@ using Henshin.Runtime.Application;
 using Henshin.Runtime.Gameplay.Components;
 using Henshin.Runtime.Libraries;
 using UnityEngine;
+using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
 /* Wrap the class within the local namespace. */
@@ -94,11 +95,21 @@ public class GuiVisibleAction: ActionController {
                 if ((this.State.Actor & FActorType.ToolBox) != 0) {
                     // Seek the toolbox in the scene.
                     this._mToolbox = Object.FindObjectOfType<ToolBoxComponent>().transform.parent;
+                    
+                    // Show the tool box.
+                    Image toolboxImg = this._mToolbox.GetComponent<Image>(); 
+                    toolboxImg.color = Color.white;
+                    toolboxImg.canvas.sortingLayerID = ApplicationView.SortingLayers.GUI;
                 }
                 // If the text box is concerned.
                 if ((this.State.Actor & FActorType.TextBox) != 0) {
                     // Seek the textbox in the scene.
                     this._mTextbox = Object.FindObjectOfType<TextBoxComponent>().transform.parent;
+                    
+                    // Show the text box.
+                    Image textboxImg = this._mTextbox.GetComponent<Image>(); 
+                    textboxImg.color = Color.white;
+                    textboxImg.canvas.sortingLayerID = ApplicationView.SortingLayers.GUI;
                 }
                 
                 // Clear the timer.

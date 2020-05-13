@@ -2,8 +2,10 @@
 
 /* Wrap the class within the local namespace. */
 
+using Henshin.Runtime.Data;
 using Henshin.Runtime.Directions.Act;
 using Henshin.Runtime.Directions.Scene;
+using Henshin.Runtime.Gameplay.Modes.Default;
 using Henshin.Runtime.Gameplay.Modes.Holes;
 using Henshin.Runtime.Gameplay.Modes.Snowball;
 using JetBrains.Annotations;
@@ -69,7 +71,8 @@ public static class GameplayController {
                 // Check the current gameplay mode.
                 switch (GameplayState.CurrentMode) {
                 case GameplayState.EGameplayMode.None:
-                    // Do nothing.
+                    // Load the static text.
+                    DefaultController.Prepare(actIndex: ActState.Current.Index, sceneIndex: SceneState.Current.Index, gameplayIndex: gameplayIndex);
                     break;
                 case GameplayState.EGameplayMode.Holes:
                     // Prepare the holes gameplay.

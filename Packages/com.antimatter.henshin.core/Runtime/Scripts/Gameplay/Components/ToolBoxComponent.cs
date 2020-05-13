@@ -32,10 +32,13 @@ public class ToolBoxComponent: MonoBehaviour {
             /// Event called when the object is enabled.
             /// </summary>
             private void OnEnable() {
-                // Update the size and position of the parent.
-                RectTransform transform = this.transform.parent.GetComponent<RectTransform>(); 
-                transform.sizeDelta = this.Size;
-                transform.anchoredPosition = Vector2.right * ApplicationView.VIEW_WIDTH;
+                // Wait for a full frame.
+                ApplicationController.OnNextTick.AddListener(call: _ => {
+                    // Update the size and position of the parent.
+                    RectTransform transform = this.transform.parent.GetComponent<RectTransform>(); 
+                    transform.sizeDelta = this.Size;
+                    transform.anchoredPosition = Vector2.right * ApplicationView.VIEW_WIDTH;
+                });
             }
         
         // -- Public Methods --

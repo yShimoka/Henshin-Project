@@ -51,67 +51,48 @@ public static class SceneView {
                     callback.Invoke();
                     
                     // Reveal the background.
-                    SceneView.Reveal(scene: scene, callback: () => {});
+                    SceneView.Reveal(callback: () => {});
                 };
                 
                 // Check if the background is set.
                 if (SceneState.Current != null) {
                     // Hide the background.
-                    SceneView.Hide(scene: SceneState.Current, callback: afterHide);
+                    SceneView.Hide(callback: afterHide);
                 } else {
                     // Reveal the actors directly.
                     afterHide.Invoke();
                 }
             }
             
-            public static void Reveal(SceneState scene, UnityAction callback) {
-                ApplicationView.Root.StartCoroutine(routine: SceneView._Reveal(scene: scene, callback: callback, reveal: true));
+            public static void Reveal(UnityAction callback) {
+                ApplicationView.Root.StartCoroutine(routine: SceneView._Reveal(callback: callback, reveal: true));
             }
             
             /// <summary>
             /// Hides the background of the scene.
             /// </summary>
             /// <param name="callback">The callback called once the operation is finished.</param>
-            public static void Hide(SceneState scene, UnityAction callback) {
-                ApplicationView.Root.StartCoroutine(routine: SceneView._Reveal(scene: scene, callback: callback, reveal: false));
+            public static void Hide(UnityAction callback) {
+                ApplicationView.Root.StartCoroutine(routine: SceneView._Reveal(callback: callback, reveal: false));
             }
             
         // -- Private Methods --
             /// <summary>
             /// Slowly reveals the scene images over a few seconds.
             /// </summary>
-            /// <param name="scene">The scene object to reveal.</param>
             /// <param name="callback">The callback called once the operation is finished.</param>
             /// <param name="reveal">If true, reveals the background. Otherwise hide it.</param>
-            private static IEnumerator _Reveal(SceneState scene, UnityAction callback, bool reveal = true) {
+            private static IEnumerator _Reveal(UnityAction callback, bool reveal = true) {
                 // Create a new timer object.
                 float timer = reveal ? 0 : SceneView.REVEAL_TIME;
                 
-                // Get all the scene's actors.
-                Image[] actors = scene.ActorList
-                    .Select(selector: actor => actor.Image)
-                    .Where(predicate: renderer => renderer != null)
-                    .ToArray();
-                
+                // Loop until the reveal time has elapsed.
                 while (reveal ? timer <= SceneView.REVEAL_TIME : timer >= 0) {
                     // Increment the timer.
                     timer += reveal ? Time.deltaTime : -Time.deltaTime;
                     
                     // Get the normalized time.
-                    float normBg = 1.5f * timer / SceneView.REVEAL_TIME;
-                    float normAc = (2   * timer - SceneView.REVEAL_TIME) / SceneView.REVEAL_TIME;
-                    
-                    // Loop through the scene's actors.
-                    foreach (Image actor in actors) {
-                        // Get the color of the object.
-                        Color actorColor = actor.color;
-                        
-                        // Update the alpha component.
-                        actorColor.a = Mathf.Clamp(value: normAc, min: 0, max: 1);
-
-                        // Apply the color.
-                        actor.color = actorColor;
-                    }
+                    float normBg = timer / SceneView.REVEAL_TIME;
                     
                     // Get the background color.
                     Color bgColor = Color.white;

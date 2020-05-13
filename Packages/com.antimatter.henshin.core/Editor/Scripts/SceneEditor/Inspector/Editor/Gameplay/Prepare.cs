@@ -8,6 +8,7 @@ using Henshin.Runtime.Actions.Gameplay;
 using Henshin.Runtime.Data;
 using Henshin.Runtime.Gameplay;
 using UnityEditor;
+using UnityEngine;
 
 /* Wrap the class within the local namespace. */
 namespace Henshin.Editor.SceneEditor.Inspector.Editor.Gameplay {
@@ -39,6 +40,12 @@ public class Prepare: Base {
                 
                 // Get the gameplay for the index.
                 state.GameplayMode = modes[state.GameplayIndex].Item2;
+                
+                // Add a refresh button.
+                if (GUILayout.Button(text: "Refresh XML")) {
+                    // Reload the xml file.
+                    XmlController.Invalidate();
+                }
             }
     // --- /Methods ---
 }

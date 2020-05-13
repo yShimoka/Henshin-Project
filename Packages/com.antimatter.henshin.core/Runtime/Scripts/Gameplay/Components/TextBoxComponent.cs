@@ -110,10 +110,12 @@ public class TextBoxComponent: MonoBehaviour {
                 // Set the limits of the rendering area.
                 this._mSettings.generationExtents = this._mRectTransform.rect.size;
                 
-                // Update the container of this component.
-                RectTransform parent = this.transform.parent.GetComponent<RectTransform>();
-                parent.sizeDelta = new Vector2(x: ApplicationView.VIEW_WIDTH - 100, y: 300);
-                parent.anchoredPosition = Vector2.down * ApplicationView.VIEW_HEIGHT;
+                ApplicationController.OnNextTick.AddListener(call: _ => {
+                    // Update the container of this component.
+                    RectTransform parent = this.transform.parent.GetComponent<RectTransform>();
+                    parent.sizeDelta = new Vector2(x: ApplicationView.VIEW_WIDTH - 100, y: 300);
+                    parent.anchoredPosition = Vector2.down * ApplicationView.VIEW_HEIGHT;
+                });
             }
 
         // -- Public Methods --
@@ -166,6 +168,9 @@ public class TextBoxComponent: MonoBehaviour {
                     Object.DestroyImmediate(obj: this.transform.GetChild(index: 0).gameObject);
                 }
                 
+                // Replace newline characters.
+                text = text.Replace(oldValue: "\\n", newValue: "\n");
+                
                 // Check if the font is set.
                 if (this.Font == null) {
                     // Throw an exception.
@@ -187,7 +192,7 @@ public class TextBoxComponent: MonoBehaviour {
                 int renderAreaWidth = Mathf.FloorToInt(f: this._mRectTransform.rect.width);
                 
                 // Loop until the copy is empty.
-                while (copy.Length > 0 && copy[index: 0] != '}') {
+                while (copy.Length > 0) {
                     // Flag set to check if the text should be hidden. 
                     bool isHidden = false;
                     // Set to the value of the segment that is expected below the current word.
@@ -200,6 +205,9 @@ public class TextBoxComponent: MonoBehaviour {
                     if (copy[index: 0] == '}') {
                         // Remove that brace.
                         copy = copy.Remove(startIndex: 0, count: 1);
+                        
+                        // If the string is empty, stop the loop.
+                        if (copy.Length == 0) break;
                     }
                     
                     // If we are at the end of a hidden section.
@@ -296,17 +304,20 @@ public class TextBoxComponent: MonoBehaviour {
                         }
                         
                     } catch (TextTooLongException size) {
-                        // Get the full line segment.
-                        string segment = copy.Substring(startIndex: 0, length: size.CharIndex - 1);
-                        
-                        // Remove the segment from the copy.
-                        copy = copy.Substring(startIndex: size.CharIndex);
-                        
-                        // Add the segment to the text.
-                        this._AddTextSegment(text: segment, position: position, size: new Vector2(
-                            x: renderAreaWidth - position.x, 
-                            y: size.Height
-                        ));
+                        // If the line has some characters.
+                        if (size.CharIndex > 1) {
+                            // Get the line segment.
+                            string segment = copy.Substring(startIndex: 0, length: size.CharIndex - 1);
+                            
+                            // Remove the segment from the copy.
+                            copy = copy.Substring(startIndex: size.CharIndex);
+                            
+                            // Add the segment to the text.
+                            this._AddTextSegment(text: segment, position: position, size: new Vector2(
+                                x: renderAreaWidth - position.x, 
+                                y: size.Height
+                            ));
+                        }
                         
                         // Update the position.
                         position.Set(newX: 0, newY: position.y - (skipNextLine ? 2 : 1 ) * size.Height);
