@@ -1,3 +1,5 @@
+<a href="/">Revenir à l'index</a>
+
 # Henshin Project - Méthodes de traduction latine.
 
 _Objectif_: Lister les différentes méthodes de traduction latin => français pour en tirer des mécaniques de gameplay.

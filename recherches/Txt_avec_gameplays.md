@@ -1,3 +1,5 @@
+<a href="/">Revenir à l'index</a>
+
 # Texte avec gameplays correspondants 
 
 ## Texte et traduction 
