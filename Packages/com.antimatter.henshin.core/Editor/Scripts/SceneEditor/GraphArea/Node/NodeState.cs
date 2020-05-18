@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using Henshin.Editor.SceneEditor.GraphArea.Socket;
 using Henshin.Runtime.Actions;
-using Henshin.Runtime.Directions.Scene;
 using JetBrains.Annotations;
 using UnityEngine;
 

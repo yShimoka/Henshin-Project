@@ -1,11 +1,9 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 using System;
-using System.Linq;
 using Henshin.Editor.SceneEditor.GraphArea.Socket;
 using Henshin.Runtime.Actions;
 using Henshin.Runtime.Actions.Actor;
-using Henshin.Runtime.Actions.Gameplay;
 using Henshin.Runtime.Actions.Scene;
 using JetBrains.Annotations;
 using UnityEditor;
@@ -357,21 +355,6 @@ public static class NodeController {
                     func: () => NodeController._ConvertNode<ColourAction>(node: node)
                 );
                 NodeController._msDeleteMenu.AddSeparator(path: "Convert/");
-                NodeController._msDeleteMenu.AddItem(
-                    content: new GUIContent{ text = "Convert/Prepare"}, 
-                    on: false, 
-                    func: () => NodeController._ConvertNode<PrepareAction>(node: node)
-                );
-                NodeController._msDeleteMenu.AddItem(
-                    content: new GUIContent{ text = "Convert/Show GUI"}, 
-                    on: false, 
-                    func: () => NodeController._ConvertNode<GuiVisibleAction>(node: node)
-                );
-                NodeController._msDeleteMenu.AddItem(
-                    content: new GUIContent{ text = "Convert/Play"}, 
-                    on: false, 
-                    func: () => NodeController._ConvertNode<PlayAction>(node: node)
-                );
                 
                 // Add the delete button.
                 NodeController._msDeleteMenu.AddSeparator(path: "");

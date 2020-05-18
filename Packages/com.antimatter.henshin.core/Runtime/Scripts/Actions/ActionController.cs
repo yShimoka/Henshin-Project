@@ -109,7 +109,7 @@ public abstract class ActionController {
             /// Index of the object that is currently being deserialized.
             /// Used by <see cref="NextSerializedData{TDataType}"/>.
             /// </summary>
-            private int _mCurrentSerializedObject = 0;
+            private int _mCurrentSerializedObject;
     // --- /Attributes ---
     
     // ---  Methods ---

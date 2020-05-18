@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using Henshin.Runtime.Directions.Act;
+using Henshin.Runtime.Gameplay;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -21,17 +22,13 @@ public class ApplicationState: ScriptableObject, ISerializationCallbackReceiver 
             /// <summary>
             /// Serializable list of all the acts in the application.
             /// </summary>
-            [SerializeField] 
             public List<ActState> ActList = new List<ActState>();
             
-#if UNITY_EDITOR
             /// <summary>
             /// Flag set if this is a debug application state.
             /// Used only within the editor.
             /// </summary>
-            [SerializeField]
             public bool IsDebugState;
-#endif
             
             // - Visual Parameters -
             /// <summary>
@@ -50,9 +47,9 @@ public class ApplicationState: ScriptableObject, ISerializationCallbackReceiver 
             public GameObject EventSystemPrefab;
             
             /// <summary>
-            /// Prefab instance used for all the 
+            /// State descriptor for the game's gameplay manager.
             /// </summary>
-            public GameObject DraggablePrefab;
+            public GameplayState GameplayState;
             
         // -- Public Attributes --
             // - Runtime Parameters -

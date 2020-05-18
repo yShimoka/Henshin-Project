@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Henshin.Runtime.Actions;
 using Henshin.Runtime.Application;
+using Henshin.Runtime.Data;
 using Henshin.Runtime.Directions.Act;
 using UnityEngine;
 
@@ -88,26 +89,29 @@ public static class SceneController {
             public static void Play(SceneState scene) {
                 // Check if the scene is set.
                 if (scene != null) {
-                    // Prepare the view of the scene.
-                    SceneView.Prepare(scene: scene, callback: () => {
-                        // Check if there is a root action set.
-                        if (scene.RootAction != null) {
-                            // Apply it.
-                            ActionController.Apply(state: scene.RootAction);
-                        } else {
-                            // Log an error.
-                            Debug.LogError(
-                                message:  "There is no root action on this scene !\n" +
-                                         $"Act/Scene Identifier: \"{scene.Owner.Identifier}/{scene.Identifier}\""
-                            );
-                            
-                            // Play the next scene.
-                            ActController.NextScene();
-                        }
-                    });
-                    
-                    // Store the scene as the current one.
-                    SceneState.Current = scene;
+                    // Load the scene's data.
+                    if (DataController.LoadScene(act: scene.Owner.Index, scene: scene.Index)) {
+                        // Prepare the view of the scene.
+                        SceneView.Prepare(scene: scene, callback: () => {
+                            // Check if there is a root action set.
+                            if (scene.RootAction != null) {
+                                // Apply it.
+                                ActionController.Apply(state: scene.RootAction);
+                            } else {
+                                // Log an error.
+                                Debug.LogError(
+                                    message:  "There is no root action on this scene !\n" +
+                                             $"Act/Scene Identifier: \"{scene.Owner.Identifier}/{scene.Identifier}\""
+                                );
+                                
+                                // Play the next scene.
+                                ActController.NextScene();
+                            }
+                        });
+                        
+                        // Store the scene as the current one.
+                        SceneState.Current = scene;
+                    }
                 } else {
                     // Throw an error.
                     ApplicationView.Error(message: "Tried to play a scene that is null !");

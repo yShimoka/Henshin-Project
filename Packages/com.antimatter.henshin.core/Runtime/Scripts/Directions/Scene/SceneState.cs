@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Henshin.Runtime.Actions;
 using Henshin.Runtime.Actor;
 using Henshin.Runtime.Directions.Act;
+using JetBrains.Annotations;
 using UnityEngine;
 
 /* Wrap the class within the local namespace. */
@@ -35,12 +36,10 @@ public class SceneState {
             /// </summary>
             public List<ActionState> ActionList = new List<ActionState>();
             
-#if UNITY_EDITOR
             /// <summary>
             /// Flag set in debug mode if this scene should be played on its own.
             /// </summary>
             public bool IsDebugScene;
-#endif
             
         // -- Public Attributes --
             // - Identifiers -
@@ -73,6 +72,7 @@ public class SceneState {
             /// <summary>
             /// Reference to the scene that is currently playing.
             /// </summary>
+            [CanBeNull]
             public static SceneState Current;
     // --- /Attributes ---
 }

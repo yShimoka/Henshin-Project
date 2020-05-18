@@ -16,75 +16,8 @@ MonoBehaviour:
   GraphList:
   - SceneIndex: 0
     NodeList:
-    - Position: {x: -92, y: -4}
-    - Position: {x: -84, y: -4}
-    - Position: {x: -84, y: -10}
-    - Position: {x: -76, y: -10}
-    - Position: {x: -76, y: -4}
-    - Position: {x: -68, y: -4}
-    - Position: {x: -52, y: -4}
-    - Position: {x: -60, y: -4}
-    - Position: {x: -44, y: -4}
-    - Position: {x: -44, y: -10}
-    - Position: {x: -36, y: -10}
-    - Position: {x: -28, y: -10}
-    - Position: {x: -28, y: -4}
-    - Position: {x: -20, y: -4}
-    - Position: {x: -12, y: -4}
-    - Position: {x: -4, y: 2}
-    - Position: {x: -12, y: 2}
-    - Position: {x: -4, y: 8}
-    - Position: {x: -4, y: 14}
-    - Position: {x: 4, y: -4}
-    - Position: {x: -84, y: 2}
-    - Position: {x: -76, y: 2}
-    - Position: {x: 12, y: -4}
-    - Position: {x: 20, y: -4}
-    - Position: {x: 36, y: -4}
-    - Position: {x: -84, y: 8}
-    - Position: {x: 28, y: -4}
-    - Position: {x: 28, y: 2}
-    - Position: {x: 28, y: -10}
-    - Position: {x: 28, y: 8}
-    - Position: {x: -76, y: 8}
-    Position: {x: 2036.734, y: 259.85077}
+    - Position: {x: -8, y: -4}
+    - Position: {x: 0, y: -4}
+    Position: {x: 544.2, y: 335.1}
     Ratio: 1
-    ScrollPosition: {x: 0.041598696, y: 0.5335797}
-  - SceneIndex: 1
-    NodeList:
-    - Position: {x: -92, y: -4}
-    - Position: {x: -84, y: -4}
-    - Position: {x: -76, y: -4}
-    - Position: {x: -60, y: -4}
-    - Position: {x: -52, y: -4}
-    - Position: {x: -36, y: -4}
-    - Position: {x: -84, y: 3}
-    - Position: {x: -68, y: -4}
-    - Position: {x: -76, y: 3}
-    - Position: {x: -68, y: 3}
-    - Position: {x: -44, y: 2}
-    - Position: {x: -36, y: 2}
-    - Position: {x: -44, y: -4}
-    - Position: {x: -28, y: -4}
-    - Position: {x: -28, y: 2}
-    - Position: {x: -20, y: -4}
-    - Position: {x: -12, y: -4}
-    - Position: {x: 4, y: -4}
-    - Position: {x: 12, y: -4}
-    - Position: {x: 12, y: 3}
-    - Position: {x: -4, y: -4}
-    - Position: {x: 12, y: 9}
-    - Position: {x: -84, y: -10}
-    - Position: {x: 20, y: -4}
-    - Position: {x: 28, y: -4}
-    - Position: {x: 36, y: -4}
-    - Position: {x: 44, y: -4}
-    - Position: {x: 52, y: -4}
-    - Position: {x: 60, y: -4}
-    - Position: {x: 68, y: -4}
-    - Position: {x: 80, y: 4}
-    - Position: {x: 88, y: 4}
-    - Position: {x: 76, y: -4}
-    Position: {x: -368.53226, y: 266.34952}
-    Ratio: 1
-    ScrollPosition: {x: 0.7800302, y: 0.529383}
+    ScrollPosition: {x: 0.5003073, y: 0.49801067}

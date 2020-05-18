@@ -1,13 +1,11 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 using System.Collections;
-using System.Linq;
 using Henshin.Runtime.Actor;
 using Henshin.Runtime.Application;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
 
 /* Wrap the class within the local namespace. */
 namespace Henshin.Runtime.Directions.Scene {

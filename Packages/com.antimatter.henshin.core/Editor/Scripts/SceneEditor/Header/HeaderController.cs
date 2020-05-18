@@ -70,8 +70,6 @@ public static class HeaderController {
             /// </summary>
             /// <param name="header">The header state to manipulate.</param>
             public static void HandleEvents(HeaderState header) {
-                // Get the current event object.
-                UnityEngine.Event ev = UnityEngine.Event.current;
             }
         // -- Private Methods --
     // --- /Methods ---

@@ -91,7 +91,7 @@ public static class ActorView {
             /// Updates the pose of the actor.
             /// </summary>
             /// <param name="actor">The actor to update.</param>
-            /// <param name="poseIndex">The index of the new pose in the actor's <see cref="ActorState.PoseList"/>.</param>
+            /// <param name="poseIndex">The index of the new pose in the actor's <see cref="PoseStore"/>.</param>
             public static void SetPose([NotNull] ActorState actor, int poseIndex) {
                 // Check if the value of the index is valid.
                 if (poseIndex >= 0 && poseIndex < actor.PoseStore.PoseList.Count) {

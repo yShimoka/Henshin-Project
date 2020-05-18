@@ -49,7 +49,7 @@ public abstract class Base {
             /// <summary>
             /// Stores all the constructors for the specified action types.
             /// </summary>
-            private static Dictionary<Type, ConstructorInfo> _msConstructors = null;
+            private static Dictionary<Type, ConstructorInfo> _msConstructors;
     // --- /Attributes ---
     
     // ---  Methods ---

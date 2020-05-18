@@ -257,7 +257,7 @@ public class DraggableComponent: MonoBehaviour, IDragHandler, IBeginDragHandler,
                 ToolBoxComponent toolbox
             ) {
                 // Create a new instance.
-                GameObject draggableObj = Object.Instantiate(original: ApplicationState.Own.DraggablePrefab);
+                GameObject draggableObj = new GameObject();
                 // Set its name.
                 draggableObj.name = $"{identifier} - Source";
                 

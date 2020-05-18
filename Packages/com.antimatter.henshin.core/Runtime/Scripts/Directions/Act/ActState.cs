@@ -60,7 +60,7 @@ public class ActState {
             /// <summary>
             /// Reference to the act that is currently being played.
             /// </summary>
-            [NonSerialized]
+            [NonSerialized, CanBeNull]
             public static ActState Current;
 
 

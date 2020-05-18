@@ -1,9 +1,9 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 using System;
+using Henshin.Runtime.Gameplay;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
@@ -145,7 +145,7 @@ public static class ApplicationView {
             /// Initializes the application.
             /// Creates the theatre scene and loads all the required elements.
             /// </summary>
-            public static void Initialize() {
+            public static bool Initialize() {
                 // Catch any creation exception.
                 try {
                     // Create the application scene.
@@ -157,18 +157,27 @@ public static class ApplicationView {
                     // Create the stage and GUI.
                     ApplicationView._CreateStage();
                     ApplicationView._CreateGUI();
+                    
+                    // Return a success.
+                    return true;
                 } catch (ApplicationCreationException exception) {
                     // Show an error.
                     ApplicationView.Error(
                         message: "The application could not initialize itself",
                         details: exception.Message
                     );
+                    
+                    // Return a failure.
+                    return false;
                 } catch (NullReferenceException exception) {
                     // Show an error.
                     ApplicationView.Error(
                         message: "NullReferenceException in application initialization",
                         details: exception.Message
                     );
+                    
+                    // Return a failure.
+                    return false;
                 }
             }
             
@@ -323,13 +332,16 @@ public static class ApplicationView {
                 // Move the camera backwards by 10 units.
                 ApplicationView.WorldCamera.transform.position = new Vector3(x: 0f, y: 0f, z: -10f);
                 
-                // Create the event handler.
-                GameObject eventSystem = Object.Instantiate(
-                    original: ApplicationState.Own.EventSystemPrefab,
-                    parent: ApplicationView.WorldCamera.transform,
-                    worldPositionStays: false
-                );
-                eventSystem.name = "Event System";
+                // Check if the appliation instance is set.
+                if (ApplicationState.Own != null) {
+                    // Create the event handler.
+                    GameObject eventSystem = Object.Instantiate(
+                        original: ApplicationState.Own.EventSystemPrefab,
+                        parent: ApplicationView.WorldCamera.transform,
+                        worldPositionStays: false
+                    );
+                    eventSystem.name = "Event System";
+                }
             }
             
             /// <summary>
@@ -396,7 +408,7 @@ public static class ApplicationView {
                 // Create the GUI root.
                 ApplicationView.GUI = new GameObject(
                     name: "GUI", 
-                    components: new []{ typeof(Canvas), typeof(CanvasScaler) }
+                    components: new []{ typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster) }
                 ).transform;
                 // Attach it to the scene root.
                 ApplicationView.GUI.SetParent(p: ApplicationView.Root.transform);
@@ -413,6 +425,13 @@ public static class ApplicationView {
                 scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
                 scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Shrink;
                 scaler.referenceResolution = new Vector2(x: ApplicationView.VIEW_WIDTH, y :ApplicationView.VIEW_HEIGHT);
+                
+                // Initialize the gameplay gui.
+                try {
+                    GameplayView.Initialize(gameplay: ApplicationState.Own.GameplayState);
+                } catch (Exception e) when (e is MissingReferenceException || e is MissingComponentException) {
+                    throw new ApplicationCreationException(message: $"Could not load the gameplay view: {e.Message}");
+                }
             }
             
             // - Error Management -
@@ -422,6 +441,7 @@ public static class ApplicationView {
             /// </summary>
             /// <param name="message">The message to display to the user.</param>
             /// <param name="details">The details of the error.</param>
+            // ReSharper disable once UnusedMember.Local
             private static void _LoadErrorScene(string message, string details) {
                 // Check if the error scene is loaded.
                 Scene errorScene = SceneManager.GetSceneByName(
@@ -440,7 +460,7 @@ public static class ApplicationView {
                 } else {
                     // Delete the root game objects.
                     foreach (GameObject gameObject in errorScene.GetRootGameObjects()) {
-                        UnityEngine.Object.Destroy(obj: gameObject);
+                        Object.Destroy(obj: gameObject);
                     }
                 }
                 
@@ -518,6 +538,9 @@ public static class ApplicationView {
                     errorMessageRect.pivot = new Vector2(x: 0.5f, y: 0f);
                     errorMessageRect.sizeDelta = new Vector2(x: 0f, y: 500f);
                     errorMessageRect.anchoredPosition3D = Vector3.zero;
+                    
+                    // Log the details.
+                    Debug.Log(message: $"Error details: {details}");
                     
                 } catch (ApplicationCreationException) {
                     // TODO: Panic.

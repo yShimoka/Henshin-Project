@@ -2,7 +2,11 @@
 
 using System;
 using Henshin.Runtime.Application;
-using Henshin.Runtime.Gameplay.Components;
+using Henshin.Runtime.Data;
+using Henshin.Runtime.Gameplay;
+using Henshin.Runtime.Gameplay.Components.Answer;
+using Henshin.Runtime.Gameplay.Components.Target;
+using UnityEngine;
 
 /* Wrap the class within the local namespace. */
 namespace Henshin.Runtime.Actions.Scene {
@@ -36,7 +40,18 @@ public class StartAction: ActionController {
             /// Just finishes the action immediately.
             /// </summary>
             protected override void Apply() {
-                this.Finish();
+                DataController.LoadGameplay(identifier: "Neku Presentation");
+                if (TargetController.Instantiate(parent: ApplicationView.GUI) is TargetState target) {
+                    if (AnswerController.Instantiate(parent: ApplicationView.GUI) is AnswerState answer) {
+                        answer.Transform.localPosition = Vector2.up * 250;
+                        target.Transform.localPosition = Vector2.down * 250;
+                        answer.Value = DataState.Options[0][0];
+                        target.Value = DataState.Options[0][0];
+                        AnswerView.UpdateText(answer: answer);
+                        answer.Callback = this.Finish;
+                    }
+                }
+                //this.Finish();
             }
     
             // - Serialization Events -

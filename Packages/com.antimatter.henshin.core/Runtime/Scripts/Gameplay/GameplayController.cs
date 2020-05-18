@@ -1,16 +1,11 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
-/* Wrap the class within the local namespace. */
-
+using Henshin.Runtime.Application;
 using Henshin.Runtime.Data;
-using Henshin.Runtime.Directions.Act;
-using Henshin.Runtime.Directions.Scene;
-using Henshin.Runtime.Gameplay.Modes.Default;
-using Henshin.Runtime.Gameplay.Modes.Holes;
-using Henshin.Runtime.Gameplay.Modes.Snowball;
-using JetBrains.Annotations;
 using UnityEngine.Events;
 
+
+/* Wrap the class within the local namespace. */
 namespace Henshin.Runtime.Gameplay {
 
 /// <summary>
@@ -19,91 +14,51 @@ namespace Henshin.Runtime.Gameplay {
 public static class GameplayController {
     // ---  Methods ---
         // -- Public Methods --
-            // - Mode Management -
+            // - Initialization -
             /// <summary>
-            /// Prepares a new gameplay with the specified mode.
-            /// This clears all data that was already created.
+            /// Initializes the specified gameplay state.
             /// </summary>
-            /// <param name="mode">The gameplay mode to prepare.</param>
-            public static void PrepareMode(GameplayState.EGameplayMode mode, int gameplayIndex) {
-                // Clear the current gameplay.
-                GameplayController._Clear();
-                
-                // Update the gameplay mode.
-                GameplayState.CurrentMode = mode;
-                
-                // Prepare the new game play.
-                GameplayController._Prepare(gameplayIndex: gameplayIndex);
-            }
+            /// <param name="gameplay">The state object to initialize.</param>
+            public static void Initialize(GameplayState gameplay) {}
             
             /// <summary>
-            /// Starts playing the mode that was prepared with <see cref="PrepareMode"/>.
+            /// Loads the specified gameplay from the <see cref="DataController"/>.
+            /// Initializes the gameplay controller for the specified gameplay type.
             /// </summary>
-            /// <param name="callback">The method to invoke after the gameplay is done.</param>
-            public static void Play([NotNull]UnityAction callback) {
-                // Store the callback.
-                GameplayState.Callback = callback;
+            /// <param name="identifier">The XML identifier of the gameplay to load.</param>
+            public static void Load(string identifier) {
+                // Load the data controller.
+                if (DataController.LoadGameplay(identifier: identifier)) {
+                    // TODO: Prepare the gameplay depending on the gameplay kind.
+                    switch (DataState.Kind) {
+                    case null:
+                        ApplicationView.Error(message: $"Could not load the gameplay \"#{identifier}\"'s kind");
+                        break;
+                    default:
+                        ApplicationView.Error(message: $"Unknown gameplay kind {DataState.Kind}");
+                        break;
+                    }
+                }
+            }
+            
+            
+            /// <summary>
+            /// Plays the currently loaded gameplay.
+            /// </summary>
+            /// <param name="callback">The callback that is triggered once the gameplay sequence is over.</param>
+            public static void Play(UnityAction callback) {
+                // Store the callback in the state.
+                GameplayState.Own.Callback = callback;
                 
-                // Check the current gameplay mode.
-                switch (GameplayState.CurrentMode) {
-                case GameplayState.EGameplayMode.Holes:
-                    // Call the holes method.
-                    HolesController.Play();
-                    break;
-                case GameplayState.EGameplayMode.Snowball:
-                    // Call the snowball method.
-                    SnowballController.Play();
-                    break;
-                case GameplayState.EGameplayMode.None:
-                    // Immediately call the callback.
-                    callback.Invoke();
+                // TODO: Play the gameplay depending on the gameplay kind.
+                switch (DataState.Kind) {
+                default:
+                    ApplicationView.Error(message: $"Cannot play gameplay kind {DataState.Kind}");
                     break;
                 }
             }
             
         // -- Private Methods --
-            /// <summary>
-            /// Prepares the new gameplay.
-            /// Assumes that <see cref="_Clear"/> was already called
-            /// and that <see cref="GameplayState.CurrentMode"/> is set to the correct value.
-            /// </summary>
-            private static void _Prepare(int gameplayIndex) {
-                // Check the current gameplay mode.
-                switch (GameplayState.CurrentMode) {
-                case GameplayState.EGameplayMode.None:
-                    // Load the static text.
-                    DefaultController.Prepare(actIndex: ActState.Current.Index, sceneIndex: SceneState.Current.Index, gameplayIndex: gameplayIndex);
-                    break;
-                case GameplayState.EGameplayMode.Holes:
-                    // Prepare the holes gameplay.
-                    HolesController.Prepare(actIndex: ActState.Current.Index, sceneIndex: SceneState.Current.Index, gameplayIndex: gameplayIndex);
-                    break;
-                case GameplayState.EGameplayMode.Snowball:
-                    // Call the snowball method.
-                    SnowballController.Prepare(actIndex: ActState.Current.Index, sceneIndex: SceneState.Current.Index, gameplayIndex: gameplayIndex);
-                    break;
-                }
-            }
-            
-            /// <summary>
-            /// Clears all the artifacts generated for the current gameplay.
-            /// </summary>
-            private static void _Clear() {
-                // Check the current gameplay mode.
-                switch (GameplayState.CurrentMode) {
-                case GameplayState.EGameplayMode.Snowball:
-                    // Call the snowball method.
-                    //SnowballController.Clear();
-                    break;
-                case GameplayState.EGameplayMode.Holes:
-                    // Call the holes method.
-                    //HolesController.Clear();
-                    break;
-                case GameplayState.EGameplayMode.None:
-                    // Do nothing.
-                    break;
-                }
-            }
     // --- /Methods ---
 }
 }

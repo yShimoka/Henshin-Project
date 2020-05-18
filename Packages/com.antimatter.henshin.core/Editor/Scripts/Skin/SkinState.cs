@@ -633,7 +633,7 @@ public class SkinState: ScriptableObject {
             /// <summary>
             /// Reference to the skin instance found in the project.
             /// </summary>
-            private static SkinState _msInstance = null;
+            private static SkinState _msInstance;
     // --- /Attributes ---
     
     // ---  Methods ---

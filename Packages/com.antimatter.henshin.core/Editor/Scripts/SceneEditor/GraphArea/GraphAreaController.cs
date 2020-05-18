@@ -9,7 +9,6 @@ using Henshin.Editor.SceneEditor.Header;
 using Henshin.Editor.Skin;
 using Henshin.Runtime.Actions;
 using Henshin.Runtime.Actions.Actor;
-using Henshin.Runtime.Actions.Gameplay;
 using Henshin.Runtime.Actions.Scene;
 using Henshin.Runtime.Directions.Act;
 using Henshin.Runtime.Directions.Scene;
@@ -714,27 +713,6 @@ public static class GraphAreaController {
                 );
                 menu.AddSeparator(path: "Create Node/");
                 menu.AddSeparator(path: "Create Node/- Gameplay Actions");
-                menu.AddItem(
-                    content: new GUIContent{ text = "Create Node/Prepare"}, 
-                    on: false, 
-                    func: () => NodeController.CreateNode<PrepareAction>(
-                        owner: graphArea, position: GraphAreaController._msLastMousePosition
-                    )
-                );
-                menu.AddItem(
-                    content: new GUIContent{ text = "Create Node/Show GUI"}, 
-                    on: false, 
-                    func: () => NodeController.CreateNode<GuiVisibleAction>(
-                        owner: graphArea, position: GraphAreaController._msLastMousePosition
-                    )
-                );
-                menu.AddItem(
-                    content: new GUIContent{ text = "Create Node/Play"}, 
-                    on: false, 
-                    func: () => NodeController.CreateNode<PlayAction>(
-                        owner: graphArea, position: GraphAreaController._msLastMousePosition
-                    )
-                );
                 
                 // Show the menu.
                 menu.ShowAsContext();

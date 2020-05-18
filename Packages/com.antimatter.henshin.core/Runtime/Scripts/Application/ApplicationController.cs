@@ -3,6 +3,7 @@
 using System.Linq;
 using Henshin.Runtime.Directions.Act;
 using Henshin.Runtime.Directions.Scene;
+using Henshin.Runtime.Gameplay;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -55,7 +56,7 @@ public class ApplicationController: MonoBehaviour {
             /// Method called upon the start of the runtime application.
             /// Loads the current application state and runs it.
             /// </summary>
-            [RuntimeInitializeOnLoadMethodAttribute]
+            [RuntimeInitializeOnLoadMethod]
             private static void _Initialize() {
 #if UNITY_EDITOR
                 // Seek the debug application state.
@@ -64,43 +65,47 @@ public class ApplicationController: MonoBehaviour {
                     .FirstOrDefault(predicate: state => state.IsDebugState);
 #else
                 // Seek the non-debug application state.
-                Application.State.Own = UnityEngine.Resources
-                    .LoadAll<Application.State>(path: "Data/States")
-                    .FirstOrDefault(predicate: state => !state.IsDebugState);
+                ApplicationState.Own = UnityEngine.Resources
+                    .LoadAll<ApplicationState>(path: "")
+                    .ElementAtOrDefault(index: 0);
 #endif
                 // Ensure that the application was found.
                 if (ApplicationState.Own == null) {
                     ApplicationView.Error(message: "Could not find an application to load !");
                 } else {
+                    // Initialize the gameplay controller.
+                    GameplayController.Initialize(gameplay: ApplicationState.Own.GameplayState);
+                    
                     // Initialize the view.
-                    ApplicationView.Initialize();
+                    if (ApplicationView.Initialize()) {
                 
 #if UNITY_EDITOR
-                    // Search for a debugged scene.
-                    SceneState debugged = ApplicationState.Own.ActList
-                        .SelectMany(selector: act => act.SceneList)
-                        .Where(predicate: scene => scene != null)
-                        .FirstOrDefault(predicate: scene => scene.IsDebugScene);
-                        
-                    // If a debug scene was found.
-                    if (debugged != null) {
-                        // Load its act.
-                        ActState.Current = debugged.Owner;
-                        
-                        // Play that scene.
-                        SceneController.Play(scene: debugged);
-                        
-                        // Stop the method.
-                        return;
-                    }
+                        // Search for a debugged scene.
+                        SceneState debugged = ApplicationState.Own.ActList
+                            .SelectMany(selector: act => act.SceneList)
+                            .Where(predicate: scene => scene != null)
+                            .FirstOrDefault(predicate: scene => scene.IsDebugScene);
+                            
+                        // If a debug scene was found.
+                        if (debugged != null) {
+                            // Load its act.
+                            ActState.Current = debugged.Owner;
+                            
+                            // Play that scene.
+                            SceneController.Play(scene: debugged);
+                            
+                            // Stop the method.
+                            return;
+                        }
 #endif
-                    // Check if the act list is set.
-                    if (ApplicationState.Own.CurrentAct != null) {
-                        // Play the first act.
-                        ActController.Play(act: ApplicationState.Own.CurrentAct);
-                    } else {
-                        // Throw an error.
-                        ApplicationView.Error(message: "The application has no act to play !");
+                        // Check if the act list is set.
+                        if (ApplicationState.Own.CurrentAct != null) {
+                            // Play the first act.
+                            ActController.Play(act: ApplicationState.Own.CurrentAct);
+                        } else {
+                            // Throw an error.
+                            ApplicationView.Error(message: "The application has no act to play !");
+                        }
                     }
                 }
             }

@@ -96,7 +96,7 @@ public static class EasingFunction
         EaseInOutElastic,
     }
 
-    private const float NATURAL_LOG_OF_2 = 0.693147181f;
+    private const float _mNATURAL_LOG_OF_2 = 0.693147181f;
 
     //
     // Easing functions
@@ -548,13 +548,13 @@ public static class EasingFunction
     }
     public static float EaseInExpoD(float start, float end, float value)
     {
-        return (10f * EasingFunction.NATURAL_LOG_OF_2 * (end - start) * Mathf.Pow(f: 2f, p: 10f * (value - 1)));
+        return (10f * EasingFunction._mNATURAL_LOG_OF_2 * (end - start) * Mathf.Pow(f: 2f, p: 10f * (value - 1)));
     }
 
     public static float EaseOutExpoD(float start, float end, float value)
     {
         end -= start;
-        return 5f * EasingFunction.NATURAL_LOG_OF_2 * end * Mathf.Pow(f: 2f, p: 1f - 10f * value);
+        return 5f * EasingFunction._mNATURAL_LOG_OF_2 * end * Mathf.Pow(f: 2f, p: 1f - 10f * value);
     }
 
     public static float EaseInOutExpoD(float start, float end, float value)
@@ -564,12 +564,12 @@ public static class EasingFunction
 
         if (value < 1)
         {
-            return 5f * EasingFunction.NATURAL_LOG_OF_2 * end * Mathf.Pow(f: 2f, p: 10f * (value - 1));
+            return 5f * EasingFunction._mNATURAL_LOG_OF_2 * end * Mathf.Pow(f: 2f, p: 10f * (value - 1));
         }
 
         value--;
 
-        return (5f * EasingFunction.NATURAL_LOG_OF_2 * end) / (Mathf.Pow(f: 2f, p: 10f * value));
+        return (5f * EasingFunction._mNATURAL_LOG_OF_2 * end) / (Mathf.Pow(f: 2f, p: 10f * value));
     }
 
     public static float EaseInCircD(float start, float end, float value)
@@ -706,7 +706,7 @@ public static class EasingFunction
         }
 
         return (a * Mathf.PI * d * Mathf.Pow(f: 2f, p: 1f - 10f * value) *
-                Mathf.Cos(f: (2f * Mathf.PI * (d * value - s)) / p)) / p - 5f * EasingFunction.NATURAL_LOG_OF_2 * a *
+                Mathf.Cos(f: (2f * Mathf.PI * (d * value - s)) / p)) / p - 5f * EasingFunction._mNATURAL_LOG_OF_2 * a *
             Mathf.Pow(f: 2f, p: 1f - 10f * value) * Mathf.Sin(f: (2f * Mathf.PI * (d * value - s)) / p);
     }
 
@@ -733,14 +733,14 @@ public static class EasingFunction
         {
             value -= 1;
 
-            return -5f * EasingFunction.NATURAL_LOG_OF_2 * a * Mathf.Pow(f: 2f, p: 10f * value) * Mathf.Sin(f: 2 * Mathf.PI * (d * value - 2f) / p) -
+            return -5f * EasingFunction._mNATURAL_LOG_OF_2 * a * Mathf.Pow(f: 2f, p: 10f * value) * Mathf.Sin(f: 2 * Mathf.PI * (d * value - 2f) / p) -
                    a * Mathf.PI * d * Mathf.Pow(f: 2f, p: 10f * value) * Mathf.Cos(f: 2 * Mathf.PI * (d * value - s) / p) / p;
         }
 
         value -= 1;
 
         return a * Mathf.PI * d * Mathf.Cos(f: 2f * Mathf.PI * (d * value - s) / p) / (p * Mathf.Pow(f: 2f, p: 10f * value)) -
-               5f * EasingFunction.NATURAL_LOG_OF_2 * a * Mathf.Sin(f: 2f * Mathf.PI * (d * value - s) / p) / (Mathf.Pow(f: 2f, p: 10f * value));
+               5f * EasingFunction._mNATURAL_LOG_OF_2 * a * Mathf.Sin(f: 2f * Mathf.PI * (d * value - s) / p) / (Mathf.Pow(f: 2f, p: 10f * value));
     }
 
     public static float SpringD(float start, float end, float value)

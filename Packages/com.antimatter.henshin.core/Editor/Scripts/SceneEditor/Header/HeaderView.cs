@@ -31,7 +31,7 @@ public static class HeaderView {
                 // If the current event is a repaint of the window.
                 if (Event.current.type == EventType.Repaint) {
                     // Update the window's content rect.
-                    header.ContentRect = UnityEditor.EditorGUILayout.BeginHorizontal(
+                    header.ContentRect = EditorGUILayout.BeginHorizontal(
                         style: SkinState.Styles.SceneHeaderBackground,
                         options: new [] {
                             GUILayout.ExpandHeight(expand: true),
@@ -40,7 +40,7 @@ public static class HeaderView {
                     );
                 } else {
                     // Start a simple horizontal layout.
-                    UnityEditor.EditorGUILayout.BeginHorizontal(
+                    EditorGUILayout.BeginHorizontal(
                         style: SkinState.Styles.SceneHeaderBackground,
                         options: new [] {
                             GUILayout.ExpandHeight(expand: true),
@@ -251,7 +251,7 @@ public static class HeaderView {
                     style: SkinState.Styles.SceneHeaderButton
                 )) {
                     // Force-reserialize the project's assets.
-                    UnityEditor.AssetDatabase.ForceReserializeAssets();
+                    AssetDatabase.ForceReserializeAssets();
                     
                     // Re-initialize the window.
                     header.Owner.IsInitialized = false;
@@ -269,7 +269,7 @@ public static class HeaderView {
                     style: SkinState.Styles.SceneHeaderButton
                 )) {
                     // Force-reserialize the project's assets.
-                    UnityEditor.AssetDatabase.ForceReserializeAssets();
+                    AssetDatabase.ForceReserializeAssets();
                     
                     // Re-initialize the window.
                     header.Owner.IsInitialized = false;
@@ -278,7 +278,7 @@ public static class HeaderView {
                     header.EditedScene.IsDebugScene = true;
                     
                     // Enter play mode.
-                    UnityEditor.EditorApplication.EnterPlaymode();
+                    EditorApplication.EnterPlaymode();
                 }
                 // End the save button area.
                 GUILayout.FlexibleSpace(); GUILayout.EndVertical(); 
