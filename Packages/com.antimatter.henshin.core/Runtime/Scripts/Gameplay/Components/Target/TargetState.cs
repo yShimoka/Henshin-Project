@@ -25,6 +25,11 @@ public class TargetState {
             /// </summary>
             public readonly RectTransform Transform;
             
+            /// <summary>
+            /// Reference to the <see cref="AnswerState"/> that is placed on this target.
+            /// </summary>
+            public AnswerState PlacedAnswer;
+            
             // - Parameters -
             /// <summary>
             /// Stores the value of this target.

@@ -35,11 +35,10 @@ public abstract class TimedAction: ActionController {
             /// </summary>
             public new TimedState State => (TimedState)base.State;
              
-        // -- Private Attributes --
             /// <summary>
             /// Timer that is incremented on each <see cref="_Update"/> call.
             /// </summary>
-            private float _mTimer;
+            protected float Timer;
     // --- /Attributes ---
     
     // ---  Methods ---
@@ -54,7 +53,7 @@ public abstract class TimedAction: ActionController {
                 ApplicationController.OnTick.AddListener(call: this._Update);
                 
                 // Reset the tick method.
-                this._mTimer = 0;
+                this.Timer = 0;
             }
             
             /// <inheritdoc cref="ActionController.Finish"/>
@@ -70,7 +69,7 @@ public abstract class TimedAction: ActionController {
             /// Updates the action.
             /// </summary>
             /// <param name="normalizedTime">The current time of the action, normalized in [0;1]</param>
-            protected abstract void Update(float normalizedTime);
+            protected virtual void Update(float normalizedTime) {}
             
             // - Serialization -
             /// <summary>
@@ -89,18 +88,17 @@ public abstract class TimedAction: ActionController {
                 this.State.Time = this.NextSerializedData<float>();
             }
         
-        // -- Private Methods --
             /// <summary>
             /// Updates the <see cref="TimedAction"/> object.
             /// </summary>
             /// <param name="deltaTime">The time since the last call to <see cref="_Update"/></param>
-            private void _Update(float deltaTime) {
+            protected virtual void _Update(float deltaTime) {
                 // Increment the timer value.
-                this._mTimer += deltaTime;
+                this.Timer += deltaTime;
                 
                 // Get the normalized time.
                 float normalized = Mathf.Clamp(
-                    value: this.State.Time == 0 ? 1 : this._mTimer / this.State.Time, min: 0, max: 1
+                    value: this.State.Time == 0 ? 1 : this.Timer / this.State.Time, min: 0, max: 1
                 );
                 
                 // Call the update method.

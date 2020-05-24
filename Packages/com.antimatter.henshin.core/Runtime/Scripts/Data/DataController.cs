@@ -1,6 +1,7 @@
 // Copyright 2020 © Caillaud Jean-Baptiste. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -8,6 +9,7 @@ using System.Xml;
 using Henshin.Runtime.Application;
 using Henshin.Runtime.Directions.Act;
 using Henshin.Runtime.Directions.Scene;
+using JetBrains.Annotations;
 using UnityEngine;
 
 /* Wrap the class within the local namespace. */
@@ -43,6 +45,9 @@ public static class DataController {
             public static bool LoadScene(int act, int scene) {
                 // Reload the file.
                 DataController._ReloadFile();
+                
+                // Clear the current identifier.
+                DataState.CurrentGameplay = null;
                 
                 // Build the xpath query.
                 string xpath = $"henshin:root/henshin:act[{act + 1}]/henshin:scene[{scene + 1}]";
@@ -86,6 +91,12 @@ public static class DataController {
             public static bool LoadGameplay(string identifier) {
                 // Reload the file.
                 DataController._ReloadFile();
+                
+                // Check if the gameplay is the same as the previous one.
+                if (identifier == DataState.CurrentGameplay) {
+                    // Do nothing.
+                    return true;
+                }
                 
                 // Check if the current scene node is loaded.
                 if (DataState.CurrentScene == null) {
@@ -137,50 +148,23 @@ public static class DataController {
                     }
                     
                     // Load the original and translated texts.
-                    DataState.Original   = DataController._GetNodeValues(parent: gameplayNode, name: "henshin:original");
-                    DataState.Translated = DataController._GetNodeValues(parent: gameplayNode, name: "henshin:translated");
-                    
+                    DataState.OriginalNodes   = gameplayNode.SelectNodes(
+                        xpath: "henshin:original", 
+                        nsmgr: DataState.NamespaceManager
+                    );
+                    DataState.TranslatedNodes = gameplayNode.SelectNodes(
+                        xpath: "henshin:translated", 
+                        nsmgr: DataState.NamespaceManager
+                    );
+
                     // Seek the option nodes.
-                    XmlNodeList optionsNodes = gameplayNode.SelectNodes(
-                         xpath: "henshin:options", 
+                    DataState.OptionsNodes = gameplayNode.SelectNodes(
+                        xpath: "henshin:options", 
                         nsmgr: DataState.NamespaceManager
                     );
                     
-                    // If no option was found.
-                    if (optionsNodes == null) {
-                        // Clear the array.
-                        DataState.Options = new string[0][];
-                    } else {
-                        // Create the data array.
-                        DataState.Options = new string[optionsNodes.Count][];
-                        
-                        // Loop through all the options.
-                        for (int i = 0; i < optionsNodes.Count; i++) {
-                            // Load the options list.
-                            XmlNode optionsNode = optionsNodes[i: i];
-                            
-                            // Load its children nodes.
-                            XmlNodeList optionNodes = optionsNode.SelectNodes(
-                                xpath: "henshin:option", 
-                                nsmgr: DataState.NamespaceManager
-                            );
-                            
-                            // If the nodes were found.
-                            if (optionNodes != null) {
-                                // Create the data array.
-                                DataState.Options[i] = new string[optionNodes.Count];
-                                
-                                // Loop through the nodes.
-                                for (int j = 0; j < optionNodes.Count; j++) {
-                                    // Load the data at the specified index.
-                                    DataState.Options[i][j] = optionNodes[i: j].InnerText;
-                                }
-                            } else {
-                                // Clear the data array.
-                                DataState.Options[i] = new string[0];
-                            }
-                        }
-                    }
+                    // Store the current gameplay.
+                    DataState.CurrentGameplay = identifier;
                     
                     // Return a success.
                     return true;
@@ -194,6 +178,7 @@ public static class DataController {
                 }
             }
             
+#if UNITY_EDITOR
             /// <summary>
             /// Loads all the gameplay identifiers in the current scene's node.
             /// </summary>
@@ -229,31 +214,77 @@ public static class DataController {
                     return new string[0];
                 }
             }
-        
-        // -- Private Methods --
-            // - Xml Management -
+#endif
+            
             /// <summary>
-            /// Loads all the node texts found in the specified nodes.
+            /// Returns the original <see cref="XmlNode"/> at the specified index.
             /// </summary>
-            /// <param name="parent">The parent of the nodes to parse.</param>
-            /// <param name="name">The name of the children nodes to parse.</param>
-            /// <returns>The list of string found in the children.</returns>
-            /// <exception cref="InvalidOperationException">
-            /// There is no node with the specified <see cref="name"/> in the <see cref="parent"/>.
-            /// </exception>
-            private static string[] _GetNodeValues(XmlNode parent, string name) {
-                // Seek the nodes.
-                XmlNodeList children = parent.SelectNodes(xpath: name, nsmgr: DataState.NamespaceManager);
-                
-                // Check if the children nodes were found.
-                if (children == null || children.Count <= 0) {
-                    throw new InvalidOperationException(message: $"Could not find a '{children}' node.");
+            /// <param name="index">The index of the original node to query.</param>
+            /// <returns>The found node object, or null if it is not found.</returns>
+            [CanBeNull]
+            public static XmlNode GetOriginalNode(int index) {
+                // Check if the original nodes exist.
+                if (DataState.OriginalNodes == null) {
+                    return null;
                 }
                 
-                // Load its contents.
-                return children.Cast<XmlNode>().Select(selector: child => child.InnerText).ToArray();
+                // Check the bounds of the index.
+                if (index < 0 || index >= DataState.OriginalNodes.Count) {
+                    return null;
+                }
+                
+                // Return the node instance.
+                return DataState.OriginalNodes[i: index];
             }
             
+            /// <summary>
+            /// Returns the translated <see cref="XmlNode"/> at the specified index.
+            /// </summary>
+            /// <param name="index">The index of the translated node to query.</param>
+            /// <returns>The found node object, or null if it is not found.</returns>
+            [CanBeNull]
+            public static XmlNode GetTranslatedNode(int index) {
+                // Check if the translated nodes exist.
+                if (DataState.TranslatedNodes == null) {
+                    return null;
+                }
+                
+                // Check the bounds of the index.
+                if (index < 0 || index >= DataState.TranslatedNodes.Count) {
+                    return null;
+                }
+                
+                // Return the node instance.
+                return DataState.TranslatedNodes[i: index];
+            }
+            
+            /// <summary>
+            /// Returns the list of option that belong to the Options node at the specified index.
+            /// </summary>
+            /// <param name="index">The index of the options node to query.</param>
+            /// <returns>The found node objects, or null if they are not found.</returns>
+            [NotNull]
+            public static IEnumerable<XmlNode> GetOptionNodes(int index) {
+                // Check if the options nodes exist.
+                if (DataState.OptionsNodes == null) {
+                    Debug.LogWarning(message: "Tried to get option nodes when none are loaded");
+                    return new XmlNode[0];
+                }
+                
+                // Check the bounds of the index.
+                if (index < 0 || index >= DataState.OptionsNodes.Count) {
+                    Debug.LogWarning(message: "Tried to get option nodes when none are loaded");
+                    return new XmlNode[0];
+                }
+                
+                // Return the node instance.
+                return DataState.OptionsNodes[i: index]
+                    .SelectNodes(xpath: "henshin:option", nsmgr: DataState.NamespaceManager)
+                    ?.Cast<XmlNode>() ?? 
+                    new XmlNode[0];
+            }
+        
+        // -- Private Methods --
             // - File Management -
             /// <summary>
             /// Seeks the file on the file system and loads it
@@ -285,8 +316,9 @@ public static class DataController {
                 
                 try {
                     // Parse the contents of the file.
+                    DataState.Document.PreserveWhitespace = false;
                     DataState.Document.LoadXml(xml: DataState.File.text);
-                    
+
                     // Load the namespace.
                     DataState.NamespaceManager = new XmlNamespaceManager(nameTable: DataState.Document.NameTable);
                     DataState.NamespaceManager.AddNamespace(prefix: "henshin", uri: "https://henshin.jb-caillaud.fr/");

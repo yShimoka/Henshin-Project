@@ -8,6 +8,38 @@
     elementFormDefault="qualified"
 >
 
+<xs:group name="RichTextOptions">
+    <xs:choice>
+        <xs:element name="i" type="RichText"/>
+        <xs:element name="b" type="RichText"/>
+        <xs:element name="t" type="xs:string"/>
+        <xs:element name="s">
+            <xs:complexType mixed="true">
+                <xs:attribute name="text" type="xs:string" use="required"/>
+            </xs:complexType>
+        </xs:element>
+        <xs:element name="c">
+            <xs:complexType mixed="true">
+                <xs:group ref="RichTextOptions" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:attribute name="r" type="xs:float" default="0"/>
+                <xs:attribute name="g" type="xs:float" default="0"/>
+                <xs:attribute name="b" type="xs:float" default="0"/>
+                <xs:attribute name="a" type="xs:float" default="1"/>
+            </xs:complexType>
+        </xs:element>
+    </xs:choice>
+</xs:group>
+
+<xs:complexType name="RichText" mixed="true">
+    <xs:choice>
+        <xs:group ref="RichTextOptions" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:sequence>
+            <xs:element name="valid"><xs:complexType mixed="true"><xs:group ref="RichTextOptions" minOccurs="0" maxOccurs="unbounded"/></xs:complexType></xs:element>
+            <xs:element name="invalid"><xs:complexType mixed="true"><xs:group ref="RichTextOptions" minOccurs="0" maxOccurs="unbounded"/></xs:complexType></xs:element>
+        </xs:sequence>
+    </xs:choice>
+</xs:complexType>
+
 <!-- Declare the root of the xml document. -->
 <xs:element name="root">
     <xs:complexType>
@@ -28,19 +60,21 @@
                                                         <xs:attribute name="duplicate" type="xs:boolean" default="false"/>
                                                     </xs:complexType>
                                                 </xs:element>
-                                                <xs:element name="original" type="xs:string" maxOccurs="unbounded"/>
-                                                <xs:element name="translated" type="xs:string" maxOccurs="unbounded"/>
-                                                <xs:element name="options" maxOccurs="unbounded" minOccurs="0">
-                                                    <xs:complexType>
-                                                        <xs:sequence>
-                                                            <xs:element name="option" type="xs:string" maxOccurs="unbounded"/>
-                                                        </xs:sequence>
-                                                    </xs:complexType>
-                                                    <xs:unique name="UniqueOptionValue">
-                                                        <xs:selector xpath="hp:option"/>
-                                                        <xs:field xpath="."/>
-                                                    </xs:unique>
-                                                </xs:element>
+                                                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                    <xs:element name="original" type="RichText"/>
+                                                    <xs:element name="translated" type="RichText"/>
+                                                    <xs:element name="options" minOccurs="0">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="option" type="xs:string" maxOccurs="unbounded"/>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                        <xs:unique name="UniqueOptionValue">
+                                                            <xs:selector xpath="hp:option"/>
+                                                            <xs:field xpath="."/>
+                                                        </xs:unique>
+                                                    </xs:element>
+                                                </xs:choice>
                                             </xs:sequence>
                                             <xs:attribute name="identifier" type="xs:string" use="required"/>
                                             <xs:attribute name="kind" use="required">
@@ -49,6 +83,7 @@
                                                         <xs:enumeration value="none"/>
                                                         <xs:enumeration value="snowball"/>
                                                         <xs:enumeration value="gaps"/>
+                                                        <xs:enumeration value="questions"/>
                                                         <xs:enumeration value="comparison"/>
                                                     </xs:restriction>
                                                 </xs:simpleType>

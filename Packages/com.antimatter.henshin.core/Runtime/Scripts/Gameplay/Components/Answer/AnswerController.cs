@@ -73,10 +73,13 @@ public class AnswerController: EmptyGraphic, IDragHandler, IBeginDragHandler, IE
                 Vector2 canvasMousePos = ApplicationView.ScreenToCanvas(point: eventData.position);
                 
                 // Update the position of the answer.
-                this.State.Transform.localPosition = canvasMousePos;
+                this.State.Transform.localPosition = canvasMousePos + new Vector2(
+                    x: -this.State.Transform.sizeDelta.x / 2,
+                    y: this.State.Transform.sizeDelta.y / 2
+                );
                 
                 // Update the world rect of the object.
-                this.State.WorldRect.center = ApplicationView.CanvasToWorld(point: canvasMousePos);
+                this.State.WorldRect.position = ApplicationView.CanvasToWorld(point: canvasMousePos);
             }
 
             /// <summary>
@@ -142,6 +145,8 @@ public class AnswerController: EmptyGraphic, IDragHandler, IBeginDragHandler, IE
                 
                 // If the object is overlapping a target.
                 if (overlapped != null) {
+                    // Attach to the target.
+                    this.transform.SetParent(parent: overlapped.transform, worldPositionStays: false);
                     // Place the object on top of the target.
                     this.transform.position = overlapped.transform.position;
                     
@@ -151,6 +156,9 @@ public class AnswerController: EmptyGraphic, IDragHandler, IBeginDragHandler, IE
                         this.State.Image.color = Color.gray;
                     }
                     
+                    // Store the answer in the target.
+                    overlapped.State.PlacedAnswer = this.State;
+                    
                     // Disable the component.
                     this.enabled = false;
                     
@@ -158,7 +166,7 @@ public class AnswerController: EmptyGraphic, IDragHandler, IBeginDragHandler, IE
                     overlapped.enabled = false;
                     
                     // If it is set, call the callback.
-                    this.State.Callback?.Invoke();
+                    this.State.Callback?.Invoke(arg0: this, arg1: overlapped);
                 } else {
                     // If the duplicate flag is set.
                     if (GameplayState.DuplicateAnswers) {
@@ -196,6 +204,9 @@ public class AnswerController: EmptyGraphic, IDragHandler, IBeginDragHandler, IE
                     
                     // Seek the answer controller.
                     if (owner.GetComponent<AnswerController>() is AnswerController controller) {
+                        // Disable the component.
+                        controller.enabled = false;
+                        
                         // Return the instance.
                         return controller.State;
                     } else {

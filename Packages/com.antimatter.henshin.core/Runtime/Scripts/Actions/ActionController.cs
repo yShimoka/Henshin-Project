@@ -88,7 +88,6 @@ public abstract class ActionController {
             /// </summary>
             public ActionState State;
             
-        // -- Protected Attributes --
         // -- Private Attributes --
             // - Caches -
             /// <summary>
@@ -194,7 +193,7 @@ public abstract class ActionController {
                     state.ParentFinishedCounter++;
                     
                     // Check if the counter is greater than the number of parents.
-                    if (state.ParentFinishedCounter >= state.ParentCount) {
+                    if (!state.WaitForAllParents || state.ParentFinishedCounter >= state.ParentCount) {
                         // Create the state's controller.
                         ActionController controller = ActionController.CreateController(
                             controller: state.ActionControllerName, 

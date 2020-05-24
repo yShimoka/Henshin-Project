@@ -1,29 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!-- Load the game data schema declaration. -->
-<henshin:root
-    xmlns:henshin="https://henshin.jb-caillaud.fr/" 
+<h:root
+    xmlns:h="https://henshin.jb-caillaud.fr/" 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="https://henshin.jb-caillaud.fr/ GameData.xsd"
 >
     <!-- Act 1 -->
-    <henshin:act>
+    <h:act>
         <!-- Scene 1 -->
-        <henshin:scene>
-            <henshin:gameplay identifier="Neku Presentation" kind="gaps">
-                <henshin:answer width="500" height="75" duplicate="true"/>
-                <henshin:original>This is Neku, he is but a boy.</henshin:original>
-                <henshin:translated>C'est Neku, il n'est qu'un graçon.</henshin:translated>
-                <henshin:options>
-                    <henshin:option>Neku</henshin:option>
-                    <henshin:option>Carrot</henshin:option>
-                    <henshin:option>Test</henshin:option>
-                </henshin:options>
-            </henshin:gameplay>
-            <henshin:gameplay identifier="Shiki Presentation" kind="none">
-                <henshin:original>This is Neku, he is but a boy.</henshin:original>
-                <henshin:translated>C'est Neku, il n'est qu'un graçon.</henshin:translated>
-            </henshin:gameplay>
-        </henshin:scene>
-    </henshin:act>
-</henshin:root>
+        <h:scene>
+            <h:gameplay identifier="Neku Presentation" kind="gaps">
+                <h:answer width="150" height="55"/>
+                <h:original>これは<h:b>ネク</h:b>、16歳の男です。</h:original>
+                <h:translated>Voici Neku, un jeune <h:t>homme</h:t> de 16 <h:t>ans</h:t>.</h:translated>
+                <h:options>
+                    <h:option>homme</h:option>
+                    <h:option>femme</h:option>
+                    <h:option>ans</h:option>
+                    <h:option>patates</h:option>
+                </h:options>
+            </h:gameplay>
+            <h:gameplay identifier="Shiki Presentation" kind="snowball">
+                <h:answer width="150" height="55"/>
+                <h:original>あれは<h:s text="Shiki">シキ</h:s>です.</h:original>
+                <h:translated>Elle c'est Shiki.</h:translated>
+                <h:options>
+                    <h:option>Shiki</h:option>
+                    <h:option>Tsuki</h:option>
+                </h:options>
+                <h:original>あれは<h:b>シキ</h:b>、１４歳の<h:s text="kanojo">彼女</h:s>です.</h:original>
+                <h:translated>Elle c'est Shiki, une adolescente de 14 ans.</h:translated>
+                <h:options>
+                    <h:option>kanojo</h:option>
+                    <h:option>otoko</h:option>
+                </h:options>
+            </h:gameplay>
+            <h:gameplay identifier="Comparison Test" kind="comparison">
+                <h:original>二人は学校について話しっている。</h:original>
+                <h:translated>
+                    <h:valid>Ils parlent de l'école.</h:valid>
+                    <h:invalid>Ils vont à l'école.</h:invalid>
+                </h:translated>
+            </h:gameplay>
+        </h:scene>
+    </h:act>
+</h:root>

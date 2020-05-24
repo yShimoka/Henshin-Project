@@ -17,13 +17,7 @@ MonoBehaviour:
     SceneList:
     - Background: {fileID: 0}
       ActorList: []
-      ActionList:
-      - ChildrenIndexList: 01000000
-        Parameters: []
-        ActionControllerName: Henshin.Runtime.Actions.Scene.StartAction
-      - ChildrenIndexList: 
-        Parameters: []
-        ActionControllerName: Henshin.Runtime.Actions.Scene.EndAction
+      ActionList: []
       IsDebugScene: 0
   IsDebugState: 1
   ClearColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
@@ -31,11 +25,15 @@ MonoBehaviour:
   EventSystemPrefab: {fileID: 308592869498175395, guid: 4be15e3c48f664c51bdb33ca8fa6b425,
     type: 3}
   GameplayState:
-    TextboxPrefab: {fileID: 8948660713939356513, guid: bdc61e573f3434aadbda267185f9996a,
+    TextboxPrefab: {fileID: 941163851589416802, guid: e5c9c9504de4348c09bc51fe3b9b370e,
       type: 3}
-    ToolboxPrefab: {fileID: 8948660713939356513, guid: 3f0b1a0d02def47c3b7fe7ff34dd6cfe,
+    TextboxTextPrefab: {fileID: 3080909592148875712, guid: 017e8cfd84584469985c8c55f0d2a421,
+      type: 3}
+    ToolboxPrefab: {fileID: 941163851589416802, guid: d9b922326427f4b95b9e2825e9ea9229,
       type: 3}
     TextAnswerPrefab: {fileID: 7015298547404358436, guid: ee57a2a5d18e0415f8cd06ddacd4ef30,
       type: 3}
     TextTargetPrefab: {fileID: 7015298547404358436, guid: c8b5495da990d4b4babb582968cf9b6d,
       type: 3}
+    TextColor: {r: 0, g: 0, b: 0, a: 1}
+    Arrow: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}

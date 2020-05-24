@@ -62,6 +62,10 @@ public static class SceneView {
                 }
             }
             
+            /// <summary>
+            /// Reveals the background of the scene.
+            /// </summary>
+            /// <param name="callback">The callback to call once the background is visible.</param>
             public static void Reveal(UnityAction callback) {
                 ApplicationView.Root.StartCoroutine(routine: SceneView._Reveal(callback: callback, reveal: true));
             }

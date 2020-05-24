@@ -4,6 +4,7 @@ using System;
 using Henshin.Editor.SceneEditor.GraphArea.Socket;
 using Henshin.Runtime.Actions;
 using Henshin.Runtime.Actions.Actor;
+using Henshin.Runtime.Actions.Gameplay;
 using Henshin.Runtime.Actions.Scene;
 using JetBrains.Annotations;
 using UnityEditor;
@@ -355,6 +356,52 @@ public static class NodeController {
                     func: () => NodeController._ConvertNode<ColourAction>(node: node)
                 );
                 NodeController._msDeleteMenu.AddSeparator(path: "Convert/");
+                NodeController._msDeleteMenu.AddSeparator(path: "Convert/Gameplay Actions");
+                NodeController._msDeleteMenu.AddItem(
+                    content: new GUIContent{ text = "Convert/Load" }, 
+                    on: false, 
+                    func: () => NodeController._ConvertNode<LoadAction>(node: node)
+                );
+                NodeController._msDeleteMenu.AddItem(
+                    content: new GUIContent{ text = "Convert/Show Text" }, 
+                    on: false, 
+                    func: () => NodeController._ConvertNode<ShowTextAction>(node: node)
+                );
+                NodeController._msDeleteMenu.AddItem(
+                    content: new GUIContent{ text = "Convert/Hide Text" }, 
+                    on: false, 
+                    func: () => NodeController._ConvertNode<HideTextAction>(node: node)
+                );
+                NodeController._msDeleteMenu.AddItem(
+                    content: new GUIContent{ text = "Convert/Show Tools" }, 
+                    on: false, 
+                    func: () => NodeController._ConvertNode<ShowToolsAction>(node: node)
+                );
+                NodeController._msDeleteMenu.AddItem(
+                    content: new GUIContent{ text = "Convert/Hide Tools" }, 
+                    on: false, 
+                    func: () => NodeController._ConvertNode<HideToolsAction>(node: node)
+                );
+                NodeController._msDeleteMenu.AddItem(
+                    content: new GUIContent{ text = "Convert/Valid" }, 
+                    on: false, 
+                    func: () => NodeController._ConvertNode<ValidAction>(node: node)
+                );
+                NodeController._msDeleteMenu.AddItem(
+                    content: new GUIContent{ text = "Convert/Invalid" }, 
+                    on: false, 
+                    func: () => NodeController._ConvertNode<InvalidAction>(node: node)
+                );
+                NodeController._msDeleteMenu.AddItem(
+                    content: new GUIContent{ text = "Convert/Play" }, 
+                    on: false, 
+                    func: () => NodeController._ConvertNode<PlayAction>(node: node)
+                );
+                NodeController._msDeleteMenu.AddItem(
+                    content: new GUIContent{ text = "Convert/Correct" }, 
+                    on: false, 
+                    func: () => NodeController._ConvertNode<CorrectAction>(node: node)
+                );
                 
                 // Add the delete button.
                 NodeController._msDeleteMenu.AddSeparator(path: "");

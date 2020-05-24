@@ -2,6 +2,7 @@
 
 using Henshin.Runtime.Application;
 using Henshin.Runtime.Data;
+using Henshin.Runtime.Gameplay.Modes;
 using UnityEngine.Events;
 
 
@@ -27,16 +28,22 @@ public static class GameplayController {
             /// </summary>
             /// <param name="identifier">The XML identifier of the gameplay to load.</param>
             public static void Load(string identifier) {
+                // If a new gameplay item was loaded.
+                if (DataState.CurrentGameplay != identifier) {
+                    // Clear the gameplay counter.
+                    GameplayState.Own.CurrentIndex = 0;
+                }
+                
                 // Load the data controller.
                 if (DataController.LoadGameplay(identifier: identifier)) {
-                    // TODO: Prepare the gameplay depending on the gameplay kind.
+                    // Prepare the gameplay depending on the gameplay kind.
                     switch (DataState.Kind) {
-                    case null:
-                        ApplicationView.Error(message: $"Could not load the gameplay \"#{identifier}\"'s kind");
-                        break;
-                    default:
-                        ApplicationView.Error(message: $"Unknown gameplay kind {DataState.Kind}");
-                        break;
+                    case "questions": case "gaps": Gaps.Load(); break;
+                    case "snowball" : Snowball.Load(); break;
+                    case "comparison" : Comparison.Load(); break;
+                    
+                    case null: ApplicationView.Error(message: $"Could not load the gameplay \"#{identifier}\"'s kind"); break;
+                    default: ApplicationView.Error(message: $"Unknown gameplay kind {DataState.Kind}"); break;
                     }
                 }
             }
@@ -50,11 +57,31 @@ public static class GameplayController {
                 // Store the callback in the state.
                 GameplayState.Own.Callback = callback;
                 
-                // TODO: Play the gameplay depending on the gameplay kind.
+                // Play the gameplay depending on the gameplay kind.
                 switch (DataState.Kind) {
-                default:
-                    ApplicationView.Error(message: $"Cannot play gameplay kind {DataState.Kind}");
-                    break;
+                // Start the gaps gameplay.
+                case "questions": case "gaps": Gaps.Play(); break;
+                case "snowball": Snowball.Play(); break;
+                case "comparison" : Comparison.Play(); break;
+                
+                // If the kind is unhandled.
+                default: ApplicationView.Error(message: $"Cannot play gameplay kind {DataState.Kind}"); break;
+                }
+            }
+            
+            /// <summary>
+            /// Shows the correction for the current gameplay.
+            /// </summary>
+            public static void Correct() {
+                // Play the gameplay depending on the gameplay kind.
+                switch (DataState.Kind) {
+                // Correct the gaps gameplay.
+                case "questions": case "gaps": Gaps.Correct(); break;
+                case "snowball": Snowball.Correct(); break;
+                case "comparison" : Comparison.Correct(); break;
+                
+                // If the kind is unhandled.
+                default: ApplicationView.Error(message: $"Cannot play gameplay kind {DataState.Kind}"); break;
                 }
             }
             

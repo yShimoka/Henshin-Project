@@ -14,7 +14,7 @@ namespace Henshin.Editor.SceneEditor.Inspector.Editor {
 /// <summary>
 /// Attribute used to associate an editor with an action state's type.
 /// </summary>
-[AttributeUsage(validOn: AttributeTargets.Class, Inherited = false)]
+[AttributeUsage(validOn: AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
 public class ActionEditorAttribute: Attribute {
     // ---  Attributes ---
         // -- Public Attributes --
@@ -84,15 +84,13 @@ public abstract class Base {
                         .GetTypes()
                         .Where(predicate: type => type.IsSubclassOf(c: typeof(Base)))
                     ) {
-                        // If the child class has the ActionEditorAttribute.
-                        if (childClass
+                        foreach (ActionEditorAttribute attribute in childClass
                             .GetCustomAttributes(attributeType: typeof(ActionEditorAttribute), inherit: false)
-                            .ElementAtOrDefault(index: 0)
-                            is ActionEditorAttribute childAttr
+                            .Cast<ActionEditorAttribute>()
                         ) {
                             // Store the pair in the dictionary.
                             Base._msConstructors.Add(
-                                key: childAttr.ActionType,
+                                key: attribute.ActionType,
                                 value: childClass.GetConstructor(types: new Type[] {})
                             );
                         }

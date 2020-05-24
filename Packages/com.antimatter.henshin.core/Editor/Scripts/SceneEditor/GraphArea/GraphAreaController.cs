@@ -9,6 +9,7 @@ using Henshin.Editor.SceneEditor.Header;
 using Henshin.Editor.Skin;
 using Henshin.Runtime.Actions;
 using Henshin.Runtime.Actions.Actor;
+using Henshin.Runtime.Actions.Gameplay;
 using Henshin.Runtime.Actions.Scene;
 using Henshin.Runtime.Directions.Act;
 using Henshin.Runtime.Directions.Scene;
@@ -713,6 +714,69 @@ public static class GraphAreaController {
                 );
                 menu.AddSeparator(path: "Create Node/");
                 menu.AddSeparator(path: "Create Node/- Gameplay Actions");
+                menu.AddItem(
+                    content: new GUIContent{ text = "Create Node/Load"}, 
+                    on: false, 
+                    func: () => NodeController.CreateNode<LoadAction>(
+                        owner: graphArea, position: GraphAreaController._msLastMousePosition
+                    )
+                );
+                menu.AddItem(
+                    content: new GUIContent{ text = "Create Node/Show Text"}, 
+                    on: false, 
+                    func: () => NodeController.CreateNode<ShowTextAction>(
+                        owner: graphArea, position: GraphAreaController._msLastMousePosition
+                    )
+                );
+                menu.AddItem(
+                    content: new GUIContent{ text = "Create Node/Hide Text"}, 
+                    on: false, 
+                    func: () => NodeController.CreateNode<HideTextAction>(
+                        owner: graphArea, position: GraphAreaController._msLastMousePosition
+                    )
+                );
+                menu.AddItem(
+                    content: new GUIContent{ text = "Create Node/Show Tools"}, 
+                    on: false, 
+                    func: () => NodeController.CreateNode<ShowToolsAction>(
+                        owner: graphArea, position: GraphAreaController._msLastMousePosition
+                    )
+                );
+                menu.AddItem(
+                    content: new GUIContent{ text = "Create Node/Hide Tools"}, 
+                    on: false, 
+                    func: () => NodeController.CreateNode<HideToolsAction>(
+                        owner: graphArea, position: GraphAreaController._msLastMousePosition
+                    )
+                );
+                menu.AddItem(
+                    content: new GUIContent{ text = "Create Node/Valid"}, 
+                    on: false, 
+                    func: () => NodeController.CreateNode<ValidAction>(
+                        owner: graphArea, position: GraphAreaController._msLastMousePosition
+                    )
+                );
+                menu.AddItem(
+                    content: new GUIContent{ text = "Create Node/Invalid"}, 
+                    on: false, 
+                    func: () => NodeController.CreateNode<InvalidAction>(
+                        owner: graphArea, position: GraphAreaController._msLastMousePosition
+                    )
+                );
+                menu.AddItem(
+                    content: new GUIContent{ text = "Create Node/Play"}, 
+                    on: false, 
+                    func: () => NodeController.CreateNode<PlayAction>(
+                        owner: graphArea, position: GraphAreaController._msLastMousePosition
+                    )
+                );
+                menu.AddItem(
+                    content: new GUIContent{ text = "Create Node/Correct"}, 
+                    on: false, 
+                    func: () => NodeController.CreateNode<CorrectAction>(
+                        owner: graphArea, position: GraphAreaController._msLastMousePosition
+                    )
+                );
                 
                 // Show the menu.
                 menu.ShowAsContext();

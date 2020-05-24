@@ -429,7 +429,7 @@ public static class ApplicationView {
                 // Initialize the gameplay gui.
                 try {
                     GameplayView.Initialize(gameplay: ApplicationState.Own.GameplayState);
-                } catch (Exception e) when (e is MissingReferenceException || e is MissingComponentException) {
+                } catch (Exception e) {
                     throw new ApplicationCreationException(message: $"Could not load the gameplay view: {e.Message}");
                 }
             }

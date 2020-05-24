@@ -43,13 +43,13 @@ public static class DataState {
             /// Index of the current act.
             /// Stored only in editor mode.
             /// </summary>
-            public static int ActIndex;
+            public static int ActIndex = -1;
             
             /// <summary>
             /// Index of the current scene.
             /// Stored only in editor mode.
             /// </summary>
-            public static int SceneIndex;
+            public static int SceneIndex = -1;
 #endif
             
             // - Data Containers -
@@ -58,6 +58,12 @@ public static class DataState {
             /// </summary>
             [CanBeNull]
             public static XmlNode CurrentScene;
+            
+            /// <summary>
+            /// Copy of the currently loaded gameplay identifier.
+            /// </summary>
+            [CanBeNull]
+            public static string CurrentGameplay;
             
             /// <summary>
             /// Stores the Xml Gameplay node's 'kind' attribute value.
@@ -69,20 +75,23 @@ public static class DataState {
             /// <summary>
             /// Stores the contents of the Xml Original nodes.
             /// This should be the text before any translation.
-            /// </summary>
-            public static string[] Original; 
+            /// </summary> 
+            [CanBeNull]
+            public static XmlNodeList OriginalNodes; 
             
             /// <summary>
             /// Stores the contents of the Xml Translated nodes.
             /// This should be the translated text.
-            /// </summary>
-            public static string[] Translated;
+            /// </summary> 
+            [CanBeNull]
+            public static XmlNodeList TranslatedNodes;
             
             /// <summary>
             /// Stores the contents of the Xml Option nodes.
             /// This is a 2D array because of the 'snowball' gameplay.
             /// </summary> 
-            public static string[][] Options; 
+            [CanBeNull]
+            public static XmlNodeList OptionsNodes; 
             
             /// <summary>
             /// Default size of the <see cref="AnswerState"/> objects.

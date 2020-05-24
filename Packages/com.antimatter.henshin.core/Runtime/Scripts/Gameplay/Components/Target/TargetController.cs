@@ -74,6 +74,12 @@ public class TargetController: EmptyGraphic {
                     
                     // Try to load the target controller on the new instance.
                     if (owner.GetComponent<TargetController>() is TargetController controller) {
+                        // Set its size.
+                        controller.State.Transform.sizeDelta = GameplayState.AnswerObjectSize;
+                        
+                        // Disable raycasting.
+                        controller.raycastTarget = false;
+                        
                         // Return the controller instance.
                         return controller.State;
                     } else {

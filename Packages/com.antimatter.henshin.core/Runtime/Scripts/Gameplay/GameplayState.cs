@@ -3,9 +3,10 @@
 using System;
 using Henshin.Runtime.Application;
 using Henshin.Runtime.Data;
-using Henshin.Runtime.Gameplay.Components.Answer;
+using Henshin.Runtime.Gameplay.Components.Textbox;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 /* Wrap the class within the local namespace. */
 namespace Henshin.Runtime.Gameplay {
@@ -24,7 +25,13 @@ public class GameplayState {
             /// Prefab object used for the GUI text box.
             /// Instanced when the application is started.
             /// </summary>
+            [Header(header: "Prefabs")]
             public GameObject TextboxPrefab;
+            
+            /// <summary>
+            /// Prefab instance used for all the textbox child text components.
+            /// </summary>
+            public GameObject TextboxTextPrefab;
             
             /// <summary>
             /// Prefab object used for the GUI tool box.
@@ -44,6 +51,13 @@ public class GameplayState {
             /// </summary>
             public GameObject TextTargetPrefab;
             
+            // - Text Settings -
+            /// <summary>
+            /// Color applied to the texts.
+            /// </summary>
+            public Color TextColor;
+            
+            public Sprite Arrow;
         // -- Public Attributes --
             // - Gameplay Info -
             /// <summary>
@@ -59,6 +73,12 @@ public class GameplayState {
             [NonSerialized]
             public UnityAction Callback;
             
+            /// <summary>
+            /// Stores the current index in the selected Gameplay node.
+            /// </summary>
+            [NonSerialized]
+            public int CurrentIndex;
+            
             /// <inheritdoc cref="DataState.AnswerObjectSize"/>
             public static Vector2 AnswerObjectSize => DataState.AnswerObjectSize;
             
@@ -72,20 +92,7 @@ public class GameplayState {
             /// </summary>
             public static GameplayState Own => ApplicationState.Own.GameplayState;
             
-            // - Component References -
-            /// <summary>
-            /// Reference to the <see cref="GameObject"/> of the textbox.
-            /// </summary>
-            [NonSerialized]
-            public GameObject TextboxObject;
-            
-            /// <summary>
-            /// Reference to the <see cref="GameObject"/> of the toolbox.
-            /// </summary>
-            [NonSerialized]
-            public GameObject ToolboxObject;
-            
-            //public TextboxController Textbox;
+            public TextboxController Textbox => TextboxState.ControllerInstance;
             //public ToolboxController Toolbox;
     // --- /Attributes ---
 }

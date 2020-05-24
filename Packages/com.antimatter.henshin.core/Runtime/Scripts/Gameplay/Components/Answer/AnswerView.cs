@@ -2,8 +2,6 @@
 
 /* Wrap the class within the local namespace. */
 
-using UnityEngine;
-
 namespace Henshin.Runtime.Gameplay.Components.Answer {
 
 /// <summary>
@@ -17,9 +15,13 @@ public static class AnswerView {
             /// Uses the value of the answer as the text to render.
             /// </summary>
             /// <param name="answer">The answer to update.</param>
-            public static void UpdateText(AnswerState answer) {
+            /// <param name="text">[Optional]The text to set as the answer's value.</param>
+            public static void UpdateText(AnswerState answer, string text = null) {
                 // Check if the answer's Text component is set.
                 if (answer.Text != null) {
+                    // If a text was specified, set the value of the answer.
+                    if (text != null) answer.Value = text;
+                    
                     // Update its text.
                     answer.Text.text = answer.Value;
                     

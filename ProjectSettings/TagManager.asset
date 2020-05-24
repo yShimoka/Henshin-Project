@@ -4,8 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - TextBox_Original
-  - TextBox_Translated
+  - Original
+  - Translated
   layers:
   - Default
   - TransparentFX

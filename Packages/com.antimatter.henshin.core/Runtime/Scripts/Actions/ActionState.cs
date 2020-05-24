@@ -42,6 +42,12 @@ public class ActionState {
             /// </summary>
             [NonSerialized]
             public List<ActionState> ChildrenList = new List<ActionState>();
+        
+            /// <summary>
+            /// Flag set if the <see cref="ActionController.Apply"/> call should wait for all the parents to be over.
+            /// </summary>
+            [NonSerialized]
+            public bool WaitForAllParents = true;
             
             /// <summary>
             /// Number of parents of this <see cref="ActionState"/>.

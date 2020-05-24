@@ -64,7 +64,7 @@ public class AnswerState {
             /// Callback method that is invoked when the answer is placed down.
             /// </summary>
             [CanBeNull]
-            public UnityAction Callback;
+            public UnityAction<AnswerController, TargetController> Callback;
             
             // - Computed Values -
             /// <summary>
