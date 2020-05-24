@@ -47,16 +47,22 @@ public static class Gaps {
             /// Enables the generated <see cref="AnswerController"/> instances.
             /// </summary>
             public static void Play() {
-                // Clear the counter.
-                Gaps._msPlacedAnswers = 0;
-                
-                // Get all the answers in the session.
-                AnswerController[] answers = ToolboxState.ControllerInstance.GetComponentsInChildren<AnswerController>();
-                
-                // Enable them and set their callbacks.
-                foreach (AnswerController controller in answers) {
-                    controller.enabled = true;
-                    controller.State.Callback = Gaps._OnAnswerPlaced;
+                // If there is no answer to place.
+                if (Gaps._msTargetControllers.Length == 0) {
+                    // Call the callback.
+                    GameplayState.Own.Callback?.Invoke();
+                } else {
+                    // Clear the counter.
+                    Gaps._msPlacedAnswers = 0;
+                    
+                    // Get all the answers in the session.
+                    AnswerController[] answers = ToolboxState.ControllerInstance.GetComponentsInChildren<AnswerController>();
+                    
+                    // Enable them and set their callbacks.
+                    foreach (AnswerController controller in answers) {
+                        controller.enabled = true;
+                        controller.State.Callback = Gaps._OnAnswerPlaced;
+                    }
                 }
             }
             

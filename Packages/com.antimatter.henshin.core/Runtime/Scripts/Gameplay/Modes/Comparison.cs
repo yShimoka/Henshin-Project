@@ -39,11 +39,6 @@ public static class Comparison {
             /// </summary>
             public static bool IsInCorrection;
         
-        // -- Private Attributes --
-            /// <summary>
-            /// Flag set if the user is playing an animation.
-            /// </summary>
-            private static bool _msIsPlaying = false;
     // --- /Attributes ---
     
     // ---  Methods ---

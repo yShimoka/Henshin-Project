@@ -10,38 +10,86 @@
     <h:act>
         <!-- Scene 1 -->
         <h:scene>
-            <h:gameplay identifier="Neku Presentation" kind="gaps">
-                <h:answer width="150" height="55"/>
-                <h:original>これは<h:b>ネク</h:b>、16歳の男です。</h:original>
-                <h:translated>Voici Neku, un jeune <h:t>homme</h:t> de 16 <h:t>ans</h:t>.</h:translated>
+            <h:gameplay identifier="Amantes" kind="snowball">
+                <h:answer width="150"/>
+                <h:original><h:i>Pyramus</h:i></h:original>
+                <h:translated><h:t>Pyrame</h:t></h:translated>
                 <h:options>
-                    <h:option>homme</h:option>
-                    <h:option>femme</h:option>
-                    <h:option>ans</h:option>
-                    <h:option>patates</h:option>
+                    <h:option>Pyrame</h:option>
+                    <h:option>Pirate</h:option>
+                    <h:option>Thisbé</h:option>
+                    <h:option>TisseBaie</h:option>
+                </h:options>
+                
+                <h:original><h:i>Pyramus</h:i> et <h:i>Thisbe</h:i></h:original>
+                <h:translated>Pyrame et <h:t>Thisbé</h:t></h:translated>
+                <h:options>
+                    <h:option>Pyrame</h:option>
+                    <h:option>Pirate</h:option>
+                    <h:option>Thisbé</h:option>
+                    <h:option>TisseBaie</h:option>
+                </h:options>
+                
+                <h:original><h:i>Pyramus</h:i> et <h:i>Thisbe</h:i> sunt</h:original>
+                <h:translated><h:i>Pyrame</h:i> et <h:i>Thisbé</h:i> <h:t>sont</h:t></h:translated>
+                <h:options>
+                    <h:option>furent</h:option>
+                    <h:option>sont</h:option>
+                    <h:option>ont</h:option>
+                </h:options>
+                
+                <h:original><h:i>Pyramus</h:i> et <h:i>Thisbe</h:i> sunt duo amantes</h:original>
+                <h:translated><h:i>Pyrame</h:i> et <h:i>Thisbé</h:i> sont <h:t>deux</h:t> <h:t>amants</h:t>.</h:translated>
+                <h:options>
+                    <h:option>deux</h:option>
+                    <h:option>trois</h:option>
+                    <h:option>amants</h:option>
+                    <h:option>amis</h:option>
                 </h:options>
             </h:gameplay>
-            <h:gameplay identifier="Shiki Presentation" kind="snowball">
-                <h:answer width="150" height="55"/>
-                <h:original>あれは<h:s text="Shiki">シキ</h:s>です.</h:original>
-                <h:translated>Elle c'est Shiki.</h:translated>
+        </h:scene>
+        
+        <!-- Scene 2 -->
+        <h:scene>
+            <h:gameplay identifier="Superaltif" kind="questions">
+                <h:answer width="200" duplicate="true"/>
+                <h:original>
+                    Alter est <h:b><h:s text="Superlatif">pulcherrimus</h:s></h:b> juvenis et 
+                    altera <h:b><h:s text="Superlatif">pulcherrima</h:s></h:b> puella in Orientem.</h:original>
                 <h:options>
-                    <h:option>Shiki</h:option>
-                    <h:option>Tsuki</h:option>
-                </h:options>
-                <h:original>あれは<h:b>シキ</h:b>、１４歳の<h:s text="kanojo">彼女</h:s>です.</h:original>
-                <h:translated>Elle c'est Shiki, une adolescente de 14 ans.</h:translated>
-                <h:options>
-                    <h:option>kanojo</h:option>
-                    <h:option>otoko</h:option>
+                    <h:option>Superlatif</h:option>
+                    <h:option>Comparatif</h:option>
                 </h:options>
             </h:gameplay>
-            <h:gameplay identifier="Comparison Test" kind="comparison">
-                <h:original>二人は学校について話しっている。</h:original>
-                <h:translated>
-                    <h:valid>Ils parlent de l'école.</h:valid>
-                    <h:invalid>Ils vont à l'école.</h:invalid>
-                </h:translated>
+            <h:gameplay identifier="Genre (Him)" kind="questions">
+                <h:answer width="150" duplicate="true"/>
+                <h:original>Alter est <h:b><h:s text="Masculin">pulcherrimus</h:s></h:b> juvenis et altera pulcherrima puella in Orientem.</h:original>
+                <h:options>
+                    <h:option>Masculin</h:option>
+                    <h:option>Feminin</h:option>
+                    <h:option>Neutre</h:option>
+                </h:options>
+            </h:gameplay>
+            <h:gameplay identifier="Genre (Her)" kind="questions">
+                <h:answer width="150" duplicate="true"/>
+                <h:original>Alter est pulcherrimus juvenis et altera <h:b><h:s text="Feminin">pulcherrima</h:s></h:b> puella in Orientem.</h:original>
+                <h:options>
+                    <h:option>Masculin</h:option>
+                    <h:option>Feminin</h:option>
+                    <h:option>Neutre</h:option>
+                </h:options>
+            </h:gameplay>
+            <h:gameplay identifier="Genre (Neutral)" kind="questions">
+                <h:answer width="225" duplicate="true"/>
+                <h:original>Pulcherrimus = Masculin<h:br/>Pulcherrima = Feminin<h:br/><h:t>Pulcherrimum</h:t> = Neutre</h:original>
+                <h:options>
+                    <h:option>Pulcherrimus</h:option>
+                    <h:option>Pulcherrimo</h:option>
+                    <h:option>Pulcherrimum</h:option>
+                </h:options>
+            </h:gameplay>
+            <h:gameplay identifier="Truth" kind="none">
+                <h:translated>L’un est le plus <h:b>beau</h:b> jeune homme et l’autre la plus <h:b>belle</h:b> jeune fille d’Orient.</h:translated>
             </h:gameplay>
         </h:scene>
     </h:act>

@@ -38,11 +38,6 @@ public static class TextboxView {
             /// Flag set if the text should be displayed in bold.
             /// </summary>
             private static bool _msIsBold;
-            
-            /// <summary>
-            /// Text generator instance.
-            /// </summary>
-            private static readonly TextGenerator _msTEXT_GENERATOR = new TextGenerator();
     // --- /Attributes ---
     
     // ---  Methods ---
@@ -89,6 +84,12 @@ public static class TextboxView {
                 // Try to get the original and translated text nodes.
                 XmlNode original   = DataController.GetOriginalNode(index: index);
                 XmlNode translated = DataController.GetTranslatedNode(index: index);
+                
+                // Flags of the boxes that have been set.
+                int setBoxes = (original == null ? 0b00 : 0b10) | (translated == null ? 0b00 : 0b01);
+                
+                // Update the textbox sizes.
+                TextboxView._SetTextboxSizes(state: setBoxes);
                 
                 // Check if the original text is set.
                 if (original != null && TextboxState.Instance.Original != null) {
@@ -200,6 +201,12 @@ public static class TextboxView {
                         TextboxView._ParseNode(container: container, node: modifier);
                         // Unset the bold flag.
                         TextboxView._msIsBold = false;
+                        break;
+                    
+                    // If the text adds a new line.
+                    case "br":
+                        // Add a new line.
+                        TextboxView._CreateNewline(container: container);
                         break;
                         
                     // If the text should be displayed in color.
@@ -349,6 +356,18 @@ public static class TextboxView {
                 
                 // Set the target's value.
                 target.Value = subtext;
+                
+                // Set the color of the target's drawables.
+                foreach (Graphic graphic in target.Controller
+                    .GetComponents<Graphic>()
+                    .Union(second: target.Controller.GetComponentsInChildren<Graphic>())
+                ) {
+                    Color color = graphic.color;
+                    if (TextboxState.Instance.Background != null) {
+                        color.a = TextboxState.Instance.Background.color.a; 
+                    }
+                    graphic.color = color;
+                }
                 
                 // Place the text after the target in the hierarchy.
                 newText.SetAsLastSibling();
@@ -670,6 +689,29 @@ public static class TextboxView {
                 
                 // Call the callback.
                 callback?.Invoke();
+            }
+            
+            private static void _SetTextboxSizes(int state) {
+                // If both boxes are visible.
+                if (state == 0b11) {
+                    TextboxState.Instance.Original.anchorMin = new Vector2(x: 0.0f, y: 0.0f);
+                    TextboxState.Instance.Original.anchorMax = new Vector2(x: 0.5f, y: 1.0f);
+                    TextboxState.Instance.Translated.anchorMin = new Vector2(x: 0.5f, y: 0.0f);
+                    TextboxState.Instance.Translated.anchorMax = new Vector2(x: 1.0f, y: 1.0f);
+                    TextboxState.Instance.Separator.enabled = true;
+                } else if (state == 0b10) {
+                    TextboxState.Instance.Original.anchorMin = new Vector2(x: 0.0f, y: 0.0f);
+                    TextboxState.Instance.Original.anchorMax = new Vector2(x: 1.0f, y: 1.0f);
+                    TextboxState.Instance.Translated.anchorMin = new Vector2(x: 0.0f, y: 0.0f);
+                    TextboxState.Instance.Translated.anchorMax = new Vector2(x: 0.0f, y: 1.0f);
+                    TextboxState.Instance.Separator.enabled = false;
+                } else if (state == 0b01) {
+                    TextboxState.Instance.Original.anchorMin = new Vector2(x: 0.0f, y: 0.0f);
+                    TextboxState.Instance.Original.anchorMax = new Vector2(x: 0.0f, y: 1.0f);
+                    TextboxState.Instance.Translated.anchorMin = new Vector2(x: 0.0f, y: 0.0f);
+                    TextboxState.Instance.Translated.anchorMax = new Vector2(x: 1.0f, y: 1.0f);
+                    TextboxState.Instance.Separator.enabled = false;
+                }
             }
     // --- /Methods ---
 }

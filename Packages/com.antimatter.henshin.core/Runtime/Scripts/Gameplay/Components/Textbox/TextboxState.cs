@@ -62,6 +62,12 @@ public class TextboxState {
             [CanBeNull]
             public Image Background;
             
+            /// <summary>
+            /// Reference to the separator image of the textbox.
+            /// </summary>
+            [CanBeNull]
+            public Image Separator;
+            
             // - Static References -
             /// <summary>
             /// Reference to the box instance in the application.

@@ -38,7 +38,7 @@ public static class GameplayController {
                 if (DataController.LoadGameplay(identifier: identifier)) {
                     // Prepare the gameplay depending on the gameplay kind.
                     switch (DataState.Kind) {
-                    case "questions": case "gaps": Gaps.Load(); break;
+                    case "questions": case "gaps": case "none": Gaps.Load(); break;
                     case "snowball" : Snowball.Load(); break;
                     case "comparison" : Comparison.Load(); break;
                     
@@ -60,7 +60,7 @@ public static class GameplayController {
                 // Play the gameplay depending on the gameplay kind.
                 switch (DataState.Kind) {
                 // Start the gaps gameplay.
-                case "questions": case "gaps": Gaps.Play(); break;
+                case "questions": case "gaps": case "none": Gaps.Play(); break;
                 case "snowball": Snowball.Play(); break;
                 case "comparison" : Comparison.Play(); break;
                 
@@ -76,7 +76,7 @@ public static class GameplayController {
                 // Play the gameplay depending on the gameplay kind.
                 switch (DataState.Kind) {
                 // Correct the gaps gameplay.
-                case "questions": case "gaps": Gaps.Correct(); break;
+                case "questions": case "gaps": case "none": Gaps.Correct(); break;
                 case "snowball": Snowball.Correct(); break;
                 case "comparison" : Comparison.Correct(); break;
                 

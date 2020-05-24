@@ -187,6 +187,13 @@ public static class ActorView {
             public static void SetScale([NotNull] ActorState actor, Vector2 scale) {
                 // Check if the actor is set.
                 if (actor.Instance != null) {
+                    // Check if the actor is inverted.
+                    if (ActorView.GetVerticalFlip(actor: actor)) {
+                        scale.y *= -1;
+                    }
+                    if (ActorView.GetHorizontalFlip(actor: actor)) {
+                        scale.x *= -1;
+                    }
                     // Update the scale of the actor.
                     actor.Instance.transform.localScale = scale; 
                 } else {
@@ -360,8 +367,19 @@ public static class ActorView {
             public static Vector2 GetScale([NotNull] ActorState actor) {
                 // Check if the actor is set.
                 if (actor.Instance != null) {
-                    // Return the scale of the actor.
-                    return actor.Instance.transform.localScale;
+                    // Get the actor's scale.
+                    Vector3 scale = actor.Instance.transform.localScale;
+                    
+                    // Check if the actor is inverted.
+                    if (ActorView.GetVerticalFlip(actor: actor)) {
+                        scale.y *= -1;
+                    }
+                    if (ActorView.GetHorizontalFlip(actor: actor)) {
+                        scale.x *= -1;
+                    }
+                    
+                    // Return the scale.
+                    return scale;
                 } else {
                     // Throw an error.
                     ApplicationView.Error(

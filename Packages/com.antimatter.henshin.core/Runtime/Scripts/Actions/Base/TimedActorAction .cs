@@ -120,7 +120,7 @@ public abstract class TimedActorAction: TimedAction {
             }
             
         // -- Private Methods --
-            private void _Update(float deltaTime) {
+            private new void _Update(float deltaTime) {
                 // Increment the timer value.
                 this._mTimer += deltaTime;
                 

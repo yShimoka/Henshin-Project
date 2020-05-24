@@ -69,8 +69,13 @@ public class TextboxController: MonoBehaviour {
                 }
                 
                 // Seek a potential background.
-                if (this.GetComponentInChildren<Image>() is Image background) {
+                if (this.transform.Find(n: "Background").GetComponent<Image>() is Image background) {
                     this.State.Background = background;
+                }
+                
+                // Seek a potential separator.
+                if (this.transform.Find(n: "Separator").GetComponent<Image>() is Image separator) {
+                    this.State.Separator = separator;
                 }
             }
             

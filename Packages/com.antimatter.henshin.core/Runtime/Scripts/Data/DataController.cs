@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -130,15 +131,13 @@ public static class DataController {
                         xpath: "henshin:answer", 
                         nsmgr: DataState.NamespaceManager
                     ) is XmlNode size) {
-                        // Check if the x and y attributes exist.
-                        if (size.Attributes?[name: "width"] != null && size.Attributes?[name: "height"] != null) {
-                            // Load the size of the answer.
-                            DataState.AnswerObjectSize = new Vector2(
-                                x: int.Parse(s: size.Attributes[name: "width"].Value),
-                                y: int.Parse(s: size.Attributes[name: "height"].Value)
-                            );
-                            
-                        }
+                        // Load the size of the answer.
+                        DataState.AnswerObjectSize = new Vector2(
+                            x: int.Parse(s: size.Attributes?[name: "width"]?.Value 
+                                ?? DataState.DEFAULT_ANSWER_OBJECT_SIZE.x.ToString(provider: CultureInfo.InvariantCulture)),
+                            y: int.Parse(s: size.Attributes?[name: "height"]?.Value
+                                ?? DataState.DEFAULT_ANSWER_OBJECT_SIZE.y.ToString(provider: CultureInfo.InvariantCulture))
+                        );
                         
                         // Check if the duplicate attribute exists.
                         if (size.Attributes?[name: "duplicate"] != null) {
@@ -360,14 +359,14 @@ public static class DataController {
                     
                     // Compare the hashes of the file.
                     if (!hash.SequenceEqual(second: DataState.Hash)) {
+                        // Update the hash.
+                        DataState.Hash = hash;
+                        
                         // Reload the contents of the file.
                         DataController._LoadFileContents();
                         
                         // Reload the current scene and act.
                         DataController.LoadScene(act: DataState.ActIndex, scene: DataState.SceneIndex);
-                    
-                        // Update the hash.
-                        DataState.Hash = hash;
                     }
 #endif
                 }

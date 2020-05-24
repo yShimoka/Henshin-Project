@@ -223,7 +223,8 @@ public static class HeaderView {
                 if (needsUpdate) {
                     // Reserialize the assets.
                     AssetDatabase.ForceReserializeAssets();
-                    
+                    AssetDatabase.SaveAssets();
+                                        
                     // Set the owner's graph area reference.
                     GraphAreaController.ReloadStores();
                     header.Owner.Instance.UpdateGraphArea(
@@ -252,6 +253,7 @@ public static class HeaderView {
                 )) {
                     // Force-reserialize the project's assets.
                     AssetDatabase.ForceReserializeAssets();
+                    AssetDatabase.SaveAssets();
                     
                     // Re-initialize the window.
                     header.Owner.IsInitialized = false;
@@ -270,6 +272,7 @@ public static class HeaderView {
                 )) {
                     // Force-reserialize the project's assets.
                     AssetDatabase.ForceReserializeAssets();
+                    AssetDatabase.SaveAssets();
                     
                     // Re-initialize the window.
                     header.Owner.IsInitialized = false;
