@@ -17,3 +17,5 @@ This is the index page for _Henshin Project's_ documentation website.
 [Listes d'assets](listes/index.md)
 
 [Prototype d'interface](interface_prototype/index.html)
+
+[Version 1.0](prototype/index.html)
