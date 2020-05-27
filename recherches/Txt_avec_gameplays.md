@@ -371,3 +371,33 @@ Datif
 __Thisbé rejoint son bien-aimé dans la mort et le sang des deux amants colore les fruits auparavant blancs de l'arbre. Les mûres deviennent noirs et demeureront l'empreinte de leur amour.__
 
 __THE END.__
+
+
+## Bilan de séquence 
+
+
+RELIER :
+
+_1. Possum videre / a dextra / puellam / a sinistra/ juvenemque_  
+
+Je peux voir / à droite / une jeune fille / et un jeune homme / a gauche. 
+
+
+TEXTE A TROU :
+
+_2. Altera pulcherrima est cum suis rubris comis._ 
+
+L'une est __très jolie__ avec ses __cheveux rouges__.
+
+_3. Alter stat et spectat puellam._
+
+L'autre __se tient debout__ et __regarde__ __la jeune fille__.
+
+
+RELIER : 
+
+_4. Fama est amantes esse._
+
+On raconte qu'/ ils sont / amants/ On raconte qu'/ ils / s'aiment. 
+
+(Comment appelle-t-on cette proposition ?)
